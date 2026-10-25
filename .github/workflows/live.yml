@@ -1,0 +1,77 @@
+name: Dados ao vivo
+
+# Roda a cada hora: coleta partidas do topo pela API oficial, recalcula as
+# estatísticas e publica o site no GitHub Pages.
+on:
+  schedule:
+    - cron: "17 * * * *"
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: live-data
+  cancel-in-progress: false
+
+jobs:
+  collect-and-deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Baixar o estado anterior (branch data)
+        uses: actions/checkout@v4
+        with:
+          ref: data
+          path: databranch
+        continue-on-error: true
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Preparar pastas
+        run: |
+          mkdir -p databranch/state site/data
+          # mantém o último live.json no ar caso a coleta falhe
+          if [ -f databranch/live.json ]; then cp databranch/live.json site/data/live.json; fi
+
+      - name: Coletar da API oficial
+        id: collect
+        continue-on-error: true
+        env:
+          BS_API_KEY: ${{ secrets.BS_API_KEY }}
+          BS_API_BASE: ${{ vars.BS_API_BASE || 'https://bsproxy.royaleapi.dev/v1' }}
+          COUNTRIES: ${{ vars.COUNTRIES || 'global,BR,US,MX,ES' }}
+          STATE_DIR: databranch/state
+          OUT_FILE: site/data/live.json
+        run: node collector/collect.mjs
+
+      - name: Salvar o estado (branch data, sem histórico)
+        if: steps.collect.outcome == 'success'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cp site/data/live.json databranch/live.json
+          cd databranch
+          rm -rf .git
+          git init -q -b data
+          git add -A
+          git -c user.name="brawl-counter-bot" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" commit -qm "dados $(date -u +%Y-%m-%dT%H:%MZ)"
+          git push -qf "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" data
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+      - id: deploy
+        uses: actions/deploy-pages@v4
