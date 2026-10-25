@@ -1271,6 +1271,6 @@ function boot(){
   setInterval(poll,POLL_MS);
   document.addEventListener('visibilitychange',()=>{if(!document.hidden)poll()});
 }
-addEventListener('hashchange',()=>{const h=location.hash.slice(1).toLowerCase();if(bySlug.has(h)&&h!==state.sel)select(h,{push:false})});
+addEventListener('hashchange',()=>{const h=location.hash.slice(1).toLowerCase();const views={agora:'now',ranking:'ranking',comparar:'compare',draft:'draft',composicoes:'comps',matchups:'matchup'};if(bySlug.has(h)){if(h!==state.sel)select(h,{push:false})}else if(views[h])setView(views[h],{keepHash:true})});
 load();
 </script>
