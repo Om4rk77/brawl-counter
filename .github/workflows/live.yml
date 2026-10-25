@@ -1,11 +1,18 @@
 name: Dados ao vivo
 
-# Roda a cada hora: coleta partidas do topo pela API oficial, recalcula as
-# estatísticas e publica o site no GitHub Pages.
+# Roda a cada hora:
+#  1) metadados (fotos, itens, mapas e traduções) — sem chave, renovados 1x por dia
+#  2) partidas do topo pela API oficial (precisa do segredo BS_API_KEY)
+#  3) publica o site no GitHub Pages
 on:
   schedule:
     - cron: "17 * * * *"
   workflow_dispatch:
+    inputs:
+      force_meta:
+        description: "Refazer os metadados agora"
+        type: boolean
+        default: false
   push:
     branches: [main]
 
@@ -21,7 +28,7 @@ concurrency:
 jobs:
   collect-and-deploy:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
     environment:
       name: github-pages
       url: ${{ steps.deploy.outputs.page_url }}
@@ -42,10 +49,19 @@ jobs:
       - name: Preparar pastas
         run: |
           mkdir -p databranch/state site/data
-          # mantém o último live.json no ar caso a coleta falhe
-          if [ -f databranch/live.json ]; then cp databranch/live.json site/data/live.json; fi
+          rm -rf databranch/.git
+          for f in live.json meta.json; do
+            if [ -f databranch/$f ]; then cp databranch/$f site/data/$f; fi
+          done
 
-      - name: Coletar da API oficial
+      - name: Metadados (fotos, itens, mapas, traduções)
+        continue-on-error: true
+        env:
+          OUT_META: site/data/meta.json
+          FORCE_META: ${{ inputs.force_meta && '1' || '' }}
+        run: node collector/meta.mjs
+
+      - name: Coletar partidas da API oficial
         id: collect
         continue-on-error: true
         env:
@@ -54,16 +70,21 @@ jobs:
           COUNTRIES: ${{ vars.COUNTRIES || 'global,BR,US,MX,ES' }}
           STATE_DIR: databranch/state
           OUT_FILE: site/data/live.json
-        run: node collector/collect.mjs
+        run: |
+          if [ -z "$BS_API_KEY" ]; then
+            echo "::warning::Segredo BS_API_KEY ainda não configurado — o site usa os dados de referência."
+            exit 0
+          fi
+          node collector/collect.mjs
 
       - name: Salvar o estado (branch data, sem histórico)
-        if: steps.collect.outcome == 'success'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          cp site/data/live.json databranch/live.json
+          for f in live.json meta.json; do
+            if [ -f site/data/$f ]; then cp site/data/$f databranch/$f; fi
+          done
           cd databranch
-          rm -rf .git
           git init -q -b data
           git add -A
           git -c user.name="brawl-counter-bot" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" commit -qm "dados $(date -u +%Y-%m-%dT%H:%MZ)"
