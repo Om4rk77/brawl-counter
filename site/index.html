@@ -1,0 +1,1276 @@
+<meta charset="utf-8">
+<title>Brawl Counter</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f2f2f7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect width=%2232%22 height=%2232%22 rx=%228%22 fill=%22%232f7cf6%22/%3E%3Cpath d=%22M9 23 23 9M13 9h-4v4M19 23h4v-4%22 stroke=%22white%22 stroke-width=%222.6%22 fill=%22none%22 stroke-linecap=%22round%22/%3E%3C/svg%3E">
+<meta name="description" content="Counters, builds, composições e draft para todos os brawlers do Brawl Stars, com dados dos elos altos.">
+<style>
+/* Layout: vidro fosco no topo, título grande estilo iOS, conteúdo em listas agrupadas.
+   Desktop: seletor segmentado no topo. Celular: barra de abas embaixo, como no iOS. */
+:root{
+  --bg:#f2f2f7; --surface:#ffffff; --surface-2:#f6f6f9; --fill:rgba(118,118,128,.12); --fill-2:rgba(118,118,128,.2);
+  --fg:#111114; --fg-2:#6c6c74; --fg-3:#a1a1a8; --sep:rgba(60,60,67,.14);
+  --nav:rgba(242,242,247,.74); --shadow:0 1px 2px rgba(16,16,24,.04),0 8px 24px rgba(16,16,24,.06);
+  --good:#1f8a3b; --good-bar:#34c759; --good-tint:rgba(52,199,89,.13);
+  --bad:#d1263b; --bad-bar:#ff6b6b; --bad-tint:rgba(255,92,92,.12);
+  --mid:#8a6d00; --mid-bar:#c9b25a;
+  --c-NA:#8e8e96; --live:#30b85a; --c-DD:#f2643d; --c-TK:#d99a1e; --c-MK:#2f7cf6; --c-AR:#2ea05a; --c-CT:#8a5cf0; --c-AS:#e93d82; --c-SP:#11a8a3;
+  --r-I:#8ea7ba; --r-R:#5cc93f; --r-SR:#3a8bff; --r-E:#b04cff; --r-M:#f0414a; --r-L:#f2b705; --r-UL:#ff7a1a;
+  --i-gd:#2fb34f; --i-sp:#e6a700; --i-hc:#9b4dff; --i-gr:#5e7487;
+  --accent:var(--c-MK); --on-accent:#ffffff;
+  --font:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display","Segoe UI Variable","Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --font-round:ui-rounded,"SF Pro Rounded",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  --spring:cubic-bezier(.32,.72,0,1); --ease:cubic-bezier(.25,.1,.25,1);
+  --rad-xl:26px; --rad-l:18px; --rad-m:12px;
+  --tabbar-h:0px;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#000000; --surface:#1c1c1e; --surface-2:#232326; --fill:rgba(118,118,128,.24); --fill-2:rgba(118,118,128,.34);
+  --fg:#f5f5f7; --fg-2:#9d9da6; --fg-3:#6a6a72; --sep:rgba(84,84,88,.55);
+  --nav:rgba(18,18,20,.74); --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 28px rgba(0,0,0,.35);
+  --good:#4cd97b; --good-bar:#30d158; --good-tint:rgba(48,209,88,.16);
+  --bad:#ff7b7b; --bad-bar:#ff6961; --bad-tint:rgba(255,105,97,.16);
+  --mid:#e0c66a; --mid-bar:#b8a456;
+  --c-DD:#ff7a55; --c-TK:#f0b23a; --c-MK:#4a93ff; --c-AR:#3fbf6e; --c-CT:#a07cff; --c-AS:#ff5c98; --c-SP:#2cc7c1;
+  --i-gd:#3fd067; --i-sp:#ffc629; --i-hc:#b47bff; --i-gr:#8aa1b4;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#000000; --surface:#1c1c1e; --surface-2:#232326; --fill:rgba(118,118,128,.24); --fill-2:rgba(118,118,128,.34);
+  --fg:#f5f5f7; --fg-2:#9d9da6; --fg-3:#6a6a72; --sep:rgba(84,84,88,.55);
+  --nav:rgba(18,18,20,.74); --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 28px rgba(0,0,0,.35);
+  --good:#4cd97b; --good-bar:#30d158; --good-tint:rgba(48,209,88,.16);
+  --bad:#ff7b7b; --bad-bar:#ff6961; --bad-tint:rgba(255,105,97,.16);
+  --mid:#e0c66a; --mid-bar:#b8a456;
+  --c-DD:#ff7a55; --c-TK:#f0b23a; --c-MK:#4a93ff; --c-AR:#3fbf6e; --c-CT:#a07cff; --c-AS:#ff5c98; --c-SP:#2cc7c1;
+  --i-gd:#3fd067; --i-sp:#ffc629; --i-hc:#b47bff; --i-gr:#8aa1b4;
+  color-scheme:dark}
+
+html{color-scheme:light}
+:root{padding-top:env(safe-area-inset-top,0px)}
+body{margin:0}
+img{max-width:100%}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--fg);font-family:var(--font);font-size:15px;line-height:1.4;-webkit-font-smoothing:antialiased;letter-spacing:-.01em;padding-bottom:var(--tabbar-h)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:40;background:var(--nav)}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none;padding:0;-webkit-tap-highlight-color:transparent}
+:focus-visible{outline:3px solid color-mix(in srgb,var(--accent) 55%,transparent);outline-offset:2px;border-radius:10px}
+.num{font-variant-numeric:tabular-nums}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.press{transition:transform .35s var(--spring),background-color .2s var(--ease),opacity .2s}
+.press:active{transform:scale(.96)}
+
+/* ---------- navegação ---------- */
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;background:var(--nav);backdrop-filter:saturate(180%) blur(22px);-webkit-backdrop-filter:saturate(180%) blur(22px);border-bottom:.5px solid var(--sep)}
+.nav-in{display:flex;align-items:center;gap:12px;padding-block:10px}
+.brand{display:flex;align-items:center;gap:9px;font-weight:700;font-size:17px;letter-spacing:-.02em;flex:none}
+.brand-mark{width:28px;height:28px;border-radius:8px;background:var(--accent);display:grid;place-items:center;color:var(--on-accent);transition:background-color .5s var(--ease)}
+.brand-mark svg{width:17px;height:17px}
+.seg{display:flex;background:var(--fill);border-radius:10px;padding:2px;position:relative;margin-inline:auto}
+.seg button{position:relative;z-index:1;padding:6px 13px;border-radius:8px;font-size:13px;font-weight:590;white-space:nowrap}
+.seg .thumb{position:absolute;z-index:0;top:2px;bottom:2px;left:0;border-radius:8px;background:var(--surface);box-shadow:0 3px 8px rgba(0,0,0,.12),0 0 0 .5px rgba(0,0,0,.04);transition:transform .45s var(--spring),width .45s var(--spring)}
+.icon-btn{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--fill);flex:none}
+.icon-btn svg{width:18px;height:18px}
+.spacer{flex:1}
+
+/* barra de abas (celular) */
+.tabbar{display:none}
+@media (max-width:760px){
+  :root{--tabbar-h:calc(56px + env(safe-area-inset-bottom,0px))}
+  .seg{display:none}
+  .tabbar{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));position:fixed;left:0;right:0;bottom:0;z-index:45;height:var(--tabbar-h);padding:6px max(6px,env(safe-area-inset-left,0px)) env(safe-area-inset-bottom,0px) max(6px,env(safe-area-inset-right,0px));background:var(--nav);backdrop-filter:saturate(180%) blur(22px);-webkit-backdrop-filter:saturate(180%) blur(22px);border-top:.5px solid var(--sep)}
+  .tabbar button{display:grid;justify-items:center;align-content:start;gap:3px;font-size:10.5px;font-weight:600;color:var(--fg-3);padding-top:2px}
+  .tabbar svg{width:24px;height:24px}
+  .tabbar button[aria-selected="true"]{color:var(--accent)}
+}
+
+/* ---------- cabeçalho grande + busca ---------- */
+.hero-head{padding-block:22px 6px}
+.large-title{font-size:clamp(30px,5vw,40px);font-weight:750;letter-spacing:-.035em;line-height:1.05;margin:0;text-wrap:balance}
+.sub{color:var(--fg-2);margin:6px 0 0;font-size:14px;max-width:70ch}
+.sub b{color:var(--fg);font-weight:600}
+.search{position:relative;margin-top:16px}
+.search-field{display:flex;align-items:center;gap:8px;background:var(--fill);border-radius:12px;padding:0 12px;height:42px;transition:background-color .2s,box-shadow .3s var(--ease)}
+.search-field:focus-within{background:var(--surface);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 30%,transparent),var(--shadow)}
+.search-field svg{width:17px;height:17px;color:var(--fg-2);flex:none}
+.search-field input{flex:1;min-width:0;border:0;background:transparent;outline:none;font-size:16px;height:100%}
+.search-field input::placeholder{color:var(--fg-2)}
+.kbd{font-size:11px;color:var(--fg-3);border:1px solid var(--sep);border-radius:6px;padding:1px 6px}
+.ac{position:absolute;left:0;right:0;top:calc(100% + 8px);z-index:35;background:var(--surface);border-radius:16px;box-shadow:0 12px 40px rgba(0,0,0,.18),0 0 0 .5px var(--sep);padding:6px;max-height:min(60vh,420px);overflow:auto;transform-origin:top center;animation:pop .35s var(--spring)}
+@keyframes pop{from{opacity:0;transform:translateY(-6px) scale(.98)}to{opacity:1;transform:none}}
+.ac-item{display:flex;align-items:center;gap:12px;padding:7px 10px;border-radius:11px;width:100%;text-align:left}
+.ac-item[aria-selected="true"]{background:var(--fill)}
+.ac-item .meta{color:var(--fg-2);font-size:13px;margin-left:auto;white-space:nowrap}
+.ac-empty{padding:16px;color:var(--fg-2);text-align:center}
+
+/* ---------- avatar ---------- */
+.av{--s:44px;width:var(--s);height:var(--s);border-radius:calc(var(--s)*.28);flex:none;position:relative;overflow:hidden;background:color-mix(in srgb,var(--cc) 22%,var(--surface-2));display:grid;place-items:center}
+.av img{width:100%;height:100%;object-fit:cover;display:block;opacity:0;transition:opacity .35s var(--ease)}
+.av img.ok{opacity:1}
+.av.loading::after,.skel::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent 30%,rgba(255,255,255,.35) 50%,transparent 70%);background-size:220% 100%;animation:shimmer 1.1s linear infinite}
+@keyframes shimmer{from{background-position:120% 0}to{background-position:-120% 0}}
+.av .mono{font-family:var(--font-round);font-weight:800;font-size:calc(var(--s)*.42);color:#fff;letter-spacing:-.02em}
+.av.mono-bg{background:linear-gradient(145deg,color-mix(in srgb,var(--rc) 80%,#fff),var(--rc))}
+.av-stack{display:flex}
+.av-stack .av{--s:40px;border-radius:12px;box-shadow:0 0 0 2.5px var(--surface)}
+.av-stack .av+.av{margin-left:-10px}
+
+/* ---------- blocos comuns ---------- */
+main{padding-block:18px 40px}
+.view[hidden]{display:none!important}
+.pcard{background:var(--surface);border-radius:var(--rad-xl);box-shadow:var(--shadow);overflow:hidden;position:relative}
+.group{display:grid;gap:8px;min-width:0;align-content:start}
+.gh{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding-inline:6px;flex-wrap:wrap}
+.gh h2{font-size:20px;font-weight:700;letter-spacing:-.025em;margin:0;text-wrap:balance}
+.gh .note{font-size:12.5px;color:var(--fg-2)}
+.list{background:var(--surface);border-radius:var(--rad-l);box-shadow:var(--shadow);overflow:hidden}
+.row{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:12px;padding:10px 14px;width:100%;text-align:left;position:relative}
+.row+.row::before{content:"";position:absolute;top:0;right:0;left:70px;border-top:.5px solid var(--sep)}
+button.row:hover{background:var(--surface-2)}
+.row .t{font-weight:600;font-size:15.5px;line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.row .s{font-size:12.5px;color:var(--fg-2);display:flex;align-items:center;gap:5px;margin-top:2px;flex-wrap:wrap}
+.row .s svg{width:13px;height:13px;color:var(--cc)}
+.row .r{display:grid;justify-items:end;gap:5px;min-width:96px}
+.val{font-weight:700;font-size:15px;white-space:nowrap}
+.val.good{color:var(--good)} .val.bad{color:var(--bad)} .val.mid{color:var(--mid)} .val.muted{color:var(--fg-3);font-weight:600}
+.bar{width:96px;height:5px;border-radius:5px;background:var(--fill);overflow:hidden}
+.bar i{display:block;height:100%;border-radius:inherit;background:var(--b,var(--accent));width:0;transition:width 1s var(--spring)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 10px;border-radius:999px;background:var(--fill);font-size:12.5px;font-weight:600;white-space:nowrap}
+.chip svg{width:14px;height:14px}
+.chip.cls{background:color-mix(in srgb,var(--cc) 16%,transparent);color:color-mix(in srgb,var(--cc) 82%,var(--fg))}
+.chip.good{background:var(--good-tint);color:var(--good)}
+.chip.bad{background:var(--bad-tint);color:var(--bad)}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--rc);flex:none}
+.tier{display:inline-grid;place-items:center;min-width:34px;height:30px;padding:0 8px;border-radius:9px;font-weight:800;font-size:16px;color:#fff;background:var(--tc)}
+.hscroll{display:flex;gap:8px;overflow-x:auto;padding:0 0 4px;scrollbar-width:none}
+.hscroll::-webkit-scrollbar{display:none}
+.fchip{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 12px;border-radius:999px;background:var(--fill);font-size:13px;font-weight:600;white-space:nowrap;flex:none}
+.fchip svg{width:14px;height:14px;color:var(--cc,var(--fg-2))}
+.fchip img{width:18px;height:18px;object-fit:contain}
+.fchip[aria-pressed="true"]{background:var(--fg);color:var(--bg)}
+.fchip[aria-pressed="true"] svg{color:currentColor}
+.empty{padding:20px 16px;color:var(--fg-2);text-align:center;font-size:14px}
+.ghost{height:34px;padding:0 12px;border-radius:10px;font-size:13.5px;font-weight:600;color:var(--accent)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;height:40px;padding:0 16px;border-radius:12px;font-weight:650;font-size:14.5px;background:var(--accent);color:var(--on-accent)}
+.btn.soft{background:color-mix(in srgb,var(--accent) 14%,transparent);color:color-mix(in srgb,var(--accent) 85%,var(--fg))}
+.btn svg{width:16px;height:16px}
+.mini-note{font-size:12.5px;color:var(--fg-2);padding:0 6px;max-width:75ch}
+.duo{display:grid;gap:22px;grid-template-columns:minmax(0,1fr)}
+@media (min-width:720px){.duo{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.more{display:block;width:100%;padding:11px;font-size:14px;font-weight:600;color:var(--accent);border-top:.5px solid var(--sep)}
+
+/* ---------- matchups ---------- */
+.mu{display:grid;gap:22px;grid-template-columns:minmax(0,1fr)}
+@media (min-width:980px){.mu{grid-template-columns:minmax(0,1fr) 380px;align-items:start}.picker{position:sticky;top:calc(env(safe-area-inset-top,0px) + 70px);max-height:calc(100vh - 90px);overflow:auto;overscroll-behavior:contain}}
+.profile{display:grid;gap:22px;min-width:0}
+.p-hero{padding:22px;display:grid;grid-template-columns:auto minmax(0,1fr);gap:18px;align-items:center}
+.p-hero::before{content:"";position:absolute;inset:0 0 auto;height:140px;background:radial-gradient(120% 100% at 0% 0%,color-mix(in srgb,var(--accent) 22%,transparent),transparent 70%);pointer-events:none}
+.p-hero .av{--s:104px;box-shadow:0 10px 30px color-mix(in srgb,var(--accent) 35%,transparent)}
+.p-name{font-size:clamp(28px,4.6vw,38px);font-weight:760;letter-spacing:-.035em;line-height:1;margin:0 0 10px;text-wrap:balance}
+.p-actions{position:absolute;top:14px;right:14px;display:flex;gap:8px;z-index:2}
+.p-actions .icon-btn{background:color-mix(in srgb,var(--surface) 70%,var(--fill))}
+.p-actions .icon-btn[aria-pressed="true"]{color:#f5b301}
+.p-actions .icon-btn[aria-pressed="true"] svg{fill:currentColor}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-top:.5px solid var(--sep)}
+.stat{padding:14px 18px 16px;display:grid;gap:3px;align-content:start}
+.stat+.stat{border-left:.5px solid var(--sep)}
+.stat .k{font-size:12px;color:var(--fg-2);font-weight:500}
+.stat .v{font-size:26px;font-weight:700;letter-spacing:-.03em;line-height:1.05}
+.stat .v small{font-size:15px;font-weight:600;color:var(--fg-2);margin-left:1px}
+.stat .h{font-size:12px;color:var(--fg-2)}
+.mode-ic{width:44px;height:44px;border-radius:12px;background:var(--surface-2);display:grid;place-items:center}
+.mode-ic img{width:30px;height:30px;object-fit:contain}
+.tips{padding:6px 0}
+.tip{display:grid;grid-template-columns:28px minmax(0,1fr);gap:10px;padding:10px 16px;align-items:start}
+.tip .ti{width:28px;height:28px;border-radius:9px;background:color-mix(in srgb,var(--accent) 14%,transparent);color:var(--accent);display:grid;place-items:center}
+.tip .ti svg{width:16px;height:16px}
+.tip p{margin:4px 0 0;max-width:62ch}
+.best{padding:18px;display:grid;gap:16px}
+.best-main{display:grid;grid-template-columns:auto minmax(0,1fr);gap:14px;align-items:center;text-align:left;border-radius:16px;padding:12px;margin:-12px;width:calc(100% + 24px)}
+.best-main:hover{background:var(--surface-2)}
+.best-main .av{--s:68px}
+.kicker{font-size:12px;font-weight:650;color:var(--good);text-transform:uppercase;letter-spacing:.06em}
+.best-name{font-size:22px;font-weight:720;letter-spacing:-.025em;margin:2px 0 4px}
+.best-why{color:var(--fg-2);margin:0;max-width:60ch}
+.alts{display:flex;flex-wrap:wrap;gap:8px;align-items:center;border-top:.5px solid var(--sep);padding-top:14px}
+.alts>span{font-size:13px;color:var(--fg-2);margin-right:4px}
+.alt{display:inline-flex;align-items:center;gap:8px;height:38px;padding:0 12px 0 4px;border-radius:999px;background:var(--fill);font-weight:600;font-size:14px}
+.alt .av{--s:30px;border-radius:50%}
+.alt b{color:var(--good);font-weight:700;font-size:12.5px}
+
+/* build */
+.it-ic{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:color-mix(in srgb,var(--ic) 15%,transparent);color:var(--ic)}
+.it-ic svg{width:22px;height:22px}
+.it-alt{font-size:12.5px;color:var(--fg-2)}
+.build-mini{display:flex;flex-wrap:wrap;gap:6px}
+.bchip{display:inline-flex;align-items:center;gap:6px;min-height:28px;padding:3px 10px 3px 6px;border-radius:9px;background:color-mix(in srgb,var(--ic) 12%,transparent);font-size:12.5px;font-weight:600;line-height:1.2}
+.bchip svg{width:15px;height:15px;color:var(--ic);flex:none}
+
+.swap-in{animation:swapIn .6s var(--spring) both}
+@keyframes swapIn{from{opacity:0;transform:translateY(14px) scale(.99)}to{opacity:1;transform:none}}
+
+/* seletor */
+.picker{background:var(--surface);border-radius:var(--rad-xl);box-shadow:var(--shadow);padding:16px 0 18px;min-width:0}
+.picker h2{font-size:20px;font-weight:700;letter-spacing:-.025em;margin:0 16px 12px;display:flex;justify-content:space-between;align-items:baseline}
+.picker h2 small{font-size:13px;font-weight:500;color:var(--fg-2)}
+.picker .hscroll{padding:0 16px 4px}
+.mini-h{font-size:12px;font-weight:600;color:var(--fg-2);text-transform:uppercase;letter-spacing:.06em;margin:16px 16px 8px}
+.mini-row{display:flex;gap:10px;overflow-x:auto;padding:0 16px 2px;scrollbar-width:none}
+.mini-row::-webkit-scrollbar{display:none}
+.mini-row .gcell{width:60px;flex:none}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(66px,1fr));gap:12px 8px;padding:0 16px}
+.gcell{display:grid;justify-items:center;gap:5px;padding:4px 0;border-radius:14px;min-width:0;position:relative}
+.gcell .av{--s:56px;transition:transform .4s var(--spring),box-shadow .3s}
+.gcell:hover .av{transform:translateY(-2px);box-shadow:0 8px 18px color-mix(in srgb,var(--cc) 35%,transparent)}
+.gcell span{font-size:11.5px;font-weight:600;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--fg-2)}
+.gcell[aria-current="true"] .av{box-shadow:0 0 0 2.5px var(--surface),0 0 0 5px var(--accent)}
+.gcell[aria-current="true"] span{color:var(--fg)}
+.gcell[disabled]{opacity:.32;cursor:not-allowed}
+
+/* ---------- draft ---------- */
+.draft{display:grid;gap:22px}
+.teams{display:grid;gap:14px;grid-template-columns:minmax(0,1fr)}
+@media (min-width:820px){.teams{grid-template-columns:minmax(0,1.3fr) minmax(0,1fr)}}
+.team{padding:16px;display:grid;gap:12px}
+.team-h{display:flex;align-items:center;gap:8px;justify-content:space-between;flex-wrap:wrap}
+.team-h h3{white-space:nowrap}
+.team-h h3{margin:0;font-size:16px;font-weight:700;display:flex;align-items:center;gap:8px}
+.team-h .tag{font-size:11.5px;font-weight:650;padding:3px 8px;border-radius:999px;background:var(--fill);color:var(--fg-2)}
+.team-dot{width:10px;height:10px;border-radius:50%;background:var(--bad-bar)}
+.team-dot.ally{background:var(--c-MK)}
+.slots{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.slots.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+.slot-b{position:relative;display:grid;justify-items:center;gap:6px;padding:12px 6px 10px;border-radius:18px;background:var(--surface-2);min-width:0;border:1.5px dashed transparent}
+.slot-b.empty-slot{border-color:var(--fill-2);background:transparent}
+.slot-b .av{--s:58px}
+.slot-b .nm{font-size:13px;font-weight:650;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.slot-b .plus{width:58px;height:58px;border-radius:16px;display:grid;place-items:center;background:var(--fill);color:var(--fg-2)}
+.slot-b .plus svg{width:22px;height:22px}
+.slot-x{position:absolute;top:6px;right:6px;width:22px;height:22px;border-radius:50%;background:var(--fill-2);display:grid;place-items:center}
+.slot-x svg{width:11px;height:11px}
+.res-solo{padding:18px;display:grid;gap:16px}
+.solo-top{display:grid;grid-template-columns:auto minmax(0,1fr);gap:16px;align-items:center}
+.solo-top .av{--s:84px;box-shadow:0 10px 26px color-mix(in srgb,var(--cc) 35%,transparent)}
+.solo-score{font-size:30px;font-weight:760;letter-spacing:-.03em;line-height:1}
+.vs-list{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.vs-item{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:14px;background:var(--surface-2);min-width:0}
+.vs-item .av{--s:34px}
+.vs-item div{min-width:0}
+.vs-item .vn{font-size:12.5px;color:var(--fg-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.trio{padding:18px;display:grid;gap:16px}
+.trio-cols{display:grid;gap:12px;grid-template-columns:minmax(0,1fr)}
+@media (min-width:700px){.trio-cols{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.member{padding:14px;border-radius:18px;background:var(--surface-2);display:grid;gap:10px;align-content:start;min-width:0}
+.member-h{display:flex;align-items:center;gap:12px;text-align:left;width:100%}
+.member-h .av{--s:52px}
+.member-h .nm{font-weight:700;font-size:16px}
+.member .lines{display:grid;gap:4px;font-size:13px}
+.member .lines span{display:flex;gap:6px;align-items:baseline}
+.member .lock{font-size:11px;font-weight:700;color:var(--c-MK);text-transform:uppercase;letter-spacing:.05em}
+.syn{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.syn>span:first-child{font-size:13px;color:var(--fg-2)}
+.alt-trios{display:grid}
+.alt-trio{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:12px;align-items:center;padding:10px 14px;position:relative;width:100%;text-align:left}
+.alt-trio+.alt-trio::before{content:"";position:absolute;top:0;left:14px;right:14px;border-top:.5px solid var(--sep)}
+.alt-trio:hover{background:var(--surface-2)}
+.alt-trio .t{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+details.bd{border-top:.5px solid var(--sep);padding-top:10px}
+details.bd summary{cursor:pointer;list-style:none;font-size:13.5px;font-weight:650;color:var(--accent);display:flex;align-items:center;gap:6px}
+details.bd summary::-webkit-details-marker{display:none}
+details.bd summary svg{width:12px;height:12px;transition:transform .3s var(--spring)}
+details.bd[open] summary svg{transform:rotate(90deg)}
+details.bd .build-mini{margin-top:10px}
+.method{font-size:12.5px;color:var(--fg-2);padding:0 6px;max-width:80ch}
+
+/* ---------- composições ---------- */
+.comp-row{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:14px;align-items:center;padding:12px 14px;position:relative}
+.comp-row+.comp-row::before{content:"";position:absolute;top:0;left:14px;right:14px;border-top:.5px solid var(--sep)}
+.comp-row .t{font-weight:650;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.comp-row .s{font-size:12.5px;color:var(--fg-2);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.comp-row .r{display:grid;justify-items:end;gap:6px}
+.comp-row .wr{font-size:19px;font-weight:750;letter-spacing:-.02em}
+.mini-btn{font-size:12.5px;font-weight:650;color:var(--accent);padding:4px 10px;border-radius:999px;background:color-mix(in srgb,var(--accent) 12%,transparent);white-space:nowrap}
+.rank-n{width:22px;text-align:center;font-weight:700;color:var(--fg-3);font-size:13px}
+
+/* ---------- agora ---------- */
+.now-grid{display:grid;gap:16px;grid-template-columns:minmax(0,1fr)}
+@media (min-width:760px){.now-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (min-width:1100px){.now-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.ev{padding:16px;display:grid;gap:12px;align-content:start}
+.ev-h{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:12px;align-items:center}
+.ev-h .mode-ic{width:46px;height:46px;border-radius:13px;background:color-mix(in srgb,var(--accent) 12%,var(--surface-2))}
+.ev-mode{font-size:12px;font-weight:650;color:var(--fg-2);text-transform:uppercase;letter-spacing:.05em}
+.ev-map{font-size:18px;font-weight:720;letter-spacing:-.02em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ev-time{font-size:12.5px;font-weight:650;color:var(--fg-2);text-align:right;white-space:nowrap}
+.ev-time b{display:block;font-size:15px;color:var(--fg)}
+.ev .list{box-shadow:none;background:var(--surface-2)}
+.ev .row{padding:8px 12px}.ev .row .av{--s:38px}.ev .row+.row::before{left:62px}
+.ev-foot{display:flex;gap:8px;flex-wrap:wrap}
+.ev.ended{opacity:.55}
+.live-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--live);margin-right:6px;vertical-align:1px;box-shadow:0 0 0 0 color-mix(in srgb,var(--live) 60%,transparent);animation:pulse 2s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--live) 55%,transparent)}70%{box-shadow:0 0 0 7px transparent}100%{box-shadow:0 0 0 0 transparent}}
+.src-tag{font-size:11px;font-weight:650;padding:2px 7px;border-radius:999px;background:var(--fill);color:var(--fg-2);white-space:nowrap}
+.src-tag.live{background:color-mix(in srgb,var(--live) 15%,transparent);color:var(--good)}
+
+/* ---------- ranking ---------- */
+.filters{display:grid;gap:12px;margin-bottom:16px}
+.frow{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.sel{position:relative}
+.sel select{appearance:none;-webkit-appearance:none;height:34px;border-radius:10px;border:0;background:var(--fill);padding:0 32px 0 12px;font-size:13.5px;font-weight:600;cursor:pointer}
+.sel::after{content:"";position:absolute;right:12px;top:50%;width:7px;height:7px;border-right:1.8px solid var(--fg-2);border-bottom:1.8px solid var(--fg-2);transform:translateY(-70%) rotate(45deg);pointer-events:none}
+.count{margin-left:auto;color:var(--fg-2);font-size:13px}
+.tbl-wrap{background:var(--surface);border-radius:var(--rad-l);box-shadow:var(--shadow);overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:560px}
+th{font-size:12px;font-weight:600;color:var(--fg-2);text-align:left;padding:12px 12px 10px;white-space:nowrap;border-bottom:.5px solid var(--sep)}
+th button{display:inline-flex;align-items:center;gap:4px;font-weight:600;color:inherit}
+th[aria-sort] button{color:var(--fg)}
+th .arr{width:10px;height:10px;opacity:0;transition:transform .3s var(--spring),opacity .2s}
+th[aria-sort] .arr{opacity:1}
+th[aria-sort="ascending"] .arr{transform:rotate(180deg)}
+td{padding:8px 12px;border-bottom:.5px solid var(--sep);white-space:nowrap;font-size:14px}
+tbody tr{cursor:pointer;transition:background-color .15s}
+tbody tr:hover{background:var(--surface-2)}
+tbody tr:last-child td{border-bottom:0}
+.rk{color:var(--fg-3);font-weight:600;width:36px}
+.bcell{display:flex;align-items:center;gap:11px;font-weight:600}
+.bcell .av{--s:38px}
+.only-sm{display:none}
+.wrcell{display:flex;align-items:center;gap:10px}
+.wrcell .bar{width:70px}
+.r-in{animation:rowIn .5s var(--spring) both}
+@keyframes rowIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* ---------- comparar ---------- */
+.cmp-top{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:12px;align-items:stretch}
+.slot{background:var(--surface);border-radius:var(--rad-xl);box-shadow:var(--shadow);padding:20px 14px;display:grid;justify-items:center;gap:8px;text-align:center;min-width:0}
+.slot .av{--s:88px}
+.slot .nm{font-size:20px;font-weight:720;letter-spacing:-.02em;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.slot .chg{font-size:13px;color:var(--accent);font-weight:600}
+.vs{align-self:center;font-weight:800;color:var(--fg-3);font-size:15px}
+.verdict{margin-top:16px;padding:18px;display:grid;gap:6px;text-align:center}
+.verdict .vk{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--fg-2)}
+.verdict .vt{font-size:21px;font-weight:720;letter-spacing:-.02em;text-wrap:balance}
+.verdict p{margin:0 auto;color:var(--fg-2);max-width:60ch}
+.cmp-table{margin-top:16px}
+.crow{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr) minmax(0,1fr);align-items:center;padding:12px 14px;gap:8px;position:relative}
+.crow+.crow::before{content:"";position:absolute;top:0;left:14px;right:14px;border-top:.5px solid var(--sep)}
+.crow .ck{text-align:center;font-size:12.5px;color:var(--fg-2);font-weight:500}
+.crow .cv{font-weight:650;font-size:15px;min-width:0}
+.crow .cv:last-child{text-align:right}
+.crow .win{color:var(--good)}
+.cmp-modes{display:flex;flex-direction:column;gap:3px;font-size:13px;font-weight:600}
+.crow .cv:last-child .cmp-modes{align-items:flex-end}
+
+/* ---------- folha (bottom sheet) ---------- */
+.sheet-bg{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.35);display:grid;align-items:end;justify-items:center;animation:fade .3s var(--ease)}
+@keyframes fade{from{opacity:0}}
+.sheet{width:min(640px,100%);max-height:min(82vh,720px);background:var(--surface);border-radius:22px 22px 0 0;display:flex;flex-direction:column;box-shadow:0 -10px 40px rgba(0,0,0,.25);animation:sheetUp .55s var(--spring);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (min-width:700px){.sheet-bg{align-items:center}.sheet{border-radius:22px;animation:popIn .45s var(--spring)}}
+@keyframes sheetUp{from{transform:translateY(100%)}}
+@keyframes popIn{from{opacity:0;transform:scale(.95)}}
+.grab{width:36px;height:5px;border-radius:5px;background:var(--fill-2);margin:8px auto 0}
+.sheet-h{display:flex;align-items:center;gap:10px;padding:12px 16px}
+.sheet-h h3{margin:0;font-size:17px;font-weight:700;flex:1}
+.sheet .search-field{margin:0 16px 10px}
+.sheet .hscroll{padding:0 16px 10px}
+.sheet .grid{overflow:auto;padding-bottom:16px}
+
+/* ---------- carregamento ---------- */
+.skel{position:relative;overflow:hidden;background:var(--fill);border-radius:14px}
+.loading-wrap{display:grid;gap:16px}
+.errbox{padding:28px 20px;text-align:center;display:grid;gap:10px;justify-items:center}
+
+/* ---------- toast + rodapé ---------- */
+.toast{position:fixed;left:50%;bottom:calc(24px + var(--tabbar-h));z-index:70;transform:translateX(-50%);background:var(--fg);color:var(--bg);padding:10px 16px;border-radius:999px;font-weight:600;font-size:14px;box-shadow:0 10px 30px rgba(0,0,0,.25);animation:toast 2.4s var(--spring) both;max-width:calc(100% - 32px);text-align:center}
+@keyframes toast{0%{opacity:0;transform:translate(-50%,16px)}12%,82%{opacity:1;transform:translate(-50%,0)}100%{opacity:0;transform:translate(-50%,8px)}}
+.foot{color:var(--fg-2);font-size:13px;padding-block:8px 40px;display:grid;gap:14px}
+.foot h3{color:var(--fg);font-size:15px;margin:0}
+.foot ul{margin:0;padding-left:18px;display:grid;gap:5px;max-width:80ch}
+.foot a{color:var(--accent);text-decoration:none}
+.foot a:hover{text-decoration:underline}
+.src-grid{display:grid;gap:18px;grid-template-columns:minmax(0,1fr)}
+@media (min-width:820px){.src-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+@media (max-width:560px){
+  .brand span{display:none}
+  .p-hero{grid-template-columns:minmax(0,1fr);justify-items:start;padding:20px 18px}
+  .p-hero .av{--s:88px}
+  .stat{padding:12px 12px 14px}.stat .v{font-size:22px}
+  .row .r{min-width:76px}.bar{width:76px}
+  .cmp-top .slot .av{--s:68px}
+  .hide-sm{display:none}
+  table{min-width:0}
+  .only-sm{display:flex;align-items:center;gap:4px;font-size:12px;font-weight:500;color:var(--fg-2);margin-top:2px}.only-sm svg{width:12px;height:12px;color:var(--cc)}
+  td,th{padding-left:10px;padding-right:10px}
+  .slot-b .av,.slot-b .plus{--s:50px;width:50px;height:50px}
+  .solo-top .av{--s:68px}
+  .comp-row{grid-template-columns:auto minmax(0,1fr);row-gap:10px}
+  .comp-row .t{white-space:normal;line-height:1.25}
+  .comp-row .s{white-space:normal}
+  .comp-row .r{grid-column:1/-1;display:flex;align-items:center;justify-content:flex-start;gap:10px}
+  .comp-row .r .mini-btn{margin-left:auto}
+  .alt-trio .t{white-space:normal;line-height:1.25}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}::view-transition-group(*){animation:none!important}}
+::view-transition-old(root),::view-transition-new(root){animation-duration:.3s}
+</style>
+
+<!-- Ícones (estilo SF Symbols, linha) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-DD" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M12 3c.8 3.2 4.5 4.6 4.5 9.1A4.5 4.5 0 0 1 12 16.6a4.5 4.5 0 0 1-4.5-4.5c0-1.9 1-3 1.8-3.8.2 1.4 1 2.3 2 2.6C11 8.4 11 5.6 12 3Z"/><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M7 20h10"/></symbol>
+    <symbol id="i-TK" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" d="M12 3 5 5.8v5.4c0 4.4 3 8.1 7 9.8 4-1.7 7-5.4 7-9.8V5.8L12 3Z"/></symbol>
+    <symbol id="i-MK" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="7"/><path d="M12 2.5v4M12 17.5v4M2.5 12h4M17.5 12h4"/></g><circle cx="12" cy="12" r="1.6" fill="currentColor"/></symbol>
+    <symbol id="i-AR" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 19c1.5-8 5-12 8-12s6.5 4 8 12" stroke-dasharray="2.2 3"/><path d="M3 20h18"/></g><circle cx="20" cy="17.5" r="2" fill="currentColor"/></symbol>
+    <symbol id="i-CT" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3.2 19.6 7.6v8.8L12 20.8 4.4 16.4V7.6L12 3.2Z" stroke-linejoin="round"/><circle cx="12" cy="12" r="3"/></g></symbol>
+    <symbol id="i-AS" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19.5 4.5 9 15l-1.5-1.5L18 3l1.5 1.5Z"/><path d="m6 12 6 6M5 19l3-3"/></g></symbol>
+    <symbol id="i-SP" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" d="M12 20s-7.5-4.4-7.5-10A4.3 4.3 0 0 1 12 7.4 4.3 4.3 0 0 1 19.5 10c0 5.6-7.5 10-7.5 10Z"/><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M12 10.5v5M9.5 13h5"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/></g></symbol>
+    <symbol id="i-star" viewBox="0 0 24 24"><path stroke="currentColor" stroke-width="1.9" stroke-linejoin="round" fill="none" d="m12 3.6 2.6 5.3 5.8.8-4.2 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8L12 3.6Z"/></symbol>
+    <symbol id="i-starf" viewBox="0 0 24 24"><path fill="currentColor" d="m12 3.6 2.6 5.3 5.8.8-4.2 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8L12 3.6Z"/></symbol>
+    <symbol id="i-gadget" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="5" y="5" width="14" height="14" rx="4.5"/><path d="M12 8.5v7M8.5 12h7" stroke-linecap="round"/></g></symbol>
+    <symbol id="i-hyper" viewBox="0 0 24 24"><path fill="currentColor" d="M13.5 2.5 5 13.2h5.6L9.8 21.5 19 10.4h-5.8l.3-7.9Z"/></symbol>
+    <symbol id="i-gear" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path stroke-linejoin="round" d="M12 2.8 13.6 5l2.7-.3.6 2.6 2.4 1.3-.9 2.5 1.5 2.3-2 1.8.2 2.7-2.6.5-1.2 2.4-2.5-1-2.4 1.3-1.6-2.2-2.7-.3.1-2.7-2-1.9 1.6-2.2-.8-2.6L7.5 7l.8-2.6 2.6.5L12 2.8Z"/></g></symbol>
+    <symbol id="i-share" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3.5M8 7.5l4-4 4 4"/><path d="M8.5 11H6.5a1.5 1.5 0 0 0-1.5 1.5v6A1.5 1.5 0 0 0 6.5 20h11a1.5 1.5 0 0 0 1.5-1.5v-6A1.5 1.5 0 0 0 17.5 11h-2"/></g></symbol>
+    <symbol id="i-chev" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" d="m9 5 7 7-7 7"/></symbol>
+    <symbol id="i-down" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="m6 9 6 6 6-6"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></g></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z"/></symbol>
+    <symbol id="i-auto" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 4a8 8 0 0 1 0 16Z" fill="currentColor"/></symbol>
+    <symbol id="i-bulb" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2V16h5v-.1c0-.8.4-1.5 1-2A6 6 0 0 0 12 3Z"/></g></symbol>
+    <symbol id="i-swords" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 17.5 3 6V3h3l11.5 11.5M13 19l6-6M16 16l4 4M19 21l2-2"/><path d="M14.5 6.5 18 3h3v3l-3.5 3.5M5 14l4 4M7 17l-3 3M3 19l2 2"/></g></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" d="m6 6 12 12M18 6 6 18"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-person" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path stroke-linecap="round" d="M4.5 20.5c1-4 4-6 7.5-6s6.5 2 7.5 6"/></g></symbol>
+    <symbol id="i-draft" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></g></symbol>
+    <symbol id="i-team" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="3.2"/><circle cx="5.5" cy="10" r="2.4"/><circle cx="18.5" cy="10" r="2.4"/><path d="M7 20c.6-3.4 2.6-5.2 5-5.2s4.4 1.8 5 5.2M2 18.5c.4-2.2 1.6-3.4 3.4-3.6M22 18.5c-.4-2.2-1.6-3.4-3.4-3.6"/></g></symbol>
+    <symbol id="i-list" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M9 6.5h11M9 12h11M9 17.5h11"/><circle cx="4.5" cy="6.5" r="1" fill="currentColor"/><circle cx="4.5" cy="12" r="1" fill="currentColor"/><circle cx="4.5" cy="17.5" r="1" fill="currentColor"/></g></symbol>
+    <symbol id="i-split" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="4" width="7.5" height="16" rx="2.5"/><rect x="13.5" y="4" width="7.5" height="16" rx="2.5"/></g></symbol>
+    <symbol id="i-refresh" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19.5 12a7.5 7.5 0 1 1-2.2-5.3"/><path d="M19.5 4v4h-4"/></g></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></g></symbol>
+    <symbol id="i-NA" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9.2 9a3 3 0 1 1 4.3 2.7c-.9.4-1.5 1.2-1.5 2.2v.4"/><circle cx="12" cy="18" r=".6" fill="currentColor"/></g></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="10.5" width="14" height="10" rx="3"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/></g></symbol>
+  </defs>
+</svg>
+
+<header class="nav">
+  <div class="wrap nav-in">
+    <div class="brand"><div class="brand-mark" aria-hidden="true"><svg><use href="#i-swords"/></svg></div><span>Brawl Counter</span></div>
+    <div class="seg" role="tablist" aria-label="Seção" id="seg">
+      <span class="thumb" aria-hidden="true"></span>
+      <button role="tab" data-view="now" aria-selected="true">Agora</button>
+      <button role="tab" data-view="matchup" aria-selected="false">Matchups</button>
+      <button role="tab" data-view="draft" aria-selected="false">Draft</button>
+      <button role="tab" data-view="comps" aria-selected="false">Composições</button>
+      <button role="tab" data-view="ranking" aria-selected="false">Ranking</button>
+      <button role="tab" data-view="compare" aria-selected="false">Comparar</button>
+    </div>
+    <span class="spacer"></span>
+    <button class="icon-btn press" id="themeBtn" aria-label="Tema: automático"><svg><use href="#i-auto"/></svg></button>
+  </div>
+</header>
+
+<nav class="tabbar" role="tablist" aria-label="Seção" id="tabbar">
+  <button role="tab" data-view="now" aria-selected="true"><svg aria-hidden="true"><use href="#i-clock"/></svg>Agora</button>
+  <button role="tab" data-view="matchup" aria-selected="false"><svg aria-hidden="true"><use href="#i-person"/></svg>Matchups</button>
+  <button role="tab" data-view="draft" aria-selected="false"><svg aria-hidden="true"><use href="#i-draft"/></svg>Draft</button>
+  <button role="tab" data-view="comps" aria-selected="false"><svg aria-hidden="true"><use href="#i-team"/></svg>Times</button>
+  <button role="tab" data-view="ranking" aria-selected="false"><svg aria-hidden="true"><use href="#i-list"/></svg>Ranking</button>
+</nav>
+
+<div class="wrap hero-head">
+  <h1 class="large-title" id="pageTitle">Agora</h1>
+  <p class="sub" id="pageSub">Carregando dados…</p>
+  <div class="search" id="searchBox">
+    <label class="search-field" for="q">
+      <svg aria-hidden="true"><use href="#i-search"/></svg>
+      <input id="q" type="search" autocomplete="off" spellcheck="false" placeholder="Buscar brawler, ex.: Piper" role="combobox" aria-expanded="false" aria-controls="acList" aria-autocomplete="list">
+      <span class="kbd hide-sm" aria-hidden="true">/</span>
+    </label>
+    <div class="ac" id="acList" role="listbox" hidden></div>
+  </div>
+</div>
+
+<main class="wrap" id="main">
+  <div id="loading" class="loading-wrap" aria-live="polite">
+    <div class="skel" style="height:200px;border-radius:26px"></div>
+    <div class="duo"><div class="skel" style="height:220px;border-radius:18px"></div><div class="skel" style="height:220px;border-radius:18px"></div></div>
+    <div class="skel" style="height:140px;border-radius:18px"></div>
+  </div>
+  <div id="err" class="pcard errbox" hidden>
+    <b style="font-size:17px">Não foi possível carregar os dados</b>
+    <span style="color:var(--fg-2)">A conexão falhou ao buscar a base de brawlers. Verifique a internet e tente de novo.</span>
+    <button class="btn press" id="retry"><svg><use href="#i-refresh"/></svg>Tentar de novo</button>
+  </div>
+
+  <!-- AGORA -->
+  <section class="view" id="view-now" hidden>
+    <div id="nowOut" class="group"></div>
+  </section>
+
+  <!-- MATCHUPS -->
+  <section class="view" id="view-matchup" hidden>
+    <div class="mu">
+      <div class="profile" id="profile" aria-live="polite"></div>
+      <aside class="picker" aria-label="Escolher brawler">
+        <h2>Brawlers <small id="pickCount"></small></h2>
+        <div class="hscroll" id="pickFilters" role="group" aria-label="Filtrar por função"></div>
+        <div id="favWrap" hidden><div class="mini-h">Favoritos</div><div class="mini-row" id="favRow"></div></div>
+        <div id="recWrap" hidden><div class="mini-h">Vistos recentemente</div><div class="mini-row" id="recRow"></div></div>
+        <div class="mini-h">Todos</div>
+        <div class="grid" id="grid"></div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- DRAFT -->
+  <section class="view draft" id="view-draft" hidden>
+    <div class="hscroll" id="dModes" role="group" aria-label="Modo de jogo"></div>
+    <div class="teams">
+      <div class="pcard team">
+        <div class="team-h"><h3><span class="team-dot"></span>Time inimigo</h3><span id="exTag"></span></div>
+        <div class="slots" id="enemySlots"></div>
+      </div>
+      <div class="pcard team">
+        <div class="team-h"><h3><span class="team-dot ally"></span>Seu time <span class="tag">opcional</span></h3><button class="ghost press" id="dClear">Limpar tudo</button></div>
+        <div class="slots two" id="allySlots"></div>
+      </div>
+    </div>
+    <div id="draftOut" class="draft"></div>
+  </section>
+
+  <!-- COMPOSIÇÕES -->
+  <section class="view" id="view-comps" hidden>
+    <div class="hscroll" id="cModes" role="group" aria-label="Modo de jogo" style="margin-bottom:16px"></div>
+    <div id="compsOut" class="group"></div>
+  </section>
+
+  <!-- RANKING -->
+  <section class="view" id="view-ranking" hidden>
+    <div class="filters">
+      <div class="hscroll" id="rkClasses" role="group" aria-label="Filtrar por função"></div>
+      <div class="frow">
+        <div class="sel"><select id="rkRarity" aria-label="Raridade"></select></div>
+        <div class="sel"><select id="rkMode" aria-label="Modo de jogo"></select></div>
+        <button class="ghost press" id="rkReset">Limpar filtros</button>
+        <span class="count num" id="rkCount"></span>
+      </div>
+    </div>
+    <div class="tbl-wrap"><table><thead><tr id="rkHead"></tr></thead><tbody id="rkBody"></tbody></table></div>
+  </section>
+
+  <!-- COMPARAR -->
+  <section class="view" id="view-compare" hidden>
+    <div class="cmp-top">
+      <button class="slot press" id="slotA" aria-label="Trocar brawler A"></button>
+      <div class="vs" aria-hidden="true">VS</div>
+      <button class="slot press" id="slotB" aria-label="Trocar brawler B"></button>
+    </div>
+    <div class="pcard verdict" id="verdict"></div>
+    <div class="list cmp-table" id="cmpTable"></div>
+  </section>
+</main>
+
+<footer class="wrap foot">
+  <div class="src-grid">
+    <div>
+      <h3>De onde vêm os números</h3>
+      <ul>
+        <li><b>Ao vivo:</b> <a href="https://developer.brawlstars.com/" target="_blank" rel="noopener">API oficial do Brawl Stars</a>. A cada hora o site lê as partidas recentes dos jogadores do topo do ranking (global e países) e recalcula win rate, pick rate, modos, mapas, matchups, sinergia e trios numa janela de 7 dias. A rotação de mapas também vem da API oficial.</li>
+        <li><b>Reserva:</b> quando um número ao vivo ainda não tem amostra suficiente, o site usa o dado de <a href="https://www.brawlplanet.com/brawlers" target="_blank" rel="noopener">BrawlPlanet</a> e <a href="https://seemeta.com/en/brawl-stars/tier-list" target="_blank" rel="noopener">SeeMeta</a>, marcado como “referência”.</li>
+        <li><b>Builds:</b> <a href="https://brawltime.ninja/tier-list/brawler" target="_blank" rel="noopener">Brawl Time Ninja</a>, win rate de cada item ou vantagem em pontos quando é o que a fonte mostra.</li>
+        <li><b>Melhores trios:</b> ao vivo quando há partidas suficientes do trio; senão, SeeMeta.</li>
+        <li><b>Imagens:</b> <a href="https://github.com/Brawlify/CDN" target="_blank" rel="noopener">Brawlify CDN</a>. <span id="footDate"></span></li>
+      </ul>
+    </div>
+    <div>
+      <h3>Limites dos dados</h3>
+      <ul>
+        <li>Nenhuma fonte pública mede a build por modo ou por confronto. A build mostrada é a de maior win rate geral, a mesma em qualquer modo.</li>
+        <li>O Draft e o counter solo são calculados pelo site a partir da matriz de matchups ao vivo, da sinergia entre parceiros e da força no modo. Pares sem dado contam como neutros.</li><li>Builds não existem na API oficial (ela não registra acessórios por partida). Elas vêm do Brawl Time Ninja e são atualizadas toda semana.</li>
+        <li>Modos com poucas partidas no topo (como Roubo nesta temporada) mostram trios calculados, não medidos.</li>
+        <li>Nomes de itens aparecem em inglês, como nas fontes.</li>
+        <li>As dicas de “Como jogar contra” são análise do kit de cada brawler, não estatística.</li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* =========================================================
+   Brawl Counter — os dados ficam em data.json (gerado pelo
+   pipeline/build_data.py) e as imagens em assets.json.
+   ========================================================= */
+const SHARE_BASE = "";
+const LIVE_URL = "data/live.json", STATIC_URL = "data/static.json", POLL_MS = 5*60*1000;
+
+const CLS = {DD:{pt:'Causador de Dano',short:'Dano'},TK:{pt:'Tanque',short:'Tanque'},MK:{pt:'Atirador de Elite',short:'Atirador'},AR:{pt:'Artilharia',short:'Artilharia'},CT:{pt:'Controlador',short:'Controle'},AS:{pt:'Assassino',short:'Assassino'},SP:{pt:'Suporte',short:'Suporte'},NA:{pt:'Função a definir',short:'Novo'}};
+const CLS_ORDER=['DD','TK','MK','AR','CT','AS','SP'];
+const RAR={'?':'Novo',I:'Inicial',R:'Raro',SR:'Super Raro',E:'Épico',M:'Mítico',L:'Lendário',UL:'Ultra Lendário'};
+const RAR_ORDER=['I','R','SR','E','M','L','UL'];
+const MODES={GG:'Pique-Gema',BB:'Futebrawl',HE:'Roubo',BO:'Caça-Estrelas',HZ:'Zona Estratégica',KO:'Nocaute',WO:'Extermínio',HK:'Hóquei Brawl',AR:'Arena Brawl',BK:'Basquete Brawl',VB:'Vôlei Brawl',DU:'Duelos',WO5:'Extermínio 5v5',KO5:'Nocaute 5v5',BB5:'Futebrawl 5v5',GG5:'Pique-Gema 5v5',PB:'Pintura Brawl',TE:'Fuga de Troféus'};
+const RANKED_MODES=['GG','BB','HE','BO','HZ','KO'];
+const TIER_C={'S+':'#e8454f','S':'#f2793a','A':'#e3a21a','B':'#3fae5a','C':'#3a8bd6','D':'#8a8a93'};
+const GEAR_PT={Damage:'Dano',Shield:'Escudo',Health:'Vida',Vision:'Visão',Speed:'Velocidade','Gadget Cooldown':'Recarga de acessório','Reload Speed':'Recarga de munição','Pet Power':'Poder do pet','Thicc Head':'Cabeça dura','Super Charge':'Carga do super'};
+
+let DATA=[], ASSETS={img:{},mode:{}}, TRIOS={}, META={}, LIVE=null, STATIC=null, ROT=[], MAPS={};
+let byName=new Map(), bySlug=new Map();
+let MU=new Map(), SY=new Map();
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const norm=s=>s.normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().replace(/[^a-z0-9]/g,'');
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const fmt=(n,d=1)=>n.toLocaleString('pt-BR',{minimumFractionDigits:d,maximumFractionDigits:d});
+const sgn=(n,d=1)=>(n>0?'+':n<0?'−':'±')+fmt(Math.abs(n),d);
+
+const store={get(k,d){try{const v=localStorage.getItem('bc:'+k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem('bc:'+k,JSON.stringify(v))}catch(e){}}};
+
+const state={
+  view:'now', sel:'piper', pickCls:'all',
+  favs:new Set(store.get('favs',[])), recent:store.get('recent',[]),
+  rk:{cls:new Set(),rar:'all',mode:'all',sort:'wr',dir:-1},
+  cmp:['piper','ash'], theme:store.get('theme','auto'),
+  draft:{mode:store.get('dmode','any'),enemy:[null,null,null],ally:[null,null],example:true},
+  cmode:'GG', showAll:{st:false,wk:false}
+};
+
+/* ---------- modelo: matriz de matchups e sinergia ---------- */
+const key=(a,b)=>a+'|'+b;
+function buildModel(){
+  MU=new Map(); SY=new Map();
+  const add=(m,a,b,v)=>{const k=key(a,b);const x=m.get(k)||[];x.push(v);m.set(k,x)};
+  for(const b of DATA){
+    for(const [n,p] of b.st){add(MU,b.n,n,p);add(MU,n,b.n,-p)}
+    for(const [n,p] of b.wk){add(MU,b.n,n,-p);add(MU,n,b.n,p)}
+    for(const [n,p] of (b.mt||[])){add(SY,b.n,n,p);add(SY,n,b.n,p)}
+  }
+  for(const m of [MU,SY]) for(const [k,v] of m) m.set(k,v.reduce((a,c)=>a+c,0)/v.length);
+}
+const mu=(a,b)=>MU.has(key(a,b))?MU.get(key(a,b)):null;
+const sy=(a,b)=>SY.get(key(a,b))||0;
+const power=b=>b.wr==null?0:b.wr-50;
+const modeWr=(b,m)=>{if(!b.mr)return null;const x=b.m.find(([c])=>c===m);return x?x[1]:null};
+const modePow=(b,m)=>{const w=modeWr(b,m);return w==null?0:w-50};
+
+/* ---------- componentes ---------- */
+function icon(id,cls=''){return `<svg class="${cls}" aria-hidden="true"><use href="#i-${id}"/></svg>`}
+function av(b,size){
+  const img=ASSETS.img[b.n]||(b.id?`https://cdn.brawlify.com/brawlers/borderless/${16000000+b.id}.png`:null), st=`--cc:var(--c-${b.c});--rc:var(--r-${b.r==='?'?'M':b.r})${size?`;--s:${size}px`:''}`;
+  if(!img) return `<span class="av mono-bg" style="${st}" aria-hidden="true"><span class="mono">${esc(b.n[0])}</span></span>`;
+  return `<span class="av loading" style="${st}" aria-hidden="true"><img alt="" src="${img}" decoding="async" onload="this.classList.add('ok');this.parentNode.classList.remove('loading')" onerror="avFail(this)" data-l="${esc(b.n[0])}"></span>`;
+}
+function avFail(img){const p=img.parentNode;p.classList.remove('loading');p.classList.add('mono-bg');p.innerHTML='<span class="mono">'+img.dataset.l+'</span>'}
+const clsChip=b=>`<span class="chip cls" style="--cc:var(--c-${b.c})">${icon(b.c)}${CLS[b.c].pt}</span>`;
+const rarChip=b=>`<span class="chip" style="--rc:var(--r-${b.r})"><span class="dot"></span>${RAR[b.r]}</span>`;
+const wrClass=v=>v==null?'':v>=52?'good':v<=47?'bad':'mid';
+const ptsClass=v=>v==null?'muted':v>0.4?'good':v<-0.4?'bad':'muted';
+const MODE_ID={GG:0,HE:2,BO:3,BB:5,HZ:17,KO:20};
+const modeIcon=(c,size=18)=>{const u=ASSETS.mode[c]||(MODE_ID[c]!=null?`https://cdn.brawlify.com/game-modes/regular/${48000000+MODE_ID[c]}.png`:null);return u?`<img src="${u}" alt="" width="${size}" height="${size}" onerror="this.remove()">`:''};
+
+/* itens de build */
+const ITEM_T={gd:['Acessório','gadget','var(--i-gd)'],sp:['Poder de estrela','starf','var(--i-sp)'],hc:['Hipercarga','hyper','var(--i-hc)'],gr:['Engrenagens','gear','var(--i-gr)']};
+const gearName=n=>GEAR_PT[n]||n;
+function itemVal(it){ if(it.v==null) return ''; return it.k==='wr'?fmt(it.v)+'%':sgn(it.v)+' pts'; }
+function buildMini(b){
+  if(!b.b) return `<span class="mini-note" style="padding:0">Sem dados de build para ${esc(b.n)} nas fontes.</span>`;
+  const out=[], B=b.b;
+  if(B.gd[0]) out.push(['gd',B.gd[0].n]);
+  if(B.sp[0]) out.push(['sp',B.sp[0].n]);
+  if(B.hc[0]) out.push(['hc',B.hc[0].n]);
+  if(B.gr.length) out.push(['gr',B.gr.slice(0,2).map(g=>gearName(g.n)).join(' + ')]);
+  return `<div class="build-mini">${out.map(([t,n])=>`<span class="bchip" style="--ic:${ITEM_T[t][2]}" title="${ITEM_T[t][0]}">${icon(ITEM_T[t][1])}${esc(n)}</span>`).join('')}</div>`;
+}
+
+/* ---------- navegação ---------- */
+const TITLES={now:'Agora',matchup:'Matchups',draft:'Draft',comps:'Composições',ranking:'Ranking',compare:'Comparar'};
+const HASH={now:'agora',draft:'draft',comps:'composicoes',ranking:'ranking',compare:'comparar'};
+function moveThumb(){
+  const act=document.querySelector('#seg [aria-selected="true"]'), th=document.querySelector('#seg .thumb');
+  if(!act||!act.offsetWidth) return;
+  th.style.width=act.offsetWidth+'px'; th.style.transform=`translateX(${act.offsetLeft}px)`;
+}
+function setView(v,opts={}){
+  state.view=v;
+  document.querySelectorAll('[role=tab][data-view]').forEach(t=>t.setAttribute('aria-selected',String(t.dataset.view===v)));
+  moveThumb();
+  ['now','matchup','draft','comps','ranking','compare'].forEach(k=>{$('#view-'+k).hidden=k!==v});
+  $('#searchBox').hidden=v==='now'&&innerWidth<761;
+  $('#pageTitle').textContent=TITLES[v];
+  if(v==='draft'){document.documentElement.style.setProperty('--accent','var(--c-MK)');renderDraft()}
+  if(v==='comps'){document.documentElement.style.setProperty('--accent','var(--c-SP)');renderComps()}
+  if(v==='ranking'){document.documentElement.style.setProperty('--accent','var(--c-MK)');renderRanking(true)}
+  if(v==='compare') renderCompare();
+  if(v==='now'){document.documentElement.style.setProperty('--accent','var(--c-AR)');renderNow()}
+  if(v==='matchup'){const b=bySlug.get(state.sel); if(b) document.documentElement.style.setProperty('--accent',`var(--c-${b.c})`)}
+  if(!opts.keepHash) setHash(v==='matchup'?state.sel:HASH[v]);
+  if(!opts.noScroll) window.scrollTo({top:0,behavior:reduce?'auto':'smooth'});
+}
+function setHash(t){try{history.replaceState(null,'','#'+t)}catch(e){}}
+function bindTabs(root){
+  root.addEventListener('click',e=>{const t=e.target.closest('[data-view]'); if(t&&t.dataset.view!==state.view) setView(t.dataset.view)});
+  root.addEventListener('keydown',e=>{
+    if(!['ArrowLeft','ArrowRight'].includes(e.key)) return;
+    const v=Object.keys(TITLES), i=v.indexOf(state.view), n=v[(i+(e.key==='ArrowRight'?1:v.length-1))%v.length];
+    setView(n); root.querySelector(`[data-view="${n}"]`).focus();
+  });
+}
+bindTabs($('#seg')); bindTabs($('#tabbar'));
+addEventListener('resize',moveThumb);
+
+/* tema */
+function applyTheme(){
+  const t=state.theme, r=document.documentElement;
+  t==='auto'?r.removeAttribute('data-theme'):r.setAttribute('data-theme',t);
+  const m={auto:['auto','Tema: automático'],light:['sun','Tema: claro'],dark:['moon','Tema: escuro']};
+  $('#themeBtn').innerHTML=icon(m[t][0]); $('#themeBtn').setAttribute('aria-label',m[t][1]); $('#themeBtn').title=m[t][1];
+}
+$('#themeBtn').addEventListener('click',()=>{state.theme={auto:'light',light:'dark',dark:'auto'}[state.theme];store.set('theme',state.theme);applyTheme();toast({auto:'Tema automático',light:'Tema claro',dark:'Tema escuro'}[state.theme])});
+
+/* toast */
+let toastT;
+function toast(msg){document.querySelectorAll('.toast').forEach(t=>t.remove());const t=document.createElement('div');t.className='toast';t.setAttribute('role','status');t.textContent=msg;document.body.appendChild(t);clearTimeout(toastT);toastT=setTimeout(()=>t.remove(),2500)}
+
+function countUp(el,to,dec=1){
+  if(!el) return;
+  if(reduce||to==null){el.textContent=to==null?'—':fmt(to,dec);return}
+  const t0=performance.now(),from=Math.max(0,to-12),dur=900;
+  const step=t=>{const p=Math.min(1,(t-t0)/dur),e=1-Math.pow(1-p,4);el.textContent=fmt(from+(to-from)*e,dec);if(p<1)requestAnimationFrame(step)};
+  requestAnimationFrame(step);
+}
+function fillBars(root){requestAnimationFrame(()=>requestAnimationFrame(()=>{root.querySelectorAll('.bar i[data-w]').forEach(i=>{i.style.width=i.dataset.w+'%'})}))}
+function animIn(el){if(reduce)return;el.classList.remove('swap-in');void el.offsetWidth;el.classList.add('swap-in')}
+
+/* ---------- PERFIL ---------- */
+function matchRow(name,pts,good){
+  const b=byName.get(name); if(!b) return '';
+  const w=Math.min(100,Math.abs(pts)/11*100);
+  return `<button class="row press" data-go="${b.s}" aria-label="Abrir ${esc(b.n)}">${av(b)}
+    <div style="min-width:0"><div class="t">${esc(b.n)}</div><div class="s" style="--cc:var(--c-${b.c})">${icon(b.c)}${CLS[b.c].short}</div></div>
+    <div class="r"><span class="val num ${good?'good':'bad'}">${good?'+':'−'}${fmt(Math.abs(pts))} pts</span><span class="bar"><i data-w="${w}" style="--b:var(--${good?'good':'bad'}-bar)"></i></span></div></button>`;
+}
+function modeRow([code,wr],ranked){
+  const w=Math.max(4,Math.min(100,(wr-30)/50*100)), c=wrClass(wr);
+  return `<div class="row"><span class="mode-ic">${modeIcon(code,30)||icon('swords')}</span>
+    <div style="min-width:0"><div class="t">${MODES[code]||code}</div><div class="s">${ranked?'Win rate no modo':'Partidas normais'}</div></div>
+    <div class="r"><span class="val num ${c}">${fmt(wr)}%</span><span class="bar"><i data-w="${w}" style="--b:var(--${c||'mid'}-bar)"></i></span></div></div>`;
+}
+function buildRows(b){
+  if(!b.b) return `<div class="empty">As fontes ainda não publicaram dados de build para ${esc(b.n)}.</div>`;
+  const B=b.b, rows=[];
+  const row=(t,main,alt,val)=>`<div class="row"><span class="it-ic" style="--ic:${ITEM_T[t][2]}">${icon(ITEM_T[t][1])}</span>
+    <div style="min-width:0"><div class="s" style="margin:0 0 2px">${ITEM_T[t][0]}</div><div class="t">${esc(main)}</div>${alt?`<div class="it-alt">Alternativa: ${esc(alt)}</div>`:''}</div>
+    <div class="r" style="min-width:0"><span class="val num ${val?'':'muted'}">${val||'sem número'}</span></div></div>`;
+  if(B.gd[0]) rows.push(row('gd',B.gd[0].n,B.gd[1]&&B.gd[1].n,itemVal(B.gd[0])));
+  if(B.sp[0]) rows.push(row('sp',B.sp[0].n,B.sp[1]&&B.sp[1].n,itemVal(B.sp[0])));
+  if(B.hc[0]) rows.push(row('hc',B.hc[0].n,null,itemVal(B.hc[0])));
+  if(B.gr.length) rows.push(row('gr',B.gr.slice(0,2).map(g=>gearName(g.n)).join(' + '),B.gr[2]&&gearName(B.gr[2].n),itemVal(B.gr[0])));
+  return rows.join('')||`<div class="empty">Sem itens listados.</div>`;
+}
+function renderProfile(slug,animate=true){
+  const b=bySlug.get(slug)||DATA[0]; state.sel=b.s;
+  document.documentElement.style.setProperty('--accent',`var(--c-${b.c})`);
+  const fav=state.favs.has(b.s), best=byName.get(b.wk[0]?.[0]);
+  const nSt=state.showAll.st?5:3, nWk=state.showAll.wk?5:3;
+  const mates=(b.mt||[]).slice(0,3);
+  $('#profile').innerHTML=`
+    <article class="pcard">
+      <div class="p-actions">
+        <button class="icon-btn press" id="favBtn" aria-pressed="${fav}" aria-label="${fav?'Remover dos favoritos':'Adicionar aos favoritos'}" title="Favorito">${icon('star')}</button>
+        <button class="icon-btn press" id="cmpBtn" aria-label="Comparar ${esc(b.n)} com outro" title="Comparar">${icon('split')}</button>
+        <button class="icon-btn press" id="shareBtn" aria-label="Copiar link deste brawler" title="Copiar link">${icon('share')}</button>
+      </div>
+      <div class="p-hero">${av(b)}<div style="min-width:0"><h2 class="p-name">${esc(b.n)}</h2><div class="chips">${clsChip(b)}${rarChip(b)}</div></div></div>
+      <div class="stats">
+        <div class="stat"><span class="k">Win rate</span><span class="v num"><span id="wrNum">—</span>${b.wr!=null?'<small>%</small>':''}</span><span class="h">${b.wr==null?'sem dados ainda':b.live?`<span class="live-dot"></span>ao vivo · ${fmt(b.g,0)} partidas`:'referência (SeeMeta)'}</span></div>
+        <div class="stat"><span class="k">Pick rate</span><span class="v num"><span id="prNum">—</span>${b.pr!=null?'<small>%</small>':''}</span><span class="h">${b.pr!=null?(b.pr<0.3?'pouco jogado':'das escolhas'):'acesso antecipado'}</span></div>
+        <div class="stat"><span class="k">Tier</span><span class="v">${b.t?`<span class="tier" style="--tc:${TIER_C[b.t]}">${b.t}</span>`:'—'}</span><span class="h">${b.t?(b.live?'pelo win rate ao vivo':'SeeMeta'):'ainda sem tier'}</span></div>
+      </div>
+    </article>
+    <div class="duo">
+      <section class="group"><div class="gh"><h2>Forte contra</h2><span class="note">${b.muLive?'<span class="src-tag live">ao vivo</span>':'<span class="src-tag">referência</span>'} vantagem sobre o esperado</span></div>
+        <div class="list">${b.st.slice(0,nSt).map(([n,p])=>matchRow(n,p,true)).join('')}${b.st.length>3?`<button class="more press" data-more="st">${state.showAll.st?'Mostrar menos':'Mostrar os 5'}</button>`:''}</div></section>
+      <section class="group"><div class="gh"><h2>Fraco contra</h2><span class="note">quem mais pune ${esc(b.n)}</span></div>
+        <div class="list">${b.wk.slice(0,nWk).map(([n,p])=>matchRow(n,-p,false)).join('')}${b.wk.length>3?`<button class="more press" data-more="wk">${state.showAll.wk?'Mostrar menos':'Mostrar os 5'}</button>`:''}</div></section>
+    </div>
+    ${best?`<section class="group"><div class="gh"><h2>Melhor pick contra ${esc(b.n)}</h2></div>
+      <div class="pcard best">
+        <button class="best-main press" data-go="${best.s}" aria-label="Abrir ${esc(best.n)}">${av(best)}
+          <div style="min-width:0"><div class="kicker">Counter nº 1 · +${fmt(b.wk[0][1])} pts</div><div class="best-name">${esc(best.n)}</div><p class="best-why">${esc(b.why)}</p></div></button>
+        <div><div class="mini-note" style="padding:0 0 8px">Build de ${esc(best.n)}</div>${buildMini(best)}</div>
+        <div class="alts"><span>Também funcionam:</span>${b.wk.slice(1,3).map(([n,p])=>{const x=byName.get(n);return `<button class="alt press" data-go="${x.s}">${av(x)}${esc(x.n)} <b class="num">+${fmt(p)}</b></button>`}).join('')}</div>
+      </div></section>`:''}
+    <section class="group"><div class="gh"><h2>Build recomendada</h2><span class="note">maior win rate com cada item</span></div>
+      <div class="list">${buildRows(b)}</div>
+      ${b.b&&b.b.note?`<p class="mini-note">Resumo da fonte: ${esc(b.b.note)}.</p>`:''}</section>
+    <section class="group"><div class="gh"><h2>Como jogar contra</h2><span class="note">análise do kit</span></div>
+      <div class="list tips">${b.tips.map(t=>`<div class="tip"><span class="ti">${icon('bulb')}</span><p>${esc(t)}</p></div>`).join('')}</div></section>
+    <div class="duo">
+      <section class="group"><div class="gh"><h2>Melhores modos</h2><span class="note">${b.mLive?'<span class="src-tag live">ao vivo</span> topo do ranking, 7 dias':b.mr?'referência: ranqueada, Diamante 1+':'acesso antecipado'}</span></div>
+        <div class="list">${b.m.slice(0,3).map(m=>modeRow(m,b.mr)).join('')}</div></section>
+      <section class="group"><div class="gh"><h2>Melhores parceiros</h2><span class="note">sinergia no mesmo time</span></div>
+        <div class="list">${mates.length?mates.map(([n,p])=>matchRow(n,p,true)).join(''):'<div class="empty">Sem dados de sinergia.</div>'}</div></section>
+    </div>`;
+  const el=$('#profile'); if(animate) animIn(el);
+  countUp($('#wrNum'),b.wr); countUp($('#prNum'),b.pr);
+  fillBars(el);
+  $('#favBtn').addEventListener('click',()=>toggleFav(b.s));
+  $('#shareBtn').addEventListener('click',()=>share(b));
+  $('#cmpBtn').addEventListener('click',()=>{state.cmp=[b.s,state.cmp[1]===b.s?state.cmp[0]:state.cmp[1]];setView('compare')});
+  el.querySelectorAll('[data-more]').forEach(x=>x.addEventListener('click',()=>{state.showAll[x.dataset.more]=!state.showAll[x.dataset.more];renderProfile(b.s,false)}));
+  updatePickerSelection();
+}
+function select(slug,{push=true,scroll=true}={}){
+  if(!bySlug.has(slug)) return;
+  if(state.view!=='matchup') setView('matchup',{keepHash:true,noScroll:true});
+  state.showAll={st:false,wk:false};
+  const go=()=>renderProfile(slug,true);
+  if(document.startViewTransition&&!reduce&&state.sel!==slug) document.startViewTransition(go); else go();
+  setHash(slug);
+  if(push){state.recent=[slug,...state.recent.filter(s=>s!==slug)].slice(0,10);store.set('recent',state.recent);renderMiniRows()}
+  if(scroll){const top=$('#profile').getBoundingClientRect().top+scrollY-80; if(scrollY>top+40||innerWidth<980) window.scrollTo({top:Math.max(0,top-20),behavior:reduce?'auto':'smooth'})}
+}
+function toggleFav(slug){
+  const on=!state.favs.has(slug); on?state.favs.add(slug):state.favs.delete(slug); store.set('favs',[...state.favs]);
+  const btn=$('#favBtn'); if(btn){btn.setAttribute('aria-pressed',on);btn.setAttribute('aria-label',on?'Remover dos favoritos':'Adicionar aos favoritos')}
+  renderMiniRows(); toast(on?'Adicionado aos favoritos':'Removido dos favoritos');
+}
+async function copyText(text,okMsg){
+  try{await navigator.clipboard.writeText(text);toast(okMsg)}
+  catch(e){const ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();let ok=false;try{ok=document.execCommand('copy')}catch(_){}ta.remove();toast(ok?okMsg:'Copie este link: '+text)}
+}
+function share(b){copyText((SHARE_BASE||location.href.split('#')[0])+'#'+b.s,'Link de '+b.n+' copiado')}
+
+/* ---------- SELETOR ---------- */
+function clsFilterChips(cur,attr){
+  return [['all','Todos',null],...CLS_ORDER.map(c=>[c,CLS[c].short,c])].map(([k,l,c])=>`<button class="fchip press" data-${attr}="${k}" aria-pressed="${cur===k}" ${c?`style="--cc:var(--c-${c})"`:''}>${c?icon(c):''}${l}</button>`).join('');
+}
+function cell(b,extra=''){return `<button class="gcell press" data-go="${b.s}" aria-label="${esc(b.n)}, ${CLS[b.c].pt}" ${b.s===state.sel?'aria-current="true"':''} ${extra}>${av(b)}<span>${esc(b.n)}</span></button>`}
+function renderPickFilters(){$('#pickFilters').innerHTML=clsFilterChips(state.pickCls,'pc')}
+function renderGrid(){
+  const l=DATA.filter(b=>state.pickCls==='all'||b.c===state.pickCls).sort((a,b)=>a.n.localeCompare(b.n,'pt'));
+  $('#grid').innerHTML=l.length?l.map(b=>cell(b)).join(''):'<div class="empty">Nenhum brawler nesta função.</div>';
+  $('#pickCount').textContent=l.length+' de '+DATA.length;
+}
+function renderMiniRows(){
+  const f=[...state.favs].map(s=>bySlug.get(s)).filter(Boolean); $('#favWrap').hidden=!f.length; $('#favRow').innerHTML=f.map(b=>cell(b)).join('');
+  const r=state.recent.map(s=>bySlug.get(s)).filter(Boolean); $('#recWrap').hidden=r.length<2; $('#recRow').innerHTML=r.map(b=>cell(b)).join('');
+}
+function updatePickerSelection(){document.querySelectorAll('.picker .gcell').forEach(c=>c.dataset.go===state.sel?c.setAttribute('aria-current','true'):c.removeAttribute('aria-current'))}
+$('#pickFilters').addEventListener('click',e=>{const t=e.target.closest('[data-pc]');if(!t)return;state.pickCls=t.dataset.pc;renderPickFilters();renderGrid()});
+document.addEventListener('click',e=>{const g=e.target.closest('[data-go]');if(!g||g.closest('#sheet'))return;select(g.dataset.go)});
+
+/* ---------- BUSCA ---------- */
+const q=$('#q'), ac=$('#acList'); let acIdx=0, acItems=[];
+function search(term){
+  const t=norm(term); if(!t) return [];
+  return DATA.map(b=>{const n=norm(b.n),i=n.indexOf(t),c=norm(CLS[b.c].pt).includes(t)?1:0;return{b,score:i===0?0:i>0?1:c?2:9}}).filter(x=>x.score<9).sort((a,b)=>a.score-b.score||a.b.n.localeCompare(b.b.n)).slice(0,8).map(x=>x.b);
+}
+function renderAc(){
+  acItems=search(q.value);
+  if(!q.value.trim()){ac.hidden=true;q.setAttribute('aria-expanded','false');return}
+  ac.hidden=false;q.setAttribute('aria-expanded','true');
+  if(!acItems.length){ac.innerHTML=`<div class="ac-empty">Nenhum brawler com “${esc(q.value)}”.</div>`;return}
+  acIdx=Math.min(acIdx,acItems.length-1);
+  ac.innerHTML=acItems.map((b,i)=>`<button class="ac-item" role="option" id="ac-${i}" aria-selected="${i===acIdx}" data-ac="${b.s}">${av(b,36)}<span style="font-weight:600">${esc(b.n)}</span><span class="meta">${CLS[b.c].short}${b.wr!=null?' · '+fmt(b.wr)+'%':''}</span></button>`).join('');
+  q.setAttribute('aria-activedescendant','ac-'+acIdx);
+}
+function pickAc(s){q.value='';ac.hidden=true;q.setAttribute('aria-expanded','false');q.blur();select(s)}
+q.addEventListener('input',()=>{acIdx=0;renderAc()});
+q.addEventListener('focus',renderAc);
+q.addEventListener('keydown',e=>{
+  if(ac.hidden) return;
+  if(e.key==='ArrowDown'){e.preventDefault();acIdx=(acIdx+1)%Math.max(1,acItems.length);renderAc()}
+  else if(e.key==='ArrowUp'){e.preventDefault();acIdx=(acIdx-1+acItems.length)%Math.max(1,acItems.length);renderAc()}
+  else if(e.key==='Enter'){e.preventDefault();if(acItems[acIdx])pickAc(acItems[acIdx].s)}
+  else if(e.key==='Escape'){q.value='';ac.hidden=true;q.setAttribute('aria-expanded','false')}
+});
+ac.addEventListener('mousedown',e=>e.preventDefault());
+ac.addEventListener('click',e=>{const t=e.target.closest('[data-ac]');if(t)pickAc(t.dataset.ac)});
+document.addEventListener('click',e=>{if(!e.target.closest('#searchBox')){ac.hidden=true;q.setAttribute('aria-expanded','false')}});
+document.addEventListener('keydown',e=>{if(e.key==='/'&&!/input|textarea|select/i.test(document.activeElement.tagName)&&!$('#sheet')){e.preventDefault();q.focus()}});
+
+/* ---------- FOLHA DE SELEÇÃO (reutilizável) ---------- */
+let lastFocus=null;
+function openPicker({title,current,disabled=new Set(),onPick}){
+  lastFocus=document.activeElement;
+  let cls='all';
+  const bg=document.createElement('div'); bg.className='sheet-bg'; bg.id='sheet';
+  bg.innerHTML=`<div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetT"><div class="grab" aria-hidden="true"></div>
+    <div class="sheet-h"><h3 id="sheetT">${esc(title)}</h3><button class="icon-btn press" id="sheetX" aria-label="Fechar">${icon('x')}</button></div>
+    <label class="search-field" for="sq">${icon('search')}<input id="sq" type="search" placeholder="Buscar" autocomplete="off"></label>
+    <div class="hscroll" id="sCls"></div><div class="grid" id="sgrid"></div></div>`;
+  document.body.appendChild(bg); document.body.style.overflow='hidden';
+  const draw=()=>{
+    $('#sCls').innerHTML=clsFilterChips(cls,'sc');
+    const t=norm($('#sq').value);
+    const l=DATA.filter(b=>(!t||norm(b.n).includes(t))&&(cls==='all'||b.c===cls)).sort((a,b)=>a.n.localeCompare(b.n,'pt'));
+    $('#sgrid').innerHTML=l.length?l.map(b=>`<button class="gcell press" data-pick="${b.s}" ${current===b.s?'aria-current="true"':''} ${disabled.has(b.s)&&current!==b.s?'disabled aria-disabled="true" title="Já está em outro slot"':''}>${av(b)}<span>${esc(b.n)}</span></button>`).join(''):`<div class="empty" style="grid-column:1/-1">Nenhum brawler encontrado.</div>`;
+  };
+  draw(); $('#sq').addEventListener('input',draw);
+  bg.addEventListener('click',e=>{
+    if(e.target===bg||e.target.closest('#sheetX')) return closeSheet();
+    const c=e.target.closest('[data-sc]'); if(c){cls=c.dataset.sc;draw();return}
+    const p=e.target.closest('[data-pick]'); if(p&&!p.disabled){closeSheet();onPick(p.dataset.pick)}
+  });
+  bg.addEventListener('keydown',e=>{
+    if(e.key==='Escape') closeSheet();
+    if(e.key==='Enter'&&e.target.id==='sq'){e.preventDefault();const f=$('#sgrid [data-pick]:not([disabled])');if(f)f.click()}
+  });
+  setTimeout(()=>$('#sq')&&$('#sq').focus(),60);
+}
+function closeSheet(){const s=$('#sheet');if(s)s.remove();document.body.style.overflow='';if(lastFocus&&lastFocus.isConnected)lastFocus.focus()}
+
+/* =========================================================
+   DRAFT: counter solo e composição counter
+   ========================================================= */
+function soloScore(c,E,mode){
+  let sum=0, known=0; const parts=[];
+  for(const e of E){const v=mu(c.n,e.n); parts.push([e,v]); if(v!=null){sum+=v;known++}}
+  const mp=mode!=='any'?modePow(c,mode):0;
+  return {c,score:sum+0.35*power(c)+0.25*mp, sum, known, parts, mp};
+}
+function bestSolos(E,mode,exclude){
+  return DATA.filter(b=>!exclude.has(b.s)).map(b=>soloScore(b,E,mode)).sort((a,b)=>b.score-a.score);
+}
+function trioScore(T,E,mode){
+  let s=0; const per=T.map(x=>soloScore(x,E,mode)); per.forEach(p=>s+=p.score);
+  const syn=[]; for(let i=0;i<3;i++)for(let j=i+1;j<3;j++){const v=sy(T[i].n,T[j].n); if(v) syn.push([T[i],T[j],v]); s+=0.5*v}
+  const cls=new Set(T.map(x=>x.c)); s-=1.5*(3-cls.size);
+  return {T,score:s,per,syn};
+}
+function bestTrios(E,mode,locked,exclude){
+  const need=3-locked.length;
+  const pool=bestSolos(E,mode,new Set([...exclude,...locked.map(b=>b.s)])).slice(0,need===3?28:40).map(x=>x.c);
+  const res=[];
+  const push=T=>res.push(trioScore(T,E,mode));
+  if(need===0) push(locked);
+  else if(need===1) pool.forEach(a=>push([...locked,a]));
+  else if(need===2){for(let i=0;i<pool.length;i++)for(let j=i+1;j<pool.length;j++)push([...locked,pool[i],pool[j]])}
+  else{for(let i=0;i<pool.length;i++)for(let j=i+1;j<pool.length;j++)for(let k=j+1;k<pool.length;k++)push([pool[i],pool[j],pool[k]])}
+  return res.sort((a,b)=>b.score-a.score);
+}
+function draftModeChips(){
+  const opts=[['any','Qualquer modo']].concat(RANKED_MODES.map(m=>[m,MODES[m]]));
+  $('#dModes').innerHTML=opts.map(([k,l])=>`<button class="fchip press" data-dm="${k}" aria-pressed="${state.draft.mode===k}">${k!=='any'?modeIcon(k):''}${l}</button>`).join('');
+}
+function slotHtml(s,side,i){
+  const b=s&&bySlug.get(s);
+  if(!b) return `<button class="slot-b empty-slot press" data-slot="${side}:${i}" aria-label="Escolher brawler"><span class="plus">${icon('plus')}</span><span class="nm" style="color:var(--fg-2)">Escolher</span></button>`;
+  return `<div style="position:relative;min-width:0;display:grid"><button class="slot-b press" data-slot="${side}:${i}" aria-label="Trocar ${esc(b.n)}">${av(b)}<span class="nm">${esc(b.n)}</span></button><button class="slot-x press" data-clear="${side}:${i}" aria-label="Remover ${esc(b.n)}">${icon('x')}</button></div>`;
+}
+function renderDraft(){
+  draftModeChips();
+  const D=state.draft;
+  $('#enemySlots').innerHTML=D.enemy.map((s,i)=>slotHtml(s,'enemy',i)).join('');
+  $('#allySlots').innerHTML=D.ally.map((s,i)=>slotHtml(s,'ally',i)).join('');
+  $('#exTag').innerHTML=D.example&&D.enemy.some(Boolean)?'<span class="tag" style="font-size:11.5px;font-weight:650;padding:3px 8px;border-radius:999px;background:var(--fill);color:var(--fg-2)">Exemplo: trio mais forte da ranqueada</span>':'';
+  const E=D.enemy.filter(Boolean).map(s=>bySlug.get(s));
+  const L=D.ally.filter(Boolean).map(s=>bySlug.get(s));
+  const out=$('#draftOut');
+  if(!E.length){out.innerHTML=`<div class="pcard empty" style="padding:28px">Escolha pelo menos 1 brawler do time inimigo para ver o melhor counter e a composição que vence esse time.</div>`;return}
+  const exclude=new Set([...D.enemy.filter(Boolean)]);
+  const solos=bestSolos(E,D.mode,new Set([...exclude,...L.map(b=>b.s)]));
+  const top=solos[0];
+  const trios=bestTrios(E,D.mode,L,exclude);
+  const bt=trios[0];
+  const modeTxt=D.mode==='any'?'':` em ${MODES[D.mode]}`;
+  const vsItem=([e,v])=>`<div class="vs-item">${av(e)}<div><div class="vn">vs ${esc(e.n)}</div><span class="val num ${ptsClass(v)}">${v==null?'sem dado':sgn(v)+' pts'}</span></div></div>`;
+  const memberHtml=(p,isLocked)=>{
+    const c=p.c, good=p.parts.filter(([,v])=>v!=null&&v>0.4).sort((a,b)=>b[1]-a[1]), bad=p.parts.filter(([,v])=>v!=null&&v<-0.4).sort((a,b)=>a[1]-b[1]);
+    return `<div class="member" style="--cc:var(--c-${c.c})">
+      <button class="member-h press" data-go="${c.s}" aria-label="Abrir ${esc(c.n)}">${av(c)}<div style="min-width:0">${isLocked?`<div class="lock">${icon('lock')} Seu pick</div>`:''}<div class="nm">${esc(c.n)}</div><div class="s" style="font-size:12.5px;color:var(--fg-2);display:flex;gap:5px;align-items:center">${CLS[c.c].short}${D.mode!=='any'&&modeWr(c,D.mode)!=null?` · ${fmt(modeWr(c,D.mode))}% no modo`:''}</div></div></button>
+      <div class="lines">${good.map(([e,v])=>`<span><b class="val good num" style="font-size:13px">${sgn(v)}</b> contra ${esc(e.n)}</span>`).join('')}${bad.map(([e,v])=>`<span><b class="val bad num" style="font-size:13px">${sgn(v)}</b> cuidado com ${esc(e.n)}</span>`).join('')}${!good.length&&!bad.length?'<span style="color:var(--fg-2)">Sem confronto medido; entra pela força geral'+(D.mode!=='any'?' e no modo':'')+'.</span>':''}</div>
+      <details class="bd"><summary>${icon('chev')}Build</summary>${buildMini(c)}</details></div>`;
+  };
+  const lockedSet=new Set(L.map(b=>b.s));
+  out.innerHTML=`
+    <section class="group"><div class="gh"><h2>Melhor counter solo${modeTxt}</h2><span class="note">1 brawler contra o time todo</span></div>
+      <div class="pcard res-solo" style="--cc:var(--c-${top.c.c})">
+        <button class="solo-top press" data-go="${top.c.s}" style="text-align:left" aria-label="Abrir ${esc(top.c.n)}">${av(top.c)}
+          <div style="min-width:0"><div class="kicker">Pick recomendado</div><div class="best-name" style="font-size:26px">${esc(top.c.n)}</div>
+          <div class="chips">${clsChip(top.c)}<span class="chip ${top.sum>0?'good':top.sum<0?'bad':''} num">${sgn(top.sum)} pts contra o time</span>${D.mode!=='any'&&modeWr(top.c,D.mode)!=null?`<span class="chip num">${modeIcon(D.mode,14)}${fmt(modeWr(top.c,D.mode))}% no modo</span>`:''}</div></div></button>
+        <div class="vs-list">${top.parts.map(vsItem).join('')}</div>
+        <div><div class="mini-note" style="padding:0 0 8px">Build recomendada</div>${buildMini(top.c)}</div>
+      </div>
+      <div class="list">${solos.slice(1,5).map((x,i)=>`<button class="row press" data-go="${x.c.s}">${av(x.c)}<div style="min-width:0"><div class="t">${esc(x.c.n)}</div><div class="s" style="--cc:var(--c-${x.c.c})">${icon(x.c.c)}${CLS[x.c.c].short} · ${x.parts.filter(([,v])=>v!=null&&v>0.4).map(([e])=>'vence '+esc(e.n)).join(', ')||'força geral'}</div></div><div class="r"><span class="val num ${ptsClass(x.sum)}">${sgn(x.sum)} pts</span></div></button>`).join('')}</div>
+    </section>
+    <section class="group"><div class="gh"><h2>Composição counter${modeTxt}</h2><span class="note">${L.length?'completando o seu time':'time inteiro contra o deles'}</span></div>
+      <div class="pcard trio">
+        <div class="trio-cols">${bt.per.map(p=>memberHtml(p,lockedSet.has(p.c.s))).join('')}</div>
+        ${bt.syn.length?`<div class="syn"><span>Sinergia:</span>${bt.syn.map(([a,b,v])=>`<span class="chip ${v>0?'good':'bad'} num">${esc(a.n)} + ${esc(b.n)} ${sgn(v)}</span>`).join('')}</div>`:''}
+        <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn soft press" id="cpTrio">${icon('share')}Copiar composição</button></div>
+      </div>
+      ${trios.length>1?`<div class="list alt-trios">${trios.slice(1,4).map((t,i)=>`<button class="alt-trio press" data-alt="${i+1}"><span class="av-stack">${t.T.map(x=>av(x)).join('')}</span><span class="t">${t.T.map(x=>esc(x.n)).join(' · ')}</span><span class="mini-btn">Ver</span></button>`).join('')}</div>`:''}
+    </section>
+    <p class="method">Como o site calcula: soma a vantagem medida de cada pick contra cada inimigo (pontos acima do esperado), um pouco da força geral na ranqueada${D.mode!=='any'?' e da força no modo escolhido':''}, a sinergia entre os três e uma penalidade quando o time repete função. Brawlers já escolhidos não aparecem, como no draft ranqueado.</p>`;
+  $('#cpTrio').addEventListener('click',()=>copyText(`Contra ${E.map(b=>b.n).join(', ')}${modeTxt}: ${bt.T.map(b=>b.n).join(', ')}`,'Composição copiada'));
+  out.querySelectorAll('[data-alt]').forEach(btn=>btn.addEventListener('click',()=>{
+    const t=trios[+btn.dataset.alt]; const tmp=trios[0]; trios[0]=t; trios[+btn.dataset.alt]=tmp;
+    state.draft._swap=t.T.map(x=>x.s); renderDraftTrio(t,trios,memberHtml,lockedSet);
+  }));
+  animIn(out);
+}
+function renderDraftTrio(t){
+  // troca a composição exibida mantendo o resto da tela
+  const card=$('#draftOut .trio .trio-cols'); if(!card) return;
+  const D=state.draft, E=D.enemy.filter(Boolean).map(s=>bySlug.get(s)), locked=new Set(D.ally.filter(Boolean));
+  const res=trioScore(t.T,E,D.mode);
+  const tmpOut=document.createElement('div');
+  card.innerHTML=res.per.map(p=>{
+    const c=p.c, good=p.parts.filter(([,v])=>v!=null&&v>0.4).sort((a,b)=>b[1]-a[1]), bad=p.parts.filter(([,v])=>v!=null&&v<-0.4).sort((a,b)=>a[1]-b[1]);
+    return `<div class="member" style="--cc:var(--c-${c.c})"><button class="member-h press" data-go="${c.s}">${av(c)}<div style="min-width:0">${locked.has(c.s)?`<div class="lock">${icon('lock')} Seu pick</div>`:''}<div class="nm">${esc(c.n)}</div><div class="s" style="font-size:12.5px;color:var(--fg-2)">${CLS[c.c].short}</div></div></button>
+      <div class="lines">${good.map(([e,v])=>`<span><b class="val good num" style="font-size:13px">${sgn(v)}</b> contra ${esc(e.n)}</span>`).join('')}${bad.map(([e,v])=>`<span><b class="val bad num" style="font-size:13px">${sgn(v)}</b> cuidado com ${esc(e.n)}</span>`).join('')}${!good.length&&!bad.length?'<span style="color:var(--fg-2)">Sem confronto medido; entra pela força geral.</span>':''}</div>
+      <details class="bd"><summary>${icon('chev')}Build</summary>${buildMini(c)}</details></div>`}).join('');
+  animIn(card); window.scrollTo({top:card.getBoundingClientRect().top+scrollY-120,behavior:reduce?'auto':'smooth'});
+}
+$('#dModes').addEventListener('click',e=>{const t=e.target.closest('[data-dm]');if(!t)return;state.draft.mode=t.dataset.dm;store.set('dmode',state.draft.mode);renderDraft()});
+$('#view-draft').addEventListener('click',e=>{
+  const c=e.target.closest('[data-clear]');
+  if(c){const [side,i]=c.dataset.clear.split(':');state.draft[side][+i]=null;state.draft.example=false;renderDraft();return}
+  const s=e.target.closest('[data-slot]'); if(!s) return;
+  const [side,i]=s.dataset.slot.split(':'), D=state.draft;
+  const used=new Set([...D.enemy,...D.ally].filter(Boolean));
+  openPicker({title:side==='enemy'?`Inimigo ${+i+1}`:`Seu pick ${+i+1}`,current:D[side][+i],disabled:used,onPick:slug=>{D[side][+i]=slug;D.example=false;renderDraft()}});
+});
+$('#dClear').addEventListener('click',()=>{state.draft.enemy=[null,null,null];state.draft.ally=[null,null];state.draft.example=false;renderDraft();toast('Draft limpo')});
+function loadEnemy(names,mode){
+  state.draft.enemy=names.map(n=>byName.get(n)?.s||null); state.draft.ally=[null,null]; state.draft.example=false;
+  if(mode&&mode!=='HE') {state.draft.mode=mode; store.set('dmode',mode)}
+  setView('draft');
+}
+
+/* =========================================================
+   COMPOSIÇÕES por modo
+   ========================================================= */
+function compModeChips(){$('#cModes').innerHTML=RANKED_MODES.map(m=>`<button class="fchip press" data-cm="${m}" aria-pressed="${state.cmode===m}">${modeIcon(m)}${MODES[m]}</button>`).join('')}
+function computedTrios(mode){
+  const pool=DATA.filter(b=>modeWr(b,mode)!=null).sort((a,b)=>modeWr(b,mode)-modeWr(a,mode)).slice(0,22);
+  const res=[];
+  for(let i=0;i<pool.length;i++)for(let j=i+1;j<pool.length;j++)for(let k=j+1;k<pool.length;k++){
+    const T=[pool[i],pool[j],pool[k]]; let s=T.reduce((a,b)=>a+modePow(b,mode),0);
+    s+=sy(T[0].n,T[1].n)+sy(T[0].n,T[2].n)+sy(T[1].n,T[2].n); s-=2*(3-new Set(T.map(x=>x.c)).size); res.push({T,s});
+  }
+  return res.sort((a,b)=>b.s-a.s).slice(0,6);
+}
+function renderComps(){
+  compModeChips();
+  const m=state.cmode, list=TRIOS[m]||[];
+  const seen=new Map();
+  for(const t of list){const k=[...t.t].sort().join('|'); const x=seen.get(k); if(!x) seen.set(k,{...t,maps:[t.map]}); else{x.maps.push(t.map); if(t.wr>x.wr){x.wr=t.wr;x.ex=t.ex}}}
+  const rows=[...seen.values()].sort((a,b)=>b.wr-a.wr);
+  const out=$('#compsOut');
+  const row=(T,wr,sub,delta,i)=>`<div class="comp-row"><span class="av-stack">${T.map(x=>av(x)).join('')}</span>
+    <div style="min-width:0"><div class="t">${T.map(x=>esc(x.n)).join(' · ')}</div><div class="s">${sub}</div></div>
+    <div class="r">${wr!=null?`<span class="wr num ${wrClass(wr)}" style="color:var(--${wr>=52?'good':wr<=47?'bad':'mid'})">${fmt(wr)}%</span>`:''}${delta!=null?`<span class="chip good num" style="height:22px;font-size:11.5px">+${fmt(delta)} vs esperado</span>`:''}<button class="mini-btn press" data-counter="${T.map(x=>x.n).join('|')}">Counterar</button></div></div>`;
+  if(rows.length){
+    out.innerHTML=`<div class="gh"><h2>Melhores trios em ${MODES[m]}</h2><span class="note">${TRIOS._live&&TRIOS._live[m]?'<span class="src-tag live">ao vivo</span> topo do ranking, 7 dias':'referência: SeeMeta, mapas ranqueados'}</span></div>
+      <div class="list">${rows.slice(0,12).map((t,i)=>row(t.t.map(n=>byName.get(n)).filter(Boolean),t.wr,t.g?`${fmt(t.g,0)} partidas juntos`:('Mapa'+(t.maps.length>1?'s':'')+': '+t.maps.map(esc).join(', ')),t.wr-t.ex,i)).join('')}</div>
+      <p class="mini-note">“Esperado” é o win rate que os três teriam só pela força individual. A diferença mostra o quanto o trio rende junto. Toque em Counterar para montar o time que vence esse trio.</p>`;
+  } else {
+    const ct=computedTrios(m);
+    out.innerHTML=`<div class="gh"><h2>Trios sugeridos para ${MODES[m]}</h2><span class="note">calculado</span></div>
+      <div class="pcard" style="padding:14px 18px;color:var(--fg-2);font-size:14px">${MODES[m]} não está no pool ranqueado desta temporada, então não há trios medidos. Estes trios combinam os brawlers mais fortes no modo com a sinergia entre eles.</div>
+      <div class="list">${ct.map((t,i)=>row(t.T,null,t.T.map(x=>`${esc(x.n)} ${fmt(modeWr(x,m))}%`).join(' · '),null,i)).join('')}</div>`;
+  }
+  animIn(out);
+}
+$('#cModes').addEventListener('click',e=>{const t=e.target.closest('[data-cm]');if(!t)return;state.cmode=t.dataset.cm;renderComps()});
+$('#compsOut').addEventListener('click',e=>{const t=e.target.closest('[data-counter]');if(t)loadEnemy(t.dataset.counter.split('|'),state.cmode)});
+
+/* =========================================================
+   RANKING
+   ========================================================= */
+const RK_COLS=[{k:'rank',l:'#'},{k:'n',l:'Brawler',sort:'n'},{k:'c',l:'Função',sort:'c',cls:'hide-sm'},{k:'r',l:'Raridade',sort:'r',cls:'hide-sm'},{k:'wr',l:'Win rate',sort:'wr'},{k:'pr',l:'Pick',sort:'pr',cls:'hide-sm'},{k:'mode',l:'No modo',sort:'mode'},{k:'t',l:'Tier',cls:'hide-sm'}];
+function renderRkControls(){
+  $('#rkClasses').innerHTML=CLS_ORDER.map(c=>`<button class="fchip press" data-rc="${c}" aria-pressed="${state.rk.cls.has(c)}" style="--cc:var(--c-${c})">${icon(c)}${CLS[c].pt}</button>`).join('');
+  $('#rkRarity').innerHTML='<option value="all">Todas as raridades</option>'+RAR_ORDER.map(r=>`<option value="${r}" ${state.rk.rar===r?'selected':''}>${RAR[r]}</option>`).join('');
+  $('#rkMode').innerHTML='<option value="all">Todos os modos</option>'+RANKED_MODES.map(m=>`<option value="${m}" ${state.rk.mode===m?'selected':''}>Top 3 em ${MODES[m]}</option>`).join('');
+}
+function renderRanking(anim){
+  const {cls,rar,mode,sort,dir}=state.rk;
+  let list=DATA.filter(b=>(!cls.size||cls.has(b.c))&&(rar==='all'||b.r===rar)&&(mode==='all'||(b.mr&&b.m.slice(0,3).some(([c])=>c===mode))));
+  const val=b=>sort==='n'?b.n:sort==='c'?CLS_ORDER.indexOf(b.c):sort==='r'?RAR_ORDER.indexOf(b.r):sort==='mode'?(mode==='all'?b.wr:modeWr(b,mode)):b[sort];
+  list.sort((a,b)=>{const x=val(a),y=val(b);if(x==null&&y==null)return 0;if(x==null)return 1;if(y==null)return -1;return (typeof x==='string'?x.localeCompare(y,'pt'):x-y)*dir||a.n.localeCompare(b.n)});
+  const cols=RK_COLS.filter(c=>c.k!=='mode'||mode!=='all');
+  $('#rkHead').innerHTML=cols.map(c=>{const s=c.sort&&sort===c.sort?(dir<0?'descending':'ascending'):null;const l=c.k==='mode'?MODES[mode]:c.l;return `<th scope="col" class="${c.cls||''}" ${s?`aria-sort="${s}"`:''}>${c.sort?`<button data-sort="${c.sort}">${l}<svg class="arr"><use href="#i-down"/></svg></button>`:l}</th>`}).join('');
+  $('#rkBody').innerHTML=list.length?list.map((b,i)=>{
+    const w=b.wr==null?0:Math.max(3,Math.min(100,(b.wr-42)/15*100)),wc=wrClass(b.wr),mw=mode==='all'?null:modeWr(b,mode);
+    const td={rank:`<td class="rk num">${i+1}</td>`,
+      n:`<td><div class="bcell">${av(b)}<span>${esc(b.n)}<small class="only-sm" style="--cc:var(--c-${b.c})">${icon(b.c)}${CLS[b.c].short}</small></span></div></td>`,
+      c:`<td class="hide-sm"><span class="chip cls" style="--cc:var(--c-${b.c})">${icon(b.c)}${CLS[b.c].short}</span></td>`,
+      r:`<td class="hide-sm"><span class="chip" style="--rc:var(--r-${b.r})"><span class="dot"></span>${RAR[b.r]}</span></td>`,
+      wr:`<td><div class="wrcell"><span class="val num ${wc}">${b.wr==null?'—':fmt(b.wr)+'%'}</span><span class="bar hide-sm"><i data-w="${w}" style="--b:var(--${wc||'mid'}-bar)"></i></span></div></td>`,
+      pr:`<td class="num hide-sm">${b.pr==null?'—':(b.pr<0.1?'<0,1':fmt(b.pr))+'%'}</td>`,
+      mode:`<td class="num"><span class="val ${wrClass(mw)}">${mw==null?'—':fmt(mw)+'%'}</span></td>`,
+      t:`<td class="hide-sm">${b.t?`<span class="tier" style="--tc:${TIER_C[b.t]};height:24px;min-width:30px;font-size:13px">${b.t}</span>`:'—'}</td>`};
+    return `<tr data-go="${b.s}" tabindex="0" class="${anim&&!reduce&&i<24?'r-in':''}" style="${anim&&i<24?`animation-delay:${i*14}ms`:''}" aria-label="Abrir ${esc(b.n)}">${cols.map(c=>td[c.k]).join('')}</tr>`;
+  }).join(''):`<tr><td colspan="${cols.length}"><div class="empty">Nenhum brawler com esses filtros. Tente remover a raridade ou o modo.</div></td></tr>`;
+  $('#rkCount').textContent=list.length+(list.length===1?' brawler':' brawlers');
+  fillBars($('#rkBody'));
+}
+$('#rkClasses').addEventListener('click',e=>{const t=e.target.closest('[data-rc]');if(!t)return;const c=t.dataset.rc;state.rk.cls.has(c)?state.rk.cls.delete(c):state.rk.cls.add(c);t.setAttribute('aria-pressed',state.rk.cls.has(c));renderRanking(true)});
+$('#rkRarity').addEventListener('change',e=>{state.rk.rar=e.target.value;renderRanking(true)});
+$('#rkMode').addEventListener('change',e=>{state.rk.mode=e.target.value;state.rk.sort=e.target.value==='all'?'wr':'mode';state.rk.dir=-1;renderRanking(true)});
+$('#rkReset').addEventListener('click',()=>{state.rk={cls:new Set(),rar:'all',mode:'all',sort:'wr',dir:-1};renderRkControls();renderRanking(true);toast('Filtros limpos')});
+$('#rkHead').addEventListener('click',e=>{const t=e.target.closest('[data-sort]');if(!t)return;const s=t.dataset.sort;if(state.rk.sort===s)state.rk.dir*=-1;else{state.rk.sort=s;state.rk.dir=(s==='n'||s==='c'||s==='r')?1:-1}renderRanking(false)});
+$('#rkBody').addEventListener('keydown',e=>{if(e.key==='Enter'){const r=e.target.closest('[data-go]');if(r)select(r.dataset.go)}});
+
+/* =========================================================
+   COMPARAR
+   ========================================================= */
+function cmpSlot(b){return `${av(b)}<div class="nm">${esc(b.n)}</div>${clsChip(b)}<span class="chg">Trocar</span>`}
+function renderCompare(){
+  const [A,B]=state.cmp.map(s=>bySlug.get(s));
+  $('#slotA').innerHTML=cmpSlot(A); $('#slotB').innerHTML=cmpSlot(B);
+  $('#slotA').style.setProperty('--accent',`var(--c-${A.c})`); $('#slotB').style.setProperty('--accent',`var(--c-${B.c})`);
+  let v;
+  if(A.s===B.s) v='<span class="vk">Confronto direto</span><div class="vt">Escolha dois brawlers diferentes</div>';
+  else{
+    const r=mu(A.n,B.n);
+    if(r!=null&&Math.abs(r)>=0.4){const w=r>0?A:B,l=r>0?B:A;v=`<span class="vk">Confronto direto</span><div class="vt">${esc(w.n)} leva vantagem</div><p>${esc(w.n)} vence ${esc(l.n)} <b class="num" style="color:var(--good)">+${fmt(Math.abs(r))} pts</b> acima do esperado, segundo os matchups medidos.</p>`}
+    else{const d=(A.wr??0)-(B.wr??0),fav=Math.abs(d)<0.5?null:(d>0?A:B);v=`<span class="vk">Confronto direto</span><div class="vt">Sem vantagem marcada entre eles</div><p>Nenhum dos dois aparece entre os 5 melhores ou piores matchups do outro, então o confronto tende ao equilíbrio. ${fav?`Pela força geral na ranqueada, ${esc(fav.n)} chega um pouco à frente (${fmt(Math.abs(d))} pts de win rate).`:'A força geral dos dois é praticamente igual.'}</p>`}
+  }
+  $('#verdict').innerHTML=v;
+  const better=(x,y)=>x==null||y==null||x===y?['','']:(x>y?['win','']:['','win']);
+  const [wa,wb]=better(A.wr,B.wr),[pa,pb]=better(A.pr,B.pr);
+  const ti=['S+','S','A','B','C','D'],tv=b=>ti.indexOf(b.t)<0?null:-ti.indexOf(b.t),[ta,tb]=better(tv(A),tv(B));
+  const modes=b=>`<div class="cmp-modes">${b.m.slice(0,3).map(([c,w])=>`<span>${MODES[c]} <span class="num" style="color:var(--fg-2)">${fmt(w)}%</span></span>`).join('')}</div>`;
+  const syn=sy(A.n,B.n);
+  const rows=[['Win rate',`<span class="num ${wa}">${A.wr==null?'—':fmt(A.wr)+'%'}</span>`,`<span class="num ${wb}">${B.wr==null?'—':fmt(B.wr)+'%'}</span>`],
+    ['Pick rate',`<span class="num ${pa}">${A.pr==null?'—':fmt(A.pr)+'%'}</span>`,`<span class="num ${pb}">${B.pr==null?'—':fmt(B.pr)+'%'}</span>`],
+    ['Tier',`<span class="${ta}">${A.t||'—'}</span>`,`<span class="${tb}">${B.t||'—'}</span>`],
+    ['Função',CLS[A.c].pt,CLS[B.c].pt],['Raridade',RAR[A.r],RAR[B.r]],['Melhores modos',modes(A),modes(B)],
+    ['Counters',`<span style="font-weight:500">${esc(A.wk.slice(0,3).map(([n])=>n).join(', '))}</span>`,`<span style="font-weight:500">${esc(B.wk.slice(0,3).map(([n])=>n).join(', '))}</span>`],
+    ['Juntos no time',`<span class="${syn>0?'win':''}">${syn?sgn(syn)+' pts':'sem dado'}</span>`,`<span class="${syn>0?'win':''}">${syn?sgn(syn)+' pts':'sem dado'}</span>`]];
+  $('#cmpTable').innerHTML=rows.map(([k,a,b])=>`<div class="crow"><div class="cv">${a}</div><div class="ck">${k}</div><div class="cv">${b}</div></div>`).join('');
+}
+['A','B'].forEach((k,i)=>$('#slot'+k).addEventListener('click',()=>openPicker({title:'Escolher brawler '+k,current:state.cmp[i],onPick:s=>{state.cmp[i]=s;renderCompare()}})));
+
+/* =========================================================
+   INÍCIO
+   ========================================================= */
+/* =========================================================
+   DADOS: estático (builds, dicas, funções) + ao vivo (API oficial)
+   ========================================================= */
+const nkey=s=>String(s).toLowerCase().replace(/[^a-z0-9]/g,'');
+const titleCase=s=>String(s).toLowerCase().replace(/(^|[\s\-.&])([a-z])/g,(m,a,b)=>a+b.toUpperCase());
+const slugify=n=>n.toLowerCase().replace(/&/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+function liveTier(wr){return wr>=55?'S+':wr>=53?'S':wr>=51?'A':wr>=49?'B':wr>=47?'C':'D'}
+function merge(st,lv){
+  const list=st.brawlers.map(b=>({...b,live:false,muLive:false,mLive:false}));
+  const byKey=new Map(list.map(b=>[nkey(b.n),b]));
+  const nameOf=raw=>(byKey.get(nkey(raw))||{}).n||titleCase(raw);
+  if(lv){
+    // brawlers novos que só a API conhece
+    for(const x of (lv.list||[])){
+      if(!byKey.has(nkey(x.name))){const n=titleCase(x.name);const b={n,s:slugify(n),id:x.id,r:'?',c:'NA',wr:null,pr:null,t:null,m:[],mr:false,st:[],wk:[],mt:[],b:null,tips:['Brawler novo: as dicas chegam na próxima atualização semanal. Use os counters medidos.'],why:'',live:false,muLive:false,mLive:false,isNew:true};list.push(b);byKey.set(nkey(x.name),b)}
+      else if(!byKey.get(nkey(x.name)).id) byKey.get(nkey(x.name)).id=x.id;
+    }
+    for(const [raw,L] of Object.entries(lv.brawlers||{})){
+      const b=byKey.get(nkey(raw)); if(!b) continue;
+      if(L.g>=60&&L.wr!=null){b.wr=L.wr;b.pr=L.pr;b.g=L.g;b.t=liveTier(L.wr);b.live=true}
+      const ms=Object.entries(L.modes||{}).filter(([m,[g]])=>g>=25);
+      if(ms.filter(([m])=>RANKED_MODES.includes(m)).length>=2){b.m=ms.map(([m,[g,wr]])=>[m,wr]).sort((a,c)=>c[1]-a[1]);b.mr=true;b.mLive=true}
+      const mp=l=>(l||[]).map(([n,p,g])=>[nameOf(n),p,g]).filter(([n])=>byKey.has(nkey(n)));
+      if((L.st||[]).length>=3&&(L.wk||[]).length>=3){b.st=mp(L.st);b.wk=mp(L.wk);b.muLive=true}
+      if((L.mt||[]).length>=3) b.mt=mp(L.mt);
+    }
+  }
+  let trios={...(st.trios||{})}; trios._live={};
+  for(const [m,l] of Object.entries(lv?.trios||{})){
+    if(l.length>=3){trios[m]=l.map(t=>({t:t.t.map(nameOf),wr:t.wr,ex:t.ex,g:t.g,map:''}));trios._live[m]=true}
+  }
+  const maps={};
+  for(const [id,x] of Object.entries(lv?.maps||{})) maps[id]={...x,top:x.top.map(([n,w,g])=>[nameOf(n),w,g])};
+  const rot=(lv?.rotation||[]).map(e=>({...e,top:(e.top||[]).map(([n,w,g])=>[nameOf(n),w,g])}));
+  return {list,trios,maps,rot};
+}
+function applyData(){
+  const {list,trios,maps,rot}=merge(STATIC,LIVE);
+  DATA=list; TRIOS=trios; MAPS=maps; ROT=rot; META=STATIC.meta||{};
+  byName=new Map(DATA.map(b=>[b.n,b])); bySlug=new Map(DATA.map(b=>[b.s,b]));
+  buildModel();
+}
+const btDate=s=>{const m=/^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})/.exec(s||'');return m?new Date(Date.UTC(+m[1],m[2]-1,+m[3],+m[4],+m[5],+m[6])):new Date(s)};
+function ago(iso){const d=(Date.now()-new Date(iso))/60000;if(!(d>=0))return'';if(d<1)return'agora mesmo';if(d<60)return`há ${Math.round(d)} min`;const h=Math.floor(d/60);return h<24?`há ${h} h`:`há ${Math.floor(h/24)} d`}
+function renderSub(){
+  if(LIVE){
+    const M=LIVE.meta, stale=(Date.now()-new Date(M.updated))>3*3600e3;
+    $('#pageSub').innerHTML=`<span class="live-dot" style="${stale?'background:var(--mid-bar);animation:none':''}"></span>${stale?'Dados ao vivo atrasados':'Ao vivo'} · atualizado <b>${ago(M.updated)}</b> · ${fmt(M.battles,0)} partidas de ${fmt(M.players,0)} jogadores do topo nos últimos ${M.windowDays} dias`;
+    $('#footDate').textContent=`Dados ao vivo: ${new Date(M.updated).toLocaleString('pt-BR')}. Builds e dicas: ${fmtDate(META.updated)}.`;
+  } else {
+    $('#pageSub').innerHTML=`${DATA.length} brawlers · dados de referência de <b>${fmtDate(META.updated)}</b> · o coletor ao vivo ainda não rodou`;
+    $('#footDate').textContent=`Builds e dicas: ${fmtDate(META.updated)}.`;
+  }
+}
+function rerender(){
+  renderPickFilters(); renderGrid(); renderMiniRows(); renderRkControls();
+  if(state.view==='matchup') renderProfile(state.sel,false); else if(bySlug.has(state.sel)) renderProfile(state.sel,false);
+  if(state.view==='now') renderNow(); if(state.view==='draft') renderDraft(); if(state.view==='comps') renderComps();
+  if(state.view==='ranking') renderRanking(false); if(state.view==='compare') renderCompare();
+}
+async function getJSON(u){const r=await fetch(u+(u.includes('?')?'&':'?')+'t='+Math.floor(Date.now()/60000),{cache:'no-store'});if(!r.ok)throw new Error(r.status);return r.json()}
+async function load(){
+  $('#loading').hidden=false; $('#err').hidden=true;
+  try{
+    const [st,lv,a]=await Promise.all([getJSON(STATIC_URL),getJSON(LIVE_URL).catch(()=>null),Promise.resolve({img:{},mode:{}})]);
+    STATIC=st; LIVE=lv&&lv.meta?lv:null; ASSETS=a; applyData(); boot();
+  }catch(e){$('#loading').hidden=true;$('#err').hidden=false;$('#pageSub').textContent='Sem conexão com a base de dados.'}
+}
+async function poll(){
+  try{const lv=await getJSON(LIVE_URL); if(lv&&lv.meta&&(!LIVE||lv.meta.updated!==LIVE.meta.updated)){LIVE=lv;applyData();rerender();renderSub();toast('Dados ao vivo atualizados')}}catch(e){}
+}
+$('#retry').addEventListener('click',load);
+function fmtDate(iso){try{const [y,m,d]=iso.split('-').map(Number);return new Date(y,m-1,d).toLocaleDateString('pt-BR',{day:'numeric',month:'short',year:'numeric'})}catch(e){return iso}}
+
+/* =========================================================
+   AGORA: rotação de mapas ao vivo
+   ========================================================= */
+function left(ms){if(ms<=0)return'encerrado';const m=Math.floor(ms/60000),h=Math.floor(m/60),d=Math.floor(h/24);return d?`${d}d ${h%24}h`:h?`${h}h ${String(m%60).padStart(2,'0')}min`:`${m} min`}
+function renderNow(){
+  const out=$('#nowOut');
+  const evs=ROT.filter(e=>MODES[e.mode]||e.mode).map(e=>({...e,endT:btDate(e.end).getTime()})).sort((a,b)=>(RANKED_MODES.indexOf(a.mode)<0)-(RANKED_MODES.indexOf(b.mode)<0)||a.endT-b.endT);
+  if(!evs.length){out.innerHTML=`<div class="pcard empty" style="padding:28px">A rotação de mapas aparece aqui assim que o coletor ao vivo rodar pela primeira vez.${LIVE?'':' Enquanto isso, use as outras abas com os dados de referência.'}</div>`;return}
+  const pickList=e=>{
+    let top=(e.top||[]).filter(([n])=>byName.has(n)).slice(0,5), src='neste mapa';
+    if(top.length<3){top=DATA.filter(b=>modeWr(b,e.mode)!=null).sort((a,b)=>modeWr(b,e.mode)-modeWr(a,e.mode)).slice(0,5).map(b=>[b.n,modeWr(b,e.mode),null]);src='no modo'}
+    return {top,src};
+  };
+  out.innerHTML=`<div class="gh"><h2>Mapas ativos</h2><span class="note"><span class="live-dot"></span>rotação oficial</span></div>
+    <div class="now-grid">${evs.map(e=>{const {top,src}=pickList(e);const ms=e.endT-Date.now();
+      return `<article class="pcard ev ${ms<=0?'ended':''}" style="--accent:var(--c-AR)">
+        <div class="ev-h"><span class="mode-ic">${modeIcon(e.mode,30)||icon('swords')}</span><div style="min-width:0"><div class="ev-mode">${esc(MODES[e.mode]||e.mode)}</div><div class="ev-map">${esc(e.map)}</div></div>
+          <div class="ev-time" data-end="${e.endT}"><b>${left(ms)}</b>${ms>0?'restantes':''}</div></div>
+        <div class="list">${top.map(([n,w,g])=>{const b=byName.get(n);return `<button class="row press" data-go="${b.s}">${av(b)}<div style="min-width:0"><div class="t">${esc(b.n)}</div><div class="s" style="--cc:var(--c-${b.c})">${icon(b.c)}${CLS[b.c].short}${g?` · ${fmt(g,0)} partidas`:''}</div></div><div class="r" style="min-width:0"><span class="val num ${wrClass(w)}">${fmt(w)}%</span></div></button>`}).join('')||'<div class="empty">Sem amostra ainda.</div>'}</div>
+        <div class="ev-foot"><span class="mini-note" style="padding:0;flex:1">Melhores picks ${src}</span>${RANKED_MODES.includes(e.mode)?`<button class="mini-btn press" data-nowdraft="${e.mode}">Draft neste modo</button>`:''}</div>
+      </article>`}).join('')}</div>`;
+  animIn(out);
+}
+$('#nowOut').addEventListener('click',e=>{const t=e.target.closest('[data-nowdraft]');if(t){state.draft.mode=t.dataset.nowdraft;store.set('dmode',state.draft.mode);setView('draft')}});
+setInterval(()=>{document.querySelectorAll('.ev-time[data-end]').forEach(el=>{const ms=+el.dataset.end-Date.now();el.innerHTML=`<b>${left(ms)}</b>${ms>0?'restantes':''}`;if(ms<=0)el.closest('.ev').classList.add('ended')});if(DATA.length)renderSub()},30000);
+
+function boot(){
+  applyTheme();
+  $('#loading').hidden=true;
+  renderSub();
+  const top3=DATA.filter(b=>b.wr!=null).sort((a,b)=>b.wr-a.wr).slice(0,3).map(b=>b.s);
+  state.draft.enemy=top3; state.draft.example=true;
+  const h=(location.hash||'').slice(1).toLowerCase();
+  if(bySlug.has(h)) state.sel=h; else if(!bySlug.has(state.sel)) state.sel=DATA[0].s;
+  renderPickFilters(); renderGrid(); renderMiniRows(); renderRkControls();
+  renderProfile(state.sel,false);
+  const map={agora:'now',ranking:'ranking',comparar:'compare',draft:'draft',composicoes:'comps'};
+  setView(bySlug.has(h)?'matchup':(map[h]||'now'),{keepHash:true,noScroll:true});
+  if(document.fonts&&document.fonts.ready) document.fonts.ready.then(moveThumb);
+  setInterval(poll,POLL_MS);
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden)poll()});
+}
+addEventListener('hashchange',()=>{const h=location.hash.slice(1).toLowerCase();if(bySlug.has(h)&&h!==state.sel)select(h,{push:false})});
+load();
+</script>
