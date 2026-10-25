@@ -120,12 +120,12 @@ export async function buildMeta(log = console.log) {
   const pick = (kind, sub) => L3(l => Object.fromEntries((game[l][kind]?.[sub] || []).map(x => [x.id, x])));
   const misc = k => { const out = {}; for (const x of game.en.misc?.[k] || []) out[x.id] = { n: L3(l => title((game[l].misc?.[k] || []).find(y => y.id === x.id)?.name || x.name)), color: x.color || undefined }; return out; };
   const MP = pick('maps', 'maps'), MD = pick('modes', 'modes');
-  const maps = {}; for (const [id, m] of Object.entries(MP.en)) if (!m.disabled) maps[id] = { n: L3(l => title(MP[l][id]?.name || m.name)), mode: m.modeId };
+  const maps = {}; for (const [id, m] of Object.entries(MP.en)) maps[id] = { n: L3(l => title(MP[l][id]?.name || m.name)), mode: m.modeId, ...(m.disabled ? { x: 1 } : {}) };
   const modes = {}; for (const [id, m] of Object.entries(MD.en)) modes[id] = { n: L3(l => title(MD[l][id]?.name || m.name)), hash: m.hash, color: m.color };
   // mapas novos que só a BrawlAPI conhece (nome em inglês)
   if (Object.keys(maps).length < 50) {
     const ml = await get(BAPI + '/maps');
-    for (const m of ml?.list || []) if (!m.disabled && !maps[m.id]) maps[m.id] = { n: L3(() => m.name), mode: m.gameMode?.id || null };
+    for (const m of ml?.list || []) if (!maps[m.id]) maps[m.id] = { n: L3(() => m.name), mode: m.gameMode?.id || null };
   }
   const out = {
     updated: new Date().toISOString(), seconds: 0,
@@ -144,9 +144,9 @@ if (typeof process !== 'undefined' && process.argv?.[1] && import.meta.url.endsW
   const MAX_AGE_H = +(process.env.META_MAX_AGE_H || 20);
   let old = null;
   try { old = JSON.parse(await fs.readFile(OUT, 'utf8')); } catch {}
-  if (old?.v === 2 && Date.now() - new Date(old.updated) < MAX_AGE_H * 36e5 && !process.env.FORCE_META) { console.log('meta.json recente, mantido'); process.exit(0); }
+  if (old?.v === 3 && Date.now() - new Date(old.updated) < MAX_AGE_H * 36e5 && !process.env.FORCE_META) { console.log('meta.json recente, mantido'); process.exit(0); }
   try {
-    const meta = await buildMeta(); meta.v = 2;
+    const meta = await buildMeta(); meta.v = 3;
     if (!Object.keys(meta.brawlers).length) throw new Error('nenhum brawler — mantendo o arquivo anterior');
     await fs.mkdir(OUT.replace(/\/[^/]+$/, ''), { recursive: true });
     await fs.writeFile(OUT, JSON.stringify(meta));
