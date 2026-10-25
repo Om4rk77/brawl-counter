@@ -111,9 +111,9 @@ a{color:var(--accent)}
 .glass.spec:hover::after{opacity:.55}
 .glass-btn{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;flex:none;transition:transform .45s var(--bounce),background-color .25s}
 .glass-btn svg{width:19px;height:19px}
-.glass-btn:active{transform:scale(.88)}
+.glass-btn:active{transform:scale(.88);transition:transform .12s cubic-bezier(.2,.8,.2,1)}
 .press{transition:transform .45s var(--spring),background-color .2s var(--ease),opacity .2s,box-shadow .3s}
-.press:active{transform:scale(.965)}
+.press:active{transform:scale(.965);transition:transform .12s cubic-bezier(.2,.8,.2,1),background-color .2s var(--ease)}
 @media (hover:hover){.lift{transition:transform .45s var(--spring),box-shadow .35s var(--ease)}.lift:hover{transform:translateY(-2px)}}
 
 /* ---------- cabeçalho ---------- */
@@ -135,13 +135,13 @@ a{color:var(--accent)}
 .tabs button{position:relative;z-index:2;display:grid;justify-items:center;align-content:center;gap:2px;border-radius:999px;color:var(--fg);font-weight:600;transition:color .3s,transform .4s var(--spring)}
 .tabs button svg{width:24px;height:24px;transition:transform .5s var(--bounce)}
 .tabs button[aria-selected="true"]{color:var(--accent)}
+.tabs button:active svg{transform:scale(.86);transition:transform .12s cubic-bezier(.2,.8,.2,1)}
 .tabs button[aria-selected="true"] svg{transform:scale(1.06)}
 .lens{position:absolute;z-index:1;top:4px;bottom:4px;left:0;width:0;border-radius:999px;pointer-events:none;
   background:linear-gradient(180deg,color-mix(in srgb,var(--glass-hi) 60%,transparent),color-mix(in srgb,var(--fill) 80%,transparent));
   box-shadow:inset 0 1px 0 var(--glass-hi),inset 0 0 0 .5px var(--glass-edge),0 6px 18px -8px rgba(0,0,0,.25);
-  transition:transform .55s var(--bounce),width .55s var(--bounce),opacity .3s,scale .35s var(--spring);will-change:transform}
-.lens.moving{scale:1.1 .9}
-.tabs.drag .lens{scale:1.14;transition:width .3s var(--spring),scale .3s var(--spring);background:color-mix(in srgb,var(--glass-hi) 35%,transparent);-webkit-backdrop-filter:blur(2px) saturate(220%);backdrop-filter:blur(2px) saturate(220%)}
+  transition:opacity .3s,scale .4s var(--bounce);will-change:transform}
+.tabs.drag .lens{scale:1.14;transition:scale .3s var(--spring);background:color-mix(in srgb,var(--glass-hi) 35%,transparent);-webkit-backdrop-filter:blur(2px) saturate(220%);backdrop-filter:blur(2px) saturate(220%)}
 /* desktop: lente no topo */
 .tabs.top-tabs{height:44px;min-width:520px}
 .tabs.top-tabs button{padding:0 16px;font-size:14px;letter-spacing:-.01em}
@@ -552,6 +552,14 @@ body.stacked #app{transform:scale(.94) translate3d(0,10px,0);border-radius:24px;
 @keyframes vtOut{to{opacity:0;transform:scale(.985)}}
 @keyframes vtIn{from{opacity:0;transform:translate3d(0,12px,0) scale(.99)}}
 @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.glass{background:var(--glass-2)}}
+/* cabeçalho ligado à rolagem: anima no compositor, na taxa da tela */
+@supports (animation-timeline:scroll()){
+  .hero .large-title{transform-origin:0 100%;animation:ltCollapse linear both;animation-timeline:scroll(root);animation-range:0 110px}
+  @keyframes ltCollapse{to{opacity:0;transform:translate3d(0,-10px,0) scale(.92)}}
+  .top::before{animation:topGlass linear both;animation-timeline:scroll(root);animation-range:10px 90px}
+  @keyframes topGlass{from{opacity:0}to{opacity:1}}
+}
+@media (prefers-reduced-motion:reduce){.hero .large-title,.top::before{animation:none!important}}
 /* render só o que está na tela */
 .rk-row{content-visibility:auto;contain-intrinsic-size:auto 62px}
 .foot{content-visibility:auto;contain-intrinsic-size:auto 480px}
@@ -857,7 +865,10 @@ function indexModes(){MODE_META={};if(!NAMES?.modes)return;const byEn={};for(con
 function modeName(c){const m=MODE_META[c];if(m)return m.n[state.lang];return (MODE_FB[c]||[MODE_EN[c]||c,MODE_EN[c]||c,MODE_EN[c]||c])[li()]}
 const modeId=c=>MODE_META[c]?.id||MODE_ID[c]||null;
 const modeColor=c=>MODE_META[c]?.color||MODE_COLOR[c]||'var(--accent)';
-function mapName(id,fallback){const m=NAMES?.maps?.[id];return m?m.n[state.lang]:(fallback||LIVE?.mapIndex?.[id]?.[0]||'')}
+let MAP_BY_NAME=null;const mkey=x=>String(x||'').toLowerCase().normalize('NFD').replace(/[^a-z0-9]/g,'');
+function mapByName(n){if(!NAMES?.maps)return null;if(!MAP_BY_NAME){MAP_BY_NAME=new Map();for(const [id,m] of Object.entries(NAMES.maps))for(const l of LANGS){const k=mkey(m.n?.[l]);if(k&&!MAP_BY_NAME.has(k))MAP_BY_NAME.set(k,id)}}return MAP_BY_NAME.get(mkey(n))||null}
+function mapName(id,fallback){let m=NAMES?.maps?.[id];if(!m){const raw=fallback||LIVE?.mapIndex?.[id]?.[0]||'';const k=raw&&mapByName(raw);m=k&&NAMES.maps[k];if(!m)return raw}return m.n[state.lang]||m.n.en||fallback||''}
+function mapLabel(name){return mapName(null,name)}
 function metaOf(b){return NAMES?.brawlers?.[b.n]||NAMES?.brawlers?.[b._metaKey]||null}
 function itemInfo(b,kind,en){
   const m=metaOf(b); if(!m) return {id:null,n:en};
@@ -933,15 +944,23 @@ function buildMini(b){
 const VIEWS=['now','matchup','draft','comps','ranking','compare'];
 const HASH={now:'now',matchup:'matchups',draft:'draft',comps:'comps',ranking:'ranking',compare:'compare'};
 const HASH_IN={now:'now',agora:'now',ahora:'now',matchups:'matchup',draft:'draft',comps:'comps',composicoes:'comps',composiciones:'comps',ranking:'ranking',compare:'compare',comparar:'compare'};
+/* lente com física de mola: interrompível, guarda a velocidade, estica conforme a velocidade */
+const LENS=new WeakMap(),LK=560,LC=2*Math.sqrt(560)*.74;
+function lensState(lens){let st=LENS.get(lens);if(!st){st={x:0,w:0,vx:0,vw:0,tx:0,tw:0,run:false,init:false,drag:false,pw:-1};LENS.set(lens,st)}return st}
+function paintLens(lens,st){const sp=Math.min(.16,Math.abs(st.vx)/7000);if(Math.abs(st.w-st.pw)>.25){lens.style.width=st.w.toFixed(2)+'px';st.pw=st.w}lens.style.transform=`translate3d(${st.x.toFixed(2)}px,0,0) scale(${(1+sp).toFixed(4)},${(1-sp*.55).toFixed(4)})`}
+function lensTick(lens,now){const st=lensState(lens);if(st.drag){st.run=false;return}let dt=Math.min(.064,(now-st.t)/1000);st.t=now;const n=Math.max(1,Math.ceil(dt*480)),h=dt/n;
+  for(let i=0;i<n;i++){const ax=LK*(st.tx-st.x)-LC*st.vx,aw=LK*(st.tw-st.w)-LC*st.vw;st.vx+=ax*h;st.x+=st.vx*h;st.vw+=aw*h;st.w+=st.vw*h}
+  if(Math.abs(st.tx-st.x)<.2&&Math.abs(st.vx)<4&&Math.abs(st.tw-st.w)<.2&&Math.abs(st.vw)<4){st.x=st.tx;st.w=st.tw;st.vx=st.vw=0;st.run=false;paintLens(lens,st);return}
+  paintLens(lens,st);requestAnimationFrame(t=>lensTick(lens,t))}
+function lensTo(lens,x,w,instant){const st=lensState(lens);st.tx=x;st.tw=w;if(instant||!st.init||reduce){st.x=x;st.w=w;st.vx=st.vw=0;st.init=true;paintLens(lens,st);return}
+  if(!st.run&&!st.drag){st.run=true;st.t=performance.now();requestAnimationFrame(t=>lensTick(lens,t))}}
 function placeLens(tabs,instant){
   const act=tabs.querySelector('[aria-selected="true"]'),lens=tabs.querySelector('.lens');
   if(!lens)return;
   if(!act){lens.style.opacity='0';return}
   if(!act.offsetWidth)return;
   lens.style.opacity='1';
-  if(instant){lens.style.transition='none';requestAnimationFrame(()=>lens.style.transition='')}
-  else{lens.classList.add('moving');clearTimeout(lens._t);lens._t=setTimeout(()=>lens.classList.remove('moving'),260)}
-  lens.style.width=act.offsetWidth+'px';lens.style.transform=`translate3d(${act.offsetLeft}px,0,0)`;
+  lensTo(lens,act.offsetLeft,act.offsetWidth,instant);
 }
 function placeLenses(instant){$$('.tabs').forEach(tb=>placeLens(tb,instant))}
 function setView(v,opts={}){
@@ -974,14 +993,14 @@ function bindTabs(tabs){
   tabs.addEventListener('keydown',e=>{if(!['ArrowLeft','ArrowRight'].includes(e.key))return;const vs=[...tabs.querySelectorAll('[data-view]')].map(b=>b.dataset.view);const i=vs.indexOf(state.view);const n=vs[(i+(e.key==='ArrowRight'?1:vs.length-1))%vs.length];setView(n);tabs.querySelector(`[data-view="${n}"]`).focus()});
   const raf=fn=>{let q=0,a;return(...x)=>{a=x;if(!q){q=1;requestAnimationFrame(()=>{q=0;fn(...a)})}}};
   tabs.addEventListener('pointerdown',e=>{if(e.button!==0)return;const lens=tabs.querySelector('.lens');const btns=[...tabs.querySelectorAll('[data-view]')];
-    drag={x0:e.clientX,id:e.pointerId,on:false,lensX:new DOMMatrix(getComputedStyle(lens).transform).m41,w:lens.offsetWidth,lens,max:tabs.clientWidth-lens.offsetWidth-4,btns,geo:btns.map(b=>[b.offsetLeft,b.offsetWidth]),x:0,v:0,t:performance.now(),lit:-1}});
-  const paint=raf(()=>{if(!drag||!drag.on)return;const {lens,geo,btns}=drag;lens.style.transform=`translate3d(${drag.x}px,0,0)`;const c=drag.x+drag.w/2;let li=-1;geo.forEach(([l,w],i)=>{if(c>l&&c<l+w)li=i});if(li!==drag.lit){if(drag.lit>=0)btns[drag.lit].style.color='';if(li>=0)btns[li].style.color='var(--accent)';drag.lit=li}});
+    const ls=lensState(lens);drag={x0:e.clientX,id:e.pointerId,on:false,lensX:ls.x,w:ls.w||lens.offsetWidth,lens,ls,max:tabs.clientWidth-(ls.w||lens.offsetWidth)-4,btns,geo:btns.map(b=>[b.offsetLeft,b.offsetWidth]),x:ls.x,v:0,t:performance.now(),lit:-1}});
+  const paint=raf(()=>{if(!drag||!drag.on)return;const {lens,geo,btns,ls}=drag;ls.x=drag.x;ls.tx=drag.x;ls.vx=drag.v*1000;paintLens(lens,ls);const c=drag.x+drag.w/2;let li=-1;geo.forEach(([l,w],i)=>{if(c>l&&c<l+w)li=i});if(li!==drag.lit){if(drag.lit>=0)btns[drag.lit].style.color='';if(li>=0)btns[li].style.color='var(--accent)';drag.lit=li}});
   tabs.addEventListener('pointermove',e=>{
     if(!drag||e.pointerId!==drag.id)return;const dx=e.clientX-drag.x0;
-    if(!drag.on&&Math.abs(dx)>8){drag.on=true;tabs.classList.add('drag');try{tabs.setPointerCapture(drag.id)}catch(_){}}
+    if(!drag.on&&Math.abs(dx)>8){drag.on=true;drag.ls.drag=true;drag.ls.run=false;tabs.classList.add('drag');try{tabs.setPointerCapture(drag.id)}catch(_){}}
     if(drag.on){let x=drag.lensX+dx;const lo=4,hi=drag.max;if(x<lo)x=lo-Math.sqrt(lo-x)*2.2;else if(x>hi)x=hi+Math.sqrt(x-hi)*2.2;const now=performance.now(),dt=Math.max(1,now-drag.t);drag.v=drag.v*.6+((x-drag.x)/dt)*.4;drag.t=now;drag.x=x;paint()}
   },{passive:true});
-  const end=e=>{if(!drag)return;if(drag.on){tabs._dragged=true;tabs.classList.remove('drag');const x=drag.x+drag.w/2+drag.v*90;let best=null,bd=1e9;drag.btns.forEach((b,i)=>{b.style.color='';const [l,w]=drag.geo[i];const d=Math.abs(l+w/2-x);if(d<bd){bd=d;best=b}});drag=null;if(best){haptic();if(best.dataset.view!==state.view)setView(best.dataset.view);else placeLens(tabs)}setTimeout(()=>tabs._dragged=false,50)}else drag=null};
+  const end=e=>{if(!drag)return;if(drag.on){tabs._dragged=true;tabs.classList.remove('drag');drag.ls.drag=false;drag.ls.vx=drag.v*1000;const x=drag.x+drag.w/2+drag.v*110;let best=null,bd=1e9;drag.btns.forEach((b,i)=>{b.style.color='';const [l,w]=drag.geo[i];const d=Math.abs(l+w/2-x);if(d<bd){bd=d;best=b}});drag=null;if(best){haptic();if(best.dataset.view!==state.view)setView(best.dataset.view);else placeLens(tabs)}setTimeout(()=>tabs._dragged=false,50)}else drag=null};
   tabs.addEventListener('pointerup',end);tabs.addEventListener('pointercancel',end);
 }
 bindTabs($('#tabsTop'));bindTabs($('#tabsDock'));
@@ -1309,7 +1328,7 @@ function renderComps(){
     <div class="r">${wr!=null?`<span class="wr num" style="color:var(--${wr>=52?'good':wr<=47?'bad':'mid'})">${fmt(wr)}%</span>`:''}${delta!=null&&delta>0?`<span class="chip good num" style="height:24px;font-size:11.5px">${t('comps.vsExp',{v:fmt(delta)})}</span>`:''}<button class="mini-btn press" data-counter="${esc(T.map(x=>x.n).join('|'))}">${t('comps.counter')}</button></div></div>`;
   if(rows.length){
     out.innerHTML=`<div class="gh"><h2>${t('comps.best',{m:esc(modeName(m))})}</h2><span class="note">${TRIOS._live&&TRIOS._live[m]?`<span class="src-tag live">${t('p.live2')}</span>${t('comps.live')}`:t('comps.ref')}</span></div>
-      <div class="list">${rows.slice(0,12).map(x=>row(x.t.map(n=>byName.get(n)).filter(Boolean),x.wr,x.g?t('comps.games',{n:fmt(x.g,0)}):(x.maps.length?t('comps.maps',{m:x.maps.map(esc).join(', ')}):''),x.wr-x.ex)).join('')}</div>
+      <div class="list">${rows.slice(0,12).map(x=>row(x.t.map(n=>byName.get(n)).filter(Boolean),x.wr,x.g?t('comps.games',{n:fmt(x.g,0)}):(x.maps.length?t('comps.maps',{m:x.maps.map(n=>esc(mapLabel(n))).join(', ')}):''),x.wr-x.ex)).join('')}</div>
       <p class="mini-note">${t('comps.note')}</p>`;
   }else{const ct=computedTrios(m);
     out.innerHTML=`<div class="gh"><h2>${t('comps.sugg',{m:esc(modeName(m))})}</h2><span class="note">${t('comps.calc')}</span></div>
@@ -1451,7 +1470,7 @@ function merge(st,lv,nm){
 }
 function applyData(){
   const {list,trios,rot}=merge(STATIC,LIVE,NAMES);
-  DATA=list;TRIOS=trios;ROT=rot;META=STATIC.meta||{};
+  DATA=list;TRIOS=trios;ROT=rot;META=STATIC.meta||{};MAP_BY_NAME=null;
   byName=new Map(DATA.map(b=>[b.n,b]));bySlug=new Map(DATA.map(b=>[b.s,b]));
   indexModes();buildModel();
 }
@@ -1505,7 +1524,7 @@ function boot(){
   state.view='';setView(bySlug.has(h)?'matchup':(HASH_IN[h]||'now'),{keepHash:true,noScroll:true,instant:true});
   if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>placeLenses(true));
   setTimeout(()=>placeLenses(true),300);
-  prewarm();
+  setTimeout(prewarm,1400);
   setInterval(poll,POLL_MS);document.addEventListener('visibilitychange',()=>{if(!document.hidden)poll()});
 }
 addEventListener('hashchange',()=>{const h=readHash();if(bySlug.has(h)){if(h!==state.sel||state.view!=='matchup')select(h,{push:false})}else if(HASH_IN[h]&&HASH_IN[h]!==state.view)setView(HASH_IN[h],{keepHash:true})});
