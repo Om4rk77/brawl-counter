@@ -207,6 +207,15 @@ function compute(sum, brawlers, rot) {
   }
   for (const l of Object.values(mapStats)) l.sort((a, b) => b[1] - a[1]);
 
+  // melhores mapas de cada brawler: [mapId, win rate, partidas, modo]
+  const byB = {};
+  for (const [k, [g, w]] of Object.entries(sum.map)) {
+    if (g < 12) continue; const [n, m] = k.split('|');
+    (byB[n] || (byB[n] = [])).push([m, +(shrink(w, g, WR[n] ?? .5, 15) * 100).toFixed(1), g, sum.mapNames[m]?.[1] || '']);
+  }
+  for (const [n, l] of Object.entries(byB)) get(n).bm = l.sort((a, b) => b[1] - a[1]).slice(0, 12);
+  for (const o of Object.values(out)) delete o.maps;
+
   // trios por modo
   const trios = {};
   for (const [k, [g, w]] of Object.entries(sum.trio)) {
@@ -223,7 +232,7 @@ function compute(sum, brawlers, rot) {
       top: (mapStats[id] || []).slice(0, 8) };
   }).filter(e => e.map);
 
-  return { brawlers: out, trios, rotation, maps: Object.fromEntries(Object.entries(mapStats).map(([k, v]) => [k, { name: sum.mapNames[k]?.[0] || '', mode: sum.mapNames[k]?.[1] || '', top: v.slice(0, 10) }])), list: brawlers };
+  return { brawlers: out, trios, rotation, maps: Object.fromEntries(Object.entries(mapStats).map(([k, v]) => [k, { name: sum.mapNames[k]?.[0] || '', mode: sum.mapNames[k]?.[1] || '', top: v.slice(0, 10) }])), mapIndex: sum.mapNames, list: brawlers };
 }
 
 /* ------------- execução ------------- */
