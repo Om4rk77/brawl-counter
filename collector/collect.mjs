@@ -17,7 +17,7 @@ import path from 'node:path';
 
 const KEY = process.env.BS_API_KEY;
 const BASE = (process.env.BS_API_BASE || 'https://bsproxy.royaleapi.dev/v1').replace(/\/$/, '');
-const COUNTRIES = (process.env.COUNTRIES || 'global,BR,US,MX,ES').split(',').map(s => s.trim()).filter(Boolean);
+const COUNTRIES = (process.env.COUNTRIES || 'global,BR,US,MX,ES,AR,CO,CL,PE,DE,FR,IT,PL,TR,KR,JP').split(',').map(s => s.trim()).filter(Boolean);
 const PER_COUNTRY = +(process.env.PER_COUNTRY || 200);
 const WINDOW_DAYS = +(process.env.WINDOW_DAYS || 7);
 const STATE_DIR = process.env.STATE_DIR || 'state';
@@ -70,7 +70,34 @@ const dayKey = t => new Date(t).toISOString().slice(0, 10);
 /* ------------- estado ------------- */
 async function readJSON(f, d) { try { return JSON.parse(await fs.readFile(f, 'utf8')); } catch { return d; } }
 async function writeJSON(f, v) { await fs.mkdir(path.dirname(f), { recursive: true }); await fs.writeFile(f, JSON.stringify(v)); }
-function emptyDay() { return { battles: 0, ranked: 0, b: {}, mode: {}, map: {}, vs: {}, with: {}, trio: {}, mapNames: {} }; }
+const SECS = ['b', 'mode', 'map', 'vs', 'with', 'trio', 'mtrio'];
+function emptyQ() { return { battles: 0, b: {}, mode: {}, map: {}, vs: {}, with: {}, trio: {}, mtrio: {} }; }
+function emptyDay() { return { battles: 0, ranked: 0, b: {}, mode: {}, map: {}, vs: {}, with: {}, trio: {}, mtrio: {}, mapNames: {}, q: { c: emptyQ(), r: emptyQ() } }; }
+// ranqueada: só elos acima de Mítico (Lendário I = 16). No log de ranqueada, brawler.trophies traz o elo (1..22).
+const MIN_RANK = +(process.env.MIN_RANK || 16);
+function queueOf(bt, teams) {
+  if (RANKED_TYPES.has(bt.type)) {
+    const r = teams.flat().map(p => p.brawler?.trophies).filter(x => typeof x === 'number');
+    if (r.length && r.every(x => x <= 30)) { const avg = r.reduce((a, b) => a + b, 0) / r.length; return avg >= MIN_RANK ? 'r' : null; }
+    return 'r';
+  }
+  return bt.type === 'ranked' || !bt.type ? 'c' : null;
+}
+function addBattle(d, T, win, mode, map) {
+  d.battles++;
+  T.forEach((tm, i) => {
+    const w = i === win ? 1 : 0, enemy = T[1 - i];
+    for (const n of tm) {
+      inc(d.b, n, 1, w); inc(d.mode, n + '|' + mode, 1, w);
+      if (map) inc(d.map, n + '|' + map, 1, w);
+      for (const e of enemy) inc(d.vs, n + '|' + e, 1, w);
+      for (const m of tm) if (m !== n) inc(d.with, n + '|' + m, 1, w);
+    }
+    const key = [...tm].sort().join(',');
+    inc(d.trio, mode + '|' + key, 1, w);
+    if (map) inc(d.mtrio, map + '|' + key, 1, w);
+  });
+}
 const inc = (o, k, g, w) => { const x = o[k] || (o[k] = [0, 0]); x[0] += g; x[1] += w; };
 
 /* ------------- coleta ------------- */
@@ -115,36 +142,27 @@ async function main() {
       const mode = MODE[it.event?.mode || bt.mode] || (it.event?.mode || bt.mode || 'other');
       const map = it.event?.id ? String(it.event.id) : null;
       const d = days[dayKey(t)] || (days[dayKey(t)] = emptyDay());
-      d.battles++; if (RANKED_TYPES.has(bt.type)) d.ranked++;
-      if (map && it.event.map) d.mapNames[map] = [it.event.map, mode];
       const T = teams.map(tm => tm.map(p => p.brawler?.name).filter(Boolean));
       if (T.some(x => x.length !== 3)) continue;
-      T.forEach((tm, i) => {
-        const w = i === win ? 1 : 0, enemy = T[1 - i];
-        for (const n of tm) {
-          inc(d.b, n, 1, w); inc(d.mode, n + '|' + mode, 1, w);
-          if (map) inc(d.map, n + '|' + map, 1, w);
-          for (const e of enemy) inc(d.vs, n + '|' + e, 1, w);
-          for (const m of tm) if (m !== n) inc(d.with, n + '|' + m, 1, w);
-        }
-        inc(d.trio, mode + '|' + [...tm].sort().join(','), 1, w);
-      });
+      if (RANKED_TYPES.has(bt.type)) d.ranked++;
+      if (map && it.event.map) d.mapNames[map] = [it.event.map, mode];
+      addBattle(d, T, win, mode, map);
+      const q = queueOf(bt, teams); if (q) addBattle(d.q[q], T, win, mode, map);
     }
   }
   return { t0, meta, days, brawlers, rot, players };
 }
 
 /* ------------- mescla com o estado ------------- */
+function addSecs(a, b) { a.battles += b.battles || 0; for (const sec of SECS) { a[sec] = a[sec] || {}; for (const [kk, [g, w]] of Object.entries(b[sec] || {})) inc(a[sec], kk, g, w); } }
+function addInto(a, b) { addSecs(a, b); a.q = a.q || { c: emptyQ(), r: emptyQ() }; for (const k of ['c', 'r']) { a.q[k] = a.q[k] || emptyQ(); if (b.q?.[k]) addSecs(a.q[k], b.q[k]); } }
 async function mergeDays(days) {
   const dir = path.join(STATE_DIR, 'days');
   await fs.mkdir(dir, { recursive: true });
   for (const [k, d] of Object.entries(days)) {
     const f = path.join(dir, k + '.json');
     const old = await readJSON(f, emptyDay());
-    old.battles += d.battles; old.ranked += d.ranked;
-    for (const sec of ['b', 'mode', 'map', 'vs', 'with', 'trio'])
-      for (const [kk, [g, w]] of Object.entries(d[sec])) inc(old[sec], kk, g, w);
-    Object.assign(old.mapNames, d.mapNames);
+    addInto(old, d); old.ranked += d.ranked; Object.assign(old.mapNames, d.mapNames);
     await writeJSON(f, old);
   }
   // janela móvel
@@ -157,10 +175,7 @@ async function mergeDays(days) {
   }
   const sum = emptyDay();
   for (const d of Object.values(all)) {
-    sum.battles += d.battles; sum.ranked += d.ranked;
-    for (const sec of ['b', 'mode', 'map', 'vs', 'with', 'trio'])
-      for (const [kk, [g, w]] of Object.entries(d[sec])) inc(sum[sec], kk, g, w);
-    Object.assign(sum.mapNames, d.mapNames);
+    addInto(sum, d); sum.ranked += d.ranked; Object.assign(sum.mapNames, d.mapNames);
   }
   return { sum, days: Object.keys(all).sort() };
 }
@@ -187,8 +202,10 @@ function compute(sum, brawlers, rot) {
     if (g < MIN_PAIR) continue; const [a, b] = k.split('|'); const ex = log5(WR[a] ?? .5, WR[b] ?? .5);
     const adv = (shrink(w, g, ex, 20) - ex) * 100; (vs[a] || (vs[a] = [])).push([b, +adv.toFixed(1), g]);
   }
+  const vsx = {};
   for (const [a, list] of Object.entries(vs)) {
     list.sort((x, y) => y[1] - x[1]);
+    vsx[a] = list.filter(x => Math.abs(x[1]) >= 0.8).sort((x, y) => Math.abs(y[1]) - Math.abs(x[1])).slice(0, 26).map(([b, p, g]) => [b, p, g]);
     get(a).st = list.filter(x => x[1] > 0).slice(0, 8);
     get(a).wk = list.filter(x => x[1] < 0).reverse().slice(0, 8).map(([b, p, g]) => [b, -p, g]);
   }
@@ -197,7 +214,8 @@ function compute(sum, brawlers, rot) {
     if (g < MIN_PAIR) continue; const [a, b] = k.split('|'); const ex = ((WR[a] ?? .5) + (WR[b] ?? .5)) / 2;
     (wi[a] || (wi[a] = [])).push([b, +((shrink(w, g, ex, 20) - ex) * 100).toFixed(1), g]);
   }
-  for (const [a, list] of Object.entries(wi)) get(a).mt = list.sort((x, y) => y[1] - x[1]).filter(x => x[1] > 0).slice(0, 6);
+  const wx = {};
+  for (const [a, list] of Object.entries(wi)) { list.sort((x, y) => y[1] - x[1]); get(a).mt = list.filter(x => x[1] > 0).slice(0, 6); wx[a] = list.filter(x => Math.abs(x[1]) >= 0.8).slice(0, 20); }
 
   // por mapa
   const mapStats = {};
@@ -219,12 +237,23 @@ function compute(sum, brawlers, rot) {
   // trios por modo
   const trios = {};
   for (const [k, [g, w]] of Object.entries(sum.trio)) {
-    if (g < 10) continue; const [m, t] = k.split('|'); const T = t.split(',');
+    if (g < 6) continue; const [m, t] = k.split('|'); const T = t.split(',');
     const ex = T.reduce((s, n) => s + (WR[n] ?? .5), 0) / 3;
     (trios[m] || (trios[m] = [])).push({ t: T, wr: +(shrink(w, g, ex, 10) * 100).toFixed(1), ex: +(ex * 100).toFixed(1), g });
   }
-  for (const m of Object.keys(trios)) trios[m] = trios[m].sort((a, b) => b.wr - a.wr).slice(0, 15);
+  for (const m of Object.keys(trios)) trios[m] = trios[m].sort((a, b) => b.wr - a.wr).slice(0, 20);
+  // trios por mapa
+  const mapTrios = {};
+  for (const [k, [g, w]] of Object.entries(sum.mtrio || {})) {
+    if (g < 3) continue; const [m, t] = k.split('|'); const T = t.split(',');
+    const ex = T.reduce((s, n) => s + (WR[n] ?? .5), 0) / 3;
+    (mapTrios[m] || (mapTrios[m] = [])).push({ t: T, wr: +(shrink(w, g, ex, 8) * 100).toFixed(1), ex: +(ex * 100).toFixed(1), g });
+  }
+  for (const m of Object.keys(mapTrios)) mapTrios[m] = mapTrios[m].sort((a, b) => b.wr - a.wr).slice(0, 10);
 
+  // partidas por mapa (pool real de cada fila)
+  const mapGames = {};
+  for (const [k, [g]] of Object.entries(sum.map)) { const m = k.split('|')[1]; mapGames[m] = (mapGames[m] || 0) + g; }
   // rotação atual
   const rotation = (rot || []).map(e => {
     const id = String(e.event?.id ?? ''); const mode = MODE[e.event?.mode] || e.event?.mode || 'other';
@@ -232,7 +261,7 @@ function compute(sum, brawlers, rot) {
       top: (mapStats[id] || []).slice(0, 8) };
   }).filter(e => e.map);
 
-  return { brawlers: out, trios, rotation, maps: Object.fromEntries(Object.entries(mapStats).map(([k, v]) => [k, { name: sum.mapNames[k]?.[0] || '', mode: sum.mapNames[k]?.[1] || '', top: v.slice(0, 10) }])), mapIndex: sum.mapNames, list: brawlers };
+  return { brawlers: out, trios, mapTrios, vsx, wx, battles: sum.battles, rotation, maps: Object.fromEntries(Object.entries(mapStats).map(([k, v]) => [k, { name: sum.mapNames[k]?.[0] || '', mode: sum.mapNames[k]?.[1] || '', g: Math.round((mapGames[k] || 0) / 6), top: v.slice(0, 10) }])), mapIndex: sum.mapNames, list: brawlers };
 }
 
 /* ------------- execução ------------- */
@@ -241,6 +270,11 @@ function compute(sum, brawlers, rot) {
     const { t0, meta, days, brawlers, rot, players } = await main();
     const { sum, days: dayList } = await mergeDays(days);
     const stats = compute(sum, brawlers, rot);
+    // filas separadas: casual (troféus) e ranqueada (acima de Mítico)
+    const queues = {};
+    for (const k of ['c', 'r']) { const qs = { ...sum.q[k], mapNames: sum.mapNames }; const c = compute(qs, brawlers, rot);
+      queues[k] = { battles: qs.battles, brawlers: c.brawlers, trios: c.trios, mapTrios: c.mapTrios, vsx: c.vsx, wx: c.wx, maps: Object.fromEntries(Object.entries(c.maps).map(([m, v]) => [m, { g: v.g, top: v.top }])) }; }
+    stats.queues = queues;
     const out = {
       meta: { updated: new Date().toISOString(), windowDays: WINDOW_DAYS, days: dayList, battles: sum.battles,
         rankedBattles: sum.ranked, players: players.length, newBattles: Object.values(days).reduce((s, d) => s + d.battles, 0),
