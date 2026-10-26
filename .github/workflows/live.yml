@@ -50,7 +50,7 @@ jobs:
         run: |
           mkdir -p databranch/state site/data
           rm -rf databranch/.git
-          for f in live.json meta.json; do
+          for f in live.json meta.json pro.json; do
             if [ -f databranch/$f ]; then cp databranch/$f site/data/$f; fi
           done
 
@@ -61,13 +61,19 @@ jobs:
           FORCE_META: ${{ inputs.force_meta && '1' || '' }}
         run: node collector/meta.mjs
 
+      - name: Cenário competitivo (Liquipedia)
+        continue-on-error: true
+        env:
+          OUT_PRO: site/data/pro.json
+        run: node collector/pro.mjs
+
       - name: Coletar partidas da API oficial
         id: collect
         continue-on-error: true
         env:
           BS_API_KEY: ${{ secrets.BS_API_KEY }}
           BS_API_BASE: ${{ vars.BS_API_BASE || 'https://bsproxy.royaleapi.dev/v1' }}
-          COUNTRIES: ${{ vars.COUNTRIES || 'global,BR,US,MX,ES' }}
+          COUNTRIES: ${{ vars.COUNTRIES || 'global,BR,US,MX,ES,AR,CO,CL,PE,DE,FR,IT,PL,TR,KR,JP' }}
           STATE_DIR: databranch/state
           OUT_FILE: site/data/live.json
         run: |
@@ -81,7 +87,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          for f in live.json meta.json; do
+          for f in live.json meta.json pro.json; do
             if [ -f site/data/$f ]; then cp site/data/$f databranch/$f; fi
           done
           cd databranch
