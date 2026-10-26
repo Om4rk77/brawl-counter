@@ -1676,7 +1676,7 @@ function compMaps(m){
   return effQueue()==='ranked'?out.slice(0,12):out;
 }
 function mapComps(id,m){
-  const mt=dedupTrios(MTRIOS[id]).filter(x=>toB(x.t).length===3).sort((a,b)=>b.wr-a.wr);
+  let mt=dedupTrios(MTRIOS[id]).filter(x=>toB(x.t).length===3).sort((a,b)=>b.wr-a.wr);const m5=mt.filter(x=>(x.g||0)>=5);if(m5.length>=3)mt=m5;
   if(mt.length>=3)return {src:'map',rows:mt.slice(0,5).map(x=>({T:toB(x.t),wr:x.wr,ex:x.ex,g:x.g}))};
   const top=(LMAPS[id]?.top||[]).map(([n,w])=>byName.get(n)).filter(Boolean);
   if(top.length>=5){const pool=top.slice(0,10),res=[];for(let i=0;i<pool.length;i++)for(let j=i+1;j<pool.length;j++)for(let k=j+1;k<pool.length;k++){const T=[pool[i],pool[j],pool[k]];let s=(30-i-j-k)*0.15+sy(T[0].n,T[1].n)+sy(T[0].n,T[2].n)+sy(T[1].n,T[2].n)-2*(3-new Set(T.map(x=>x.c)).size)+T.reduce((a,b)=>a+modePow(b,m),0)*0.3;res.push({T,s})}
@@ -1732,7 +1732,7 @@ $('#compsOut').addEventListener('click',e=>{
   const mp=e.target.closest('[data-cmap]');if(mp){state.cmap=mp.dataset.cmap;haptic();renderComps();return}
   const x=e.target.closest('[data-cnt]');if(x)openCounter(toB(x.dataset.cnt.split('|')),state.cmode);
 });
-function srcTag(){const q=LV&&LV._q;return q?`<span class="src-tag q">${qImg(q,14)}${t(q==='r'?'q.ranked':'q.casual')}</span>`:LIVE?`<span class="src-tag live">${t('q.all')}</span>`:''}
+function srcTag(){const q=LV&&LV._q&&LV._q[0];return q?`<span class="src-tag q">${qImg(q,14)}${q==='r'?t('q.ranked')+' '+esc(rankName(state.rmin))+'+':t('q.casual')}</span>`:LIVE?`<span class="src-tag live">${t('q.all')}</span>`:''}
 
 /* =========================================================================
    DRAFT: 3ª ESCOLHA IDEAL
