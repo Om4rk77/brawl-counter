@@ -1616,7 +1616,7 @@ function renderQBar(){
   el.innerHTML=`<span class="lens" aria-hidden="true"></span>`+opt.map(([k,ic,l,n])=>`<button class="qseg press" role="radio" data-q="${k}" aria-checked="${state.queue===k}" ${k!=='all'&&!ok?'disabled':''} title="${esc(l)}${n?` · ${fmt(n,0)} ${t('q.games')}`:''}">${ic}<span>${esc(l)}</span></button>`).join('');
   const L=el.querySelector('.lens'),a=el.querySelector('[aria-checked="true"]');
   requestAnimationFrame(()=>{if(a){L.style.width=a.offsetWidth+'px';L.style.transform=`translate3d(${a.offsetLeft}px,0,0)`}});
-  const n=$('#qNote');if(n)n.innerHTML=!LIVE?'':!ok?t('q.soon'):state.queue==='ranked'?t('q.rankedNote',{n:fmt(Q.r.battles,0)}):state.queue==='casual'?t('q.casualNote',{n:fmt(Q.c.battles,0)}):t('q.allNote');
+  const n=$('#qNote');if(n)n.innerHTML=!LIVE?'':!ok?t('q.soon'):state.queue!=='all'&&!(LV&&LV._q)?t('q.few',{n:fmt((state.queue==='ranked'?Q.r:Q.c).battles,0)}):state.queue==='ranked'?t('q.rankedNote',{n:fmt(Q.r.battles,0)}):state.queue==='casual'?t('q.casualNote',{n:fmt(Q.c.battles,0)}):t('q.allNote');
 }
 function setQueue(q){if(q===state.queue)return;state.queue=q;store.set('queue',q);haptic();applyData();renderQBar();rerender();renderSub()}
 document.addEventListener('click',e=>{const x=e.target.closest('#qBar [data-q]');if(x&&!x.disabled)setQueue(x.dataset.q)});
@@ -1826,7 +1826,7 @@ $('#proOut')?.addEventListener('click',e=>{const x=e.target.closest('[data-ptip]
 Object.assign(I18N.pt,{
   'nav.pro':'Competitivo','tab.pro':'Pro',
   'q.all':'Tudo','q.casual':'Casual','q.ranked':'Ranqueada','q.games':'partidas',
-  'q.soon':'O filtro casual/ranqueada liga sozinho na próxima coleta de dados.',
+  'q.few':'Ainda juntando partidas dessa fila ({n} até agora); por enquanto mostrando tudo.','q.soon':'O filtro casual/ranqueada liga sozinho na próxima coleta de dados.',
   'q.allNote':'Somando partidas casuais e ranqueadas.','q.casualNote':'Só partidas de troféus · {n} partidas.','q.rankedNote':'Só ranqueada de Lendário pra cima · {n} partidas.',
   'comps.maps2':'Mapas','comps.poolR':'mapas mais jogados na ranqueada','comps.poolC':'rotação atual e mapas mais jogados','comps.inRot':'Na rotação',
   'comps.top5':'Top 5 em {m}','comps.src.map':'partidas reais neste mapa','comps.src.mapTop':'montadas com os melhores do mapa','comps.src.mode':'melhores do modo (pouco jogo no mapa)','comps.src.calc':'calculadas pelo modelo',
@@ -1859,7 +1859,7 @@ Object.assign(I18N.pt,{
 Object.assign(I18N.en,{
   'nav.pro':'Competitive','tab.pro':'Pro',
   'q.all':'All','q.casual':'Casual','q.ranked':'Ranked','q.games':'games',
-  'q.soon':'The casual/ranked filter turns on with the next data collection.',
+  'q.few':'Still collecting games for this queue ({n} so far); showing all for now.','q.soon':'The casual/ranked filter turns on with the next data collection.',
   'q.allNote':'Casual and ranked games combined.','q.casualNote':'Trophy games only · {n} games.','q.rankedNote':'Ranked from Legendary up only · {n} games.',
   'comps.maps2':'Maps','comps.poolR':'most played ranked maps','comps.poolC':'current rotation and most played maps','comps.inRot':'In rotation',
   'comps.top5':'Top 5 on {m}','comps.src.map':'real games on this map','comps.src.mapTop':'built from the map’s best brawlers','comps.src.mode':'best in mode (few games on map)','comps.src.calc':'computed by the model',
@@ -1891,7 +1891,7 @@ Object.assign(I18N.en,{
 Object.assign(I18N.es,{
   'nav.pro':'Competitivo','tab.pro':'Pro',
   'q.all':'Todo','q.casual':'Casual','q.ranked':'Clasificatoria','q.games':'partidas',
-  'q.soon':'El filtro casual/clasificatoria se activa con la próxima recolección de datos.',
+  'q.few':'Aún juntando partidas de esta cola ({n} hasta ahora); por ahora mostrando todo.','q.soon':'El filtro casual/clasificatoria se activa con la próxima recolección de datos.',
   'q.allNote':'Partidas casuales y clasificatorias juntas.','q.casualNote':'Solo partidas de trofeos · {n} partidas.','q.rankedNote':'Solo clasificatoria de Legendario para arriba · {n} partidas.',
   'comps.maps2':'Mapas','comps.poolR':'mapas más jugados en clasificatoria','comps.poolC':'rotación actual y mapas más jugados','comps.inRot':'En rotación',
   'comps.top5':'Top 5 en {m}','comps.src.map':'partidas reales en este mapa','comps.src.mapTop':'armadas con los mejores del mapa','comps.src.mode':'mejores del modo (pocas partidas en el mapa)','comps.src.calc':'calculadas por el modelo',
