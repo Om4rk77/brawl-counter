@@ -72,17 +72,24 @@ async function readJSON(f, d) { try { return JSON.parse(await fs.readFile(f, 'ut
 async function writeJSON(f, v) { await fs.mkdir(path.dirname(f), { recursive: true }); await fs.writeFile(f, JSON.stringify(v)); }
 const SECS = ['b', 'mode', 'map', 'vs', 'with', 'trio', 'mtrio'];
 function emptyQ() { return { battles: 0, b: {}, mode: {}, map: {}, vs: {}, with: {}, trio: {}, mtrio: {} }; }
-function emptyDay() { return { battles: 0, ranked: 0, b: {}, mode: {}, map: {}, vs: {}, with: {}, trio: {}, mtrio: {}, mapNames: {}, q: { c: emptyQ(), r: emptyQ() } }; }
-// ranqueada: só elos acima de Mítico (Lendário I = 16). No log de ranqueada, brawler.trophies traz o elo (1..22).
-const MIN_RANK = +(process.env.MIN_RANK || 16);
+// Filas: c = casual (troféus). Ranqueada separada por faixa de elo (média do elo dos 6 jogadores):
+// no log de ranqueada, brawler.trophies traz o elo (1..22). Faixas: 10 Diamante, 13 Mítico, 16 Lendário, 19 Mestre, 22 Pro.
+// 'r' (dias antigos) = partidas com média >= 16, sem faixa exata.
+const BANDS = [10, 13, 16, 19, 22];
+const QKEYS = ['c', 'r', ...BANDS.map(b => 'r' + b)];
+const emptyQs = () => Object.fromEntries(QKEYS.map(k => [k, emptyQ()]));
+function emptyDay() { return { battles: 0, ranked: 0, b: {}, mode: {}, map: {}, vs: {}, with: {}, trio: {}, mtrio: {}, mapNames: {}, q: emptyQs(), sd: {}, sdp: {} }; }
 function queueOf(bt, teams) {
   if (RANKED_TYPES.has(bt.type)) {
     const r = teams.flat().map(p => p.brawler?.trophies).filter(x => typeof x === 'number');
-    if (r.length && r.every(x => x <= 30)) { const avg = r.reduce((a, b) => a + b, 0) / r.length; return avg >= MIN_RANK ? 'r' : null; }
-    return 'r';
+    if (r.length === 6 && r.every(x => x >= 1 && x <= 22)) { const avg = r.reduce((a, b) => a + b, 0) / r.length;
+      let band = null; for (const b of BANDS) if (avg >= b) band = b; return band ? 'r' + band : null; }
+    return null; // sem elo confiável: fica fora da ranqueada
   }
   return bt.type === 'ranked' || !bt.type ? 'c' : null;
 }
+// Combate Solo/Duplo: só sabemos a posição do dono do log. "Top" = metade de cima (solo 1º–4º, duplo 1º–2º).
+const SD_MODES = { soloShowdown: 'SD', duoShowdown: 'DSD' };
 function addBattle(d, T, win, mode, map) {
   d.battles++;
   T.forEach((tm, i) => {
@@ -98,6 +105,7 @@ function addBattle(d, T, win, mode, map) {
     if (map) inc(d.mtrio, map + '|' + key, 1, w);
   });
 }
+const incR = (o, k, w, r) => { const x = o[k] || (o[k] = [0, 0, 0]); x[0]++; x[1] += w; x[2] += r; };
 const inc = (o, k, g, w) => { const x = o[k] || (o[k] = [0, 0]); x[0] += g; x[1] += w; };
 
 /* ------------- coleta ------------- */
@@ -130,6 +138,19 @@ async function main() {
     for (const it of (log?.items || [])) {
       const t = parseBT(it.battleTime); if (!(t > cutoff && t <= t0)) continue;
       const bt = it.battle || {}; const teams = bt.teams;
+      const sdm = SD_MODES[it.event?.mode || bt.mode];
+      if (sdm && typeof bt.rank === 'number' && it.event?.id && (bt.type === 'ranked' || !bt.type)) {
+        const key = it.battleTime + '|' + log.__tag; if (seen.has(key)) continue; seen.add(key);
+        const map = String(it.event.id), d = days[dayKey(t)] || (days[dayKey(t)] = emptyDay());
+        if (it.event.map) d.mapNames[map] = [it.event.map, sdm];
+        if (sdm === 'SD') { const me = (bt.players || []).find(p => p.tag === log.__tag); const n = me?.brawler?.name; if (!n) continue;
+          incR(d.sd, map + '|' + n, bt.rank <= 4 ? 1 : 0, bt.rank); }
+        else { const tm = (bt.teams || []).find(x => x.some(p => p.tag === log.__tag)); if (!tm || tm.length !== 2) continue;
+          const me = tm.find(p => p.tag === log.__tag), mate = tm.find(p => p.tag !== log.__tag); const n = me?.brawler?.name; if (!n) continue;
+          const w = bt.rank <= 2 ? 1 : 0; incR(d.sd, map + '|' + n, w, bt.rank);
+          if (mate?.brawler?.name) incR(d.sdp, map + '|' + [n, mate.brawler.name].sort().join(','), w, bt.rank); }
+        continue;
+      }
       if (!Array.isArray(teams) || teams.length !== 2 || teams.some(tm => tm.length !== 3)) continue;
       if (!bt.result || bt.result === 'draw') continue;
       const allTags = teams.flat().map(p => p.tag).sort().join(',');
@@ -155,7 +176,9 @@ async function main() {
 
 /* ------------- mescla com o estado ------------- */
 function addSecs(a, b) { a.battles += b.battles || 0; for (const sec of SECS) { a[sec] = a[sec] || {}; for (const [kk, [g, w]] of Object.entries(b[sec] || {})) inc(a[sec], kk, g, w); } }
-function addInto(a, b) { addSecs(a, b); a.q = a.q || { c: emptyQ(), r: emptyQ() }; for (const k of ['c', 'r']) { a.q[k] = a.q[k] || emptyQ(); if (b.q?.[k]) addSecs(a.q[k], b.q[k]); } }
+function addR(a, b) { for (const [k, [g, w, r]] of Object.entries(b || {})) { const x = a[k] || (a[k] = [0, 0, 0]); x[0] += g; x[1] += w; x[2] += r; } }
+function addInto(a, b) { addSecs(a, b); a.q = a.q || emptyQs(); for (const k of QKEYS) { a.q[k] = a.q[k] || emptyQ(); if (b.q?.[k]) addSecs(a.q[k], b.q[k]); }
+  a.sd = a.sd || {}; a.sdp = a.sdp || {}; addR(a.sd, b.sd); addR(a.sdp, b.sdp); }
 async function mergeDays(days) {
   const dir = path.join(STATE_DIR, 'days');
   await fs.mkdir(dir, { recursive: true });
@@ -264,17 +287,34 @@ function compute(sum, brawlers, rot) {
   return { brawlers: out, trios, mapTrios, vsx, wx, battles: sum.battles, rotation, maps: Object.fromEntries(Object.entries(mapStats).map(([k, v]) => [k, { name: sum.mapNames[k]?.[0] || '', mode: sum.mapNames[k]?.[1] || '', g: Math.round((mapGames[k] || 0) / 6), top: v.slice(0, 10) }])), mapIndex: sum.mapNames, list: brawlers };
 }
 
+function showdown(sum) {
+  const out = { SD: {}, DSD: {} }; const per = {};
+  for (const [k, [g, w, r]] of Object.entries(sum.sd || {})) { const [m, n] = k.split('|'); (per[m] || (per[m] = [])).push([n, g, w, r]); }
+  for (const [m, l] of Object.entries(per)) {
+    const mode = sum.mapNames[m]?.[1]; if (!out[mode]) continue;
+    const G = l.reduce((s, x) => s + x[1], 0), W = l.reduce((s, x) => s + x[2], 0), base = G ? W / G : .4;
+    const top = l.filter(x => x[1] >= 5).map(([n, g, w, r]) => [n, +(shrink(w, g, base, 8) * 100).toFixed(1), g, +(r / g).toFixed(2)]).sort((a, b) => b[1] - a[1]).slice(0, 12);
+    const duos = Object.entries(sum.sdp || {}).filter(([k, [g]]) => k.startsWith(m + '|') && g >= 3)
+      .map(([k, [g, w, r]]) => [k.split('|')[1].split(','), +(shrink(w, g, base, 6) * 100).toFixed(1), g, +(r / g).toFixed(2)]).sort((a, b) => b[1] - a[1]).slice(0, 8);
+    out[mode][m] = { name: sum.mapNames[m]?.[0] || '', g: G, base: +(base * 100).toFixed(1), top, ...(mode === 'DSD' ? { duos } : {}) };
+  }
+  return out;
+}
+
 /* ------------- execução ------------- */
 (async () => {
   try {
     const { t0, meta, days, brawlers, rot, players } = await main();
     const { sum, days: dayList } = await mergeDays(days);
     const stats = compute(sum, brawlers, rot);
-    // filas separadas: casual (troféus) e ranqueada (acima de Mítico)
-    const queues = {};
-    for (const k of ['c', 'r']) { const qs = { ...sum.q[k], mapNames: sum.mapNames }; const c = compute(qs, brawlers, rot);
-      queues[k] = { battles: qs.battles, brawlers: c.brawlers, trios: c.trios, mapTrios: c.mapTrios, vsx: c.vsx, wx: c.wx, maps: Object.fromEntries(Object.entries(c.maps).map(([m, v]) => [m, { g: v.g, top: v.top }])) }; }
-    stats.queues = queues;
+    // filas: casual e ranqueada acumulada por elo mínimo (r10 = Diamante+, ..., r22 = Pro)
+    const queues = {}; const pack = qs => { const c = compute({ ...qs, mapNames: sum.mapNames }, brawlers, rot);
+      return { battles: qs.battles, brawlers: c.brawlers, trios: c.trios, mapTrios: c.mapTrios, vsx: c.vsx, wx: c.wx, maps: Object.fromEntries(Object.entries(c.maps).map(([m, v]) => [m, { g: v.g, top: v.top }])) }; };
+    queues.c = pack(sum.q.c);
+    for (const b of BANDS) { const acc = emptyQ(); for (const x of BANDS) if (x >= b) addSecs(acc, sum.q['r' + x]); if (b <= 16) addSecs(acc, sum.q.r); queues['r' + b] = pack(acc); }
+    queues.r = queues.r16;
+    stats.queues = queues; stats.rankBands = BANDS;
+    stats.showdown = showdown(sum);
     const out = {
       meta: { updated: new Date().toISOString(), windowDays: WINDOW_DAYS, days: dayList, battles: sum.battles,
         rankedBattles: sum.ranked, players: players.length, newBattles: Object.values(days).reduce((s, d) => s + d.battles, 0),
