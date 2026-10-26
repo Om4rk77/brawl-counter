@@ -570,6 +570,76 @@ body.stacked #app{transform:scale(.94) translate3d(0,10px,0);border-radius:24px;
 .brand-mark.logo{background:none;box-shadow:none;width:38px;height:38px;border-radius:0}
 .brand-mark.logo img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 4px 8px rgba(0,0,0,.25))}
 .view{will-change:auto}
+
+/* fila casual/ranqueada */
+.qwrap{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:14px}
+.qbar{position:relative;display:inline-flex;padding:4px;border-radius:999px;gap:2px;isolation:isolate}
+.qbar .lens{position:absolute;left:0;top:4px;bottom:4px;border-radius:999px;background:var(--surface);box-shadow:0 6px 18px -8px rgba(0,0,0,.35),inset 0 0 0 .5px var(--sep);transition:transform .55s var(--bounce),width .55s var(--bounce);z-index:-1;will-change:transform}
+.qseg{display:inline-flex;align-items:center;gap:7px;height:36px;padding:0 14px 0 10px;border-radius:999px;font-size:13.5px;font-weight:660;color:var(--fg-2);transition:color .25s}
+.qseg[aria-checked="true"]{color:var(--fg)}
+.qseg:disabled{opacity:.4;cursor:not-allowed}
+.qseg .qdot{display:grid;place-items:center;width:20px;height:20px}.qseg .qdot svg{width:16px;height:16px}
+.qnote{font-size:12.5px;color:var(--fg-3);max-width:420px}
+.src-tag.q{display:inline-flex;align-items:center;gap:4px;margin-right:6px;color:var(--fg)}
+.fchip .cnt{font-size:11.5px;color:inherit;opacity:.6;margin-left:2px}
+.mini-btn{display:inline-flex;align-items:center;gap:5px}.mini-btn svg{width:14px;height:14px}
+/* mapas nas comps */
+.map-strip{gap:10px;padding-bottom:10px}
+.mtile{flex:none;width:150px;border-radius:20px;overflow:hidden;background:var(--surface);box-shadow:var(--card-shadow);display:grid;text-align:left;position:relative;transition:transform .4s var(--bounce),box-shadow .3s}
+.mtile[aria-pressed="true"]{box-shadow:0 0 0 2.5px var(--accent),var(--card-shadow);transform:translateY(-2px)}
+.mtile-art{position:relative;aspect-ratio:16/10;overflow:hidden;background:color-mix(in srgb,var(--mc) 28%,var(--surface-2))}
+.mtile-art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .5s}.mtile-art img.ok{opacity:1}
+.mtile-n{padding:8px 10px 10px;font-weight:700;font-size:13.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mtile-b{position:absolute;top:8px;left:8px;font-size:10.5px;font-weight:720;padding:3px 8px;border-radius:999px;background:rgba(0,0,0,.55);color:#fff;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+/* sheet genérico */
+.sheet-body{overflow:auto;padding:0 16px 20px;touch-action:pan-y;overscroll-behavior:contain;flex:1;min-height:0}
+.cnt-vs{display:flex;align-items:center;gap:12px;padding:12px;border-radius:20px;background:var(--fill)}
+.cnt-vs .t{font-weight:700;flex:1;min-width:0}
+.cnt-item{display:grid;grid-template-columns:auto auto minmax(0,1fr);gap:12px;align-items:center;padding:12px 14px;position:relative}
+.cnt-item:not(:has(.rank)){grid-template-columns:auto minmax(0,1fr) auto}
+.cnt-item+.cnt-item::before{content:"";position:absolute;top:0;left:14px;right:14px;border-top:.5px solid var(--sep)}
+.cnt-item .t{font-weight:680;margin-bottom:6px}
+.cnt-item .rank{font-family:var(--font-d);font-weight:800;font-size:18px;color:var(--fg-3);width:18px}
+.cnt-item.first .rank{color:var(--good)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.tips{margin:0;padding:0 0 0 18px;display:grid;gap:8px;font-size:14px;line-height:1.45}
+/* 3ª escolha */
+.third{display:grid;gap:14px;padding:18px}
+.third-trio{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap}
+.third-trio .tm{display:grid;justify-items:center;gap:4px;font-size:12px;font-weight:650;color:var(--fg-2)}
+.third-trio .tm.pick{color:var(--fg)}.third-trio .tm.pick .av{box-shadow:0 0 0 3px var(--cc),0 10px 26px -10px var(--cc)}
+.third-trio .plus-s{font-family:var(--font-d);font-size:20px;font-weight:800;color:var(--fg-3)}
+/* competitivo */
+#pModes{margin-bottom:12px}
+.pro-sum{padding:16px 18px;display:grid;gap:12px;margin-bottom:6px}
+.pro-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.pro-stats div{display:grid;gap:2px}.pro-stats b{font-family:var(--font-d);font-size:26px;font-weight:800;letter-spacing:-.02em}.pro-stats span{font-size:12.5px;color:var(--fg-2)}
+.pro-sum a{color:var(--accent);font-weight:650}
+.pb-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
+.pb{padding:14px;display:grid;gap:4px}.pb.ban .kicker{color:var(--bad)}
+.pb-row{display:grid;grid-template-columns:auto 88px minmax(0,1fr) auto;gap:10px;align-items:center;padding:5px 2px;text-align:left;width:100%}
+.pb-row .nm{font-weight:650;font-size:13.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pb-row .bar{height:6px;border-radius:6px;background:var(--fill);overflow:hidden}.pb-row .bar i{display:block;height:100%;width:100%;border-radius:6px;background:var(--good);transform-origin:left}
+.pb.ban .bar i{background:var(--bad)}
+.pb-row .v{font-size:12px;color:var(--fg-2)}
+.pairs{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
+.pair{display:flex;align-items:center;gap:12px;padding:10px 14px}.pair .t{font-weight:680;font-size:13.5px}.pair .s{font-size:12px;color:var(--fg-2)}
+.pm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+.pm{overflow:hidden;display:grid;align-content:start}
+.pm-art{position:relative;aspect-ratio:16/8;background:color-mix(in srgb,var(--mc) 28%,var(--surface-2));overflow:hidden}
+.pm-art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .5s}.pm-art img.ok{opacity:1}
+.pm-art::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(0,0,0,.55))}
+.pm-n{position:absolute;left:12px;bottom:8px;z-index:1;color:#fff;font-family:var(--font-d);font-weight:760;font-size:16px}
+.pm-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 12px}.pm-row+.pm-row{border-top:.5px solid var(--sep)}
+.pm-row .s{font-size:12.5px;color:var(--fg-2)}
+.game{padding:12px 14px;display:grid;gap:8px;position:relative}.game+.game::before{content:"";position:absolute;top:0;left:14px;right:14px;border-top:.5px solid var(--sep)}
+.gm-top{display:flex;justify-content:space-between;gap:10px;font-size:11.5px;color:var(--fg-3);font-weight:620}
+.gm-row{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:10px;align-items:center}
+.gm-row .side{display:flex;align-items:center;gap:8px;min-width:0;opacity:.55}.gm-row .side.r{justify-content:flex-end}
+.gm-row .side.win{opacity:1}.gm-row .side.win .tn{color:var(--good)}
+.gm-row .tn{font-weight:700;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.gm-row .vs-s{font-family:var(--font-d);font-weight:800;font-size:12px;color:var(--fg-3)}
+@media (max-width:520px){.gm-row .tn{display:none}.pb-row{grid-template-columns:auto 70px minmax(0,1fr) auto}}
 </style>
 </head>
 <body>
@@ -607,6 +677,7 @@ body.stacked #app{transform:scale(.94) translate3d(0,10px,0);border-radius:24px;
     <symbol id="i-plus" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" d="M12 5v14M5 12h14"/></symbol>
     <symbol id="i-person" viewBox="0 0 24 24"><g fill="currentColor"><circle cx="12" cy="8" r="4.2"/><path d="M4 20.5c.9-4.3 4.2-6.6 8-6.6s7.1 2.3 8 6.6c.1.6-.3 1-.9 1H4.9c-.6 0-1-.4-.9-1Z"/></g></symbol>
     <symbol id="i-draft" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3.6" fill="currentColor"/><path d="M12 1.8v3.2M12 19v3.2M1.8 12h3.2M19 12h3.2"/></g></symbol>
+    <symbol id="i-trophy" viewBox="0 0 24 24"><path fill="currentColor" d="M7 3h10v2h3.2c.5 0 .8.4.8.8 0 3.3-2 5.7-4.9 6.1A5.6 5.6 0 0 1 13 15.7V18h3c.6 0 1 .4 1 1v1.2c0 .4-.4.8-.8.8H7.8c-.4 0-.8-.4-.8-.8V19c0-.6.4-1 1-1h3v-2.3a5.6 5.6 0 0 1-3.1-3.8C5 11.5 3 9.1 3 5.8c0-.4.3-.8.8-.8H7V3Zm0 4H5.1c.3 1.7 1.2 2.9 2.4 3.4A9 9 0 0 1 7 7Zm10 0c0 1.2-.2 2.3-.5 3.4 1.2-.5 2.1-1.7 2.4-3.4H17Z"/></symbol>
     <symbol id="i-team" viewBox="0 0 24 24"><g fill="currentColor"><circle cx="12" cy="7.6" r="3.4"/><circle cx="5.2" cy="9.6" r="2.5"/><circle cx="18.8" cy="9.6" r="2.5"/><path d="M6.6 20c.5-3.6 2.6-5.6 5.4-5.6s4.9 2 5.4 5.6c.1.5-.3.9-.8.9H7.4c-.5 0-.9-.4-.8-.9ZM1.3 18.6c.3-2.4 1.6-3.8 3.6-4 .3 0-.3 1.1-.6 3.4l-.1.9H2c-.4 0-.8-.2-.7-.3ZM22.7 18.6c-.3-2.4-1.6-3.8-3.6-4-.3 0 .3 1.1.6 3.4l.1.9H22c.4 0 .8-.2.7-.3Z"/></g></symbol>
     <symbol id="i-list" viewBox="0 0 24 24"><g fill="currentColor"><rect x="3" y="4" width="18" height="4" rx="2"/><rect x="3" y="10" width="13" height="4" rx="2"/><rect x="3" y="16" width="8" height="4" rx="2"/></g></symbol>
     <symbol id="i-split" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="4" width="7.5" height="16" rx="2.5"/><rect x="13.5" y="4" width="7.5" height="16" rx="2.5"/></g></symbol>
@@ -632,6 +703,7 @@ body.stacked #app{transform:scale(.94) translate3d(0,10px,0);border-radius:24px;
         <button role="tab" data-view="comps" aria-selected="false"><span data-i18n="nav.comps">Composições</span></button>
         <button role="tab" data-view="ranking" aria-selected="false"><span data-i18n="nav.ranking">Ranking</span></button>
         <button role="tab" data-view="compare" aria-selected="false"><span data-i18n="nav.compare">Comparar</span></button>
+        <button role="tab" data-view="pro" aria-selected="false"><span data-i18n="nav.pro">Competitivo</span></button>
       </div>
       <span class="mini-title" id="miniTitle" aria-hidden="true">Agora</span>
     </div>
@@ -645,6 +717,7 @@ body.stacked #app{transform:scale(.94) translate3d(0,10px,0);border-radius:24px;
 <div class="wrap hero">
   <h1 class="large-title" id="pageTitle">Agora</h1>
   <p class="sub" id="pageSub">…</p>
+  <div class="qwrap"><div class="qbar glass" id="qBar" role="radiogroup" aria-label="Fila"></div><span class="qnote" id="qNote"></span></div>
   <div class="search" id="searchBox">
     <label class="search-field glass spec" for="q">
       <svg aria-hidden="true"><use href="#i-search"/></svg>
@@ -725,6 +798,10 @@ body.stacked #app{transform:scale(.94) translate3d(0,10px,0);border-radius:24px;
     <div class="card verdict" id="verdict"></div>
     <div class="list cmp-table" id="cmpTable"></div>
   </section>
+  <section class="view" id="view-pro" hidden>
+    <div class="hscroll" id="pModes"></div>
+    <div id="proOut" class="group"></div>
+  </section>
 </main>
 
 <footer class="wrap foot" id="foot"></footer>
@@ -738,6 +815,7 @@ body.stacked #app{transform:scale(.94) translate3d(0,10px,0);border-radius:24px;
     <button role="tab" data-view="draft" aria-selected="false"><svg aria-hidden="true"><use href="#i-draft"/></svg><span data-i18n="tab.draft">Draft</span></button>
     <button role="tab" data-view="comps" aria-selected="false"><svg aria-hidden="true"><use href="#i-team"/></svg><span data-i18n="tab.comps">Times</span></button>
     <button role="tab" data-view="ranking" aria-selected="false"><svg aria-hidden="true"><use href="#i-list"/></svg><span data-i18n="tab.ranking">Ranking</span></button>
+    <button role="tab" data-view="pro" aria-selected="false"><svg aria-hidden="true"><use href="#i-trophy"/></svg><span data-i18n="tab.pro">Pro</span></button>
   </div>
   <button class="glass glass-btn spec" id="dockSearch" data-i18n-aria="ui.search" aria-label="Buscar"><svg aria-hidden="true"><use href="#i-search"/></svg></button>
 </nav>
@@ -749,7 +827,7 @@ body.stacked #app{transform:scale(.94) translate3d(0,10px,0);border-radius:24px;
           data/meta.json   (nomes oficiais em 3 idiomas, ids e imagens — diário)
           data/tips.json   (dicas traduzidas para inglês e espanhol)
    ========================================================================= */
-const URLS={live:'data/live.json',stat:'data/static.json',meta:'data/meta.json',tips:'data/tips.json'};
+const URLS={live:'data/live.json',stat:'data/static.json',meta:'data/meta.json',tips:'data/tips.json',pro:'data/pro.json'};
 const POLL_MS=5*60*1000;
 const CDN='https://cdn.brawlify.com', BFY='https://brawlify.com/images';
 
@@ -846,8 +924,9 @@ const state={
   rk:{cls:new Set(),rar:'all',mode:'all',sort:'wr',dir:-1},
   cmp:['piper','ash'], theme:store.get('theme','auto'),
   draft:{mode:store.get('dmode','any'),enemy:[null,null,null],ally:[null,null],example:true},
-  cmode:'GG', showAll:{st:false,wk:false}, mapMode:'all'
+  cmode:'GG', showAll:{st:false,wk:false}, mapMode:'all', queue:store.get('queue','all'), pmode:'GG', cmap:null, cmapMode:null
 };
+let LV=null,VSX=null,WX=null,MTRIOS={},LMAPS={};
 let DATA=[],TRIOS={},META={},LIVE=null,STATIC=null,NAMES=null,TIPS={},ROT=[],MAPS={};
 let byName=new Map(), bySlug=new Map(), MU=new Map(), SY=new Map();
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
@@ -925,6 +1004,8 @@ function buildModel(){
   MU=new Map();SY=new Map();
   const add=(m,a,b,v)=>{const k=key(a,b);const x=m.get(k)||[];x.push(v);m.set(k,x)};
   for(const b of DATA){for(const [n,p] of b.st){add(MU,b.n,n,p);add(MU,n,b.n,-p)}for(const [n,p] of b.wk){add(MU,b.n,n,-p);add(MU,n,b.n,p)}for(const [n,p] of (b.mt||[])){add(SY,b.n,n,p);add(SY,n,b.n,p)}}
+  if(VSX)for(const [a,l] of Object.entries(VSX))for(const [b,p] of l){add(MU,a,b,p);add(MU,b,a,-p)}
+  if(WX)for(const [a,l] of Object.entries(WX))for(const [b,p] of l)add(SY,a,b,p);
   for(const m of [MU,SY])for(const [k,v] of m)m.set(k,v.reduce((a,c)=>a+c,0)/v.length);
 }
 const mu=(a,b)=>MU.has(key(a,b))?MU.get(key(a,b)):null;
@@ -948,9 +1029,9 @@ function buildMini(b){
 /* =========================================================================
    NAVEGAÇÃO: abas com lente de vidro, arrastável
    ========================================================================= */
-const VIEWS=['now','matchup','draft','comps','ranking','compare'];
-const HASH={now:'now',matchup:'matchups',draft:'draft',comps:'comps',ranking:'ranking',compare:'compare'};
-const HASH_IN={now:'now',agora:'now',ahora:'now',matchups:'matchup',draft:'draft',comps:'comps',composicoes:'comps',composiciones:'comps',ranking:'ranking',compare:'compare',comparar:'compare'};
+const VIEWS=['now','matchup','draft','comps','ranking','compare','pro'];
+const HASH={now:'now',matchup:'matchups',draft:'draft',comps:'comps',ranking:'ranking',compare:'compare',pro:'competitivo'};
+const HASH_IN={now:'now',agora:'now',ahora:'now',matchups:'matchup',draft:'draft',comps:'comps',composicoes:'comps',composiciones:'comps',ranking:'ranking',compare:'compare',comparar:'compare',pro:'pro',competitivo:'pro',competitive:'pro'};
 /* lente com física de mola: interrompível, guarda a velocidade, estica conforme a velocidade */
 const LENS=new WeakMap(),LK=560,LC=2*Math.sqrt(560)*.74;
 function lensState(lens){let st=LENS.get(lens);if(!st){st={x:0,w:0,vx:0,vw:0,tx:0,tw:0,run:false,init:false,drag:false,pw:-1};LENS.set(lens,st)}return st}
@@ -979,9 +1060,9 @@ function setView(v,opts={}){
     VIEWS.forEach(k=>{$('#view-'+k).hidden=k!==v});
     $('#pageTitle').textContent=t('nav.'+v);$('#miniTitle').textContent=t('nav.'+v);
     document.title=(v==='now'?'':t('nav.'+v)+' · ')+'Brawl Counter';
-    const accent={now:'var(--c-AR)',draft:'var(--c-MK)',comps:'var(--c-SP)',ranking:'var(--c-MK)',compare:'var(--c-CT)'}[v];
+    const accent={now:'var(--c-AR)',draft:'var(--c-MK)',comps:'var(--c-SP)',ranking:'var(--c-MK)',compare:'var(--c-CT)',pro:'var(--c-TK)'}[v];
     if(v==='matchup'){const b=bySlug.get(state.sel);if(b)setAccent(`var(--c-${b.c})`)}else setAccent(accent);
-    if(viewEpoch[v]!==epoch){viewEpoch[v]=epoch;if(v==='now')renderNow();if(v==='draft')renderDraft();if(v==='comps')renderComps();if(v==='ranking')renderRanking(true);if(v==='compare')renderCompare()}
+    if(viewEpoch[v]!==epoch){viewEpoch[v]=epoch;if(v==='now')renderNow();if(v==='draft')renderDraft();if(v==='comps')renderComps();if(v==='ranking')renderRanking(true);if(v==='compare')renderCompare();if(v==='pro')renderPro()}
     if(v==='matchup'&&opts.render!==false&&profKey!==state.sel+':'+epoch)renderProfile(state.sel,false);
   };
   if(changed&&prevView)scrollMem[prevView]=scrollY;
@@ -1045,7 +1126,7 @@ function applyStaticI18n(){
   $$('[data-i18n-aria]').forEach(el=>el.setAttribute('aria-label',t(el.dataset.i18nAria)));
   $('#slotA').setAttribute('aria-label',t('cmp.chooseA'));$('#slotB').setAttribute('aria-label',t('cmp.chooseB'));
 }
-function setLang(l){if(!LANGS.includes(l)||l===state.lang)return;state.lang=l;store.set('lang',l);const go=()=>{applyStaticI18n();renderFoot();if(DATA.length){renderSub();rerender();setView(state.view,{keepHash:true,noScroll:true,instant:true})}};if(document.startViewTransition&&!reduce)document.startViewTransition(go);else go();setTimeout(()=>{placeLenses(true);toast(t('ui.langSet'))},60)}
+function setLang(l){if(!LANGS.includes(l)||l===state.lang)return;state.lang=l;store.set('lang',l);const go=()=>{applyStaticI18n();renderFoot();if(DATA.length){renderSub();renderQBar();rerender();setView(state.view,{keepHash:true,noScroll:true,instant:true})}};if(document.startViewTransition&&!reduce)document.startViewTransition(go);else go();setTimeout(()=>{placeLenses(true);toast(t('ui.langSet'))},60)}
 
 let layer=null;
 function closeLayer(){if(!layer)return;const L=layer;layer=null;L.scrim.classList.add('closing');L.box.classList.add('closing');document.body.classList.remove('stacked');document.body.style.overflow='';setTimeout(()=>{L.scrim.remove();L.box.remove()},L.box.classList.contains('sheet')?380:230);if(L.focus&&L.focus.isConnected)L.focus.focus({preventScroll:true})}
@@ -1296,11 +1377,12 @@ function renderDraft(){
   $('#enemySlots').innerHTML=D.enemy.map((s,i)=>slotHtml(s,'enemy',i)).join('');$('#allySlots').innerHTML=D.ally.map((s,i)=>slotHtml(s,'ally',i)).join('');
   $('#exTag').innerHTML=D.example&&D.enemy.some(Boolean)?`<span class="tag">${t('draft.example')}</span>`:'';
   const E=D.enemy.filter(Boolean).map(s=>bySlug.get(s)).filter(Boolean),L=D.ally.filter(Boolean).map(s=>bySlug.get(s)).filter(Boolean),out=$('#draftOut');
-  if(!E.length){out.innerHTML=`<div class="card empty-art"><span class="art">${icon('draft')}</span><p>${t('draft.pickEnemy')}</p></div>`;return}
+  const third=L.length===2?thirdHtml(L,E,D.mode):'';
+  if(!E.length){out.innerHTML=third+`<div class="card empty-art"><span class="art">${icon('draft')}</span><p>${t('draft.pickEnemy')}</p></div>`;animIn(out);return}
   const exclude=new Set(D.enemy.filter(Boolean)),solos=bestSolos(E,D.mode,new Set([...exclude,...L.map(b=>b.s)])),top=solos[0],trios=bestTrios(E,D.mode,L,exclude),bt=trios[0];
   const modeTxt=D.mode==='any'?'':t('draft.inModeT',{m:modeName(D.mode)}),lockedSet=new Set(L.map(b=>b.s));
   const vsItem=([e,v])=>`<div class="vs-item">${av(e)}<div><div class="vn">vs ${esc(e.n)}</div><span class="val num ${ptsClass(v)}">${v==null?t('draft.noData'):sgn(v)+' pts'}</span></div></div>`;
-  out.innerHTML=`
+  out.innerHTML=third+`
     <section class="group"><div class="gh"><h2>${t('draft.solo')}${esc(modeTxt)}</h2><span class="note">${t('draft.soloNote')}</span></div>
       <div class="card res-solo" style="--cc:var(--c-${top.c.c})">
         <button class="solo-top press" data-go="${top.c.s}">${av(top.c)}<div style="min-width:0"><div class="kicker">${t('draft.rec')}</div><div class="best-name" style="font-size:clamp(22px,3vw,28px)">${esc(top.c.n)}</div>
@@ -1335,24 +1417,7 @@ function loadEnemy(names,mode){state.draft.enemy=names.map(n=>byName.get(n)?.s||
    ========================================================================= */
 function compModeChips(){$('#cModes').innerHTML=RANKED_MODES.map(m=>`<button class="fchip press" data-cm="${m}" aria-pressed="${state.cmode===m}">${modeIcon(m)}${esc(modeName(m))}</button>`).join('')}
 function computedTrios(mode){const pool=DATA.filter(b=>modeWr(b,mode)!=null).sort((a,b)=>modeWr(b,mode)-modeWr(a,mode)).slice(0,22);const res=[];for(let i=0;i<pool.length;i++)for(let j=i+1;j<pool.length;j++)for(let k=j+1;k<pool.length;k++){const T=[pool[i],pool[j],pool[k]];let s=T.reduce((a,b)=>a+modePow(b,mode),0);s+=sy(T[0].n,T[1].n)+sy(T[0].n,T[2].n)+sy(T[1].n,T[2].n);s-=2*(3-new Set(T.map(x=>x.c)).size);res.push({T,s})}return res.sort((a,b)=>b.s-a.s).slice(0,6)}
-function renderComps(){
-  compModeChips();const m=state.cmode,list=TRIOS[m]||[],seen=new Map();
-  for(const x of list){const k=[...x.t].sort().join('|');const y=seen.get(k);if(!y)seen.set(k,{...x,maps:[x.map].filter(Boolean)});else{if(x.map)y.maps.push(x.map);if(x.wr>y.wr){y.wr=x.wr;y.ex=x.ex}}}
-  const rows=[...seen.values()].sort((a,b)=>b.wr-a.wr),out=$('#compsOut');
-  const row=(T,wr,sub,delta)=>`<div class="comp-row"><span class="av-stack">${T.map(x=>av(x)).join('')}</span><div style="min-width:0"><div class="t">${T.map(x=>esc(x.n)).join(' · ')}</div><div class="s">${sub}</div></div>
-    <div class="r">${wr!=null?`<span class="wr num" style="color:var(--${wr>=52?'good':wr<=47?'bad':'mid'})">${fmt(wr)}%</span>`:''}${delta!=null&&delta>0?`<span class="chip good num" style="height:24px;font-size:11.5px">${t('comps.vsExp',{v:fmt(delta)})}</span>`:''}<button class="mini-btn press" data-counter="${esc(T.map(x=>x.n).join('|'))}">${t('comps.counter')}</button></div></div>`;
-  if(rows.length){
-    out.innerHTML=`<div class="gh"><h2>${t('comps.best',{m:esc(modeName(m))})}</h2><span class="note">${TRIOS._live&&TRIOS._live[m]?`<span class="src-tag live">${t('p.live2')}</span>${t('comps.live')}`:t('comps.ref')}</span></div>
-      <div class="list">${rows.slice(0,12).map(x=>row(x.t.map(n=>byName.get(n)).filter(Boolean),x.wr,x.g?t('comps.games',{n:fmt(x.g,0)}):(x.maps.length?t('comps.maps',{m:x.maps.map(n=>esc(mapLabel(n))).join(', ')}):''),x.wr-x.ex)).join('')}</div>
-      <p class="mini-note">${t('comps.note')}</p>`;
-  }else{const ct=computedTrios(m);
-    out.innerHTML=`<div class="gh"><h2>${t('comps.sugg',{m:esc(modeName(m))})}</h2><span class="note">${t('comps.calc')}</span></div>
-      <div class="card" style="padding:14px 18px;color:var(--fg-2);font-size:14px">${t('comps.notPool',{m:esc(modeName(m))})}</div>
-      <div class="list">${ct.map(x=>row(x.T,null,x.T.map(y=>`${esc(y.n)} ${fmt(modeWr(y,m))}%`).join(' · '),null)).join('')}</div>`}
-  animIn(out);
-}
 $('#cModes').addEventListener('click',e=>{const x=e.target.closest('[data-cm]');if(!x)return;state.cmode=x.dataset.cm;renderComps()});
-$('#compsOut').addEventListener('click',e=>{const x=e.target.closest('[data-counter]');if(x)loadEnemy(x.dataset.counter.split('|'),state.cmode)});
 
 /* =========================================================================
    RANKING
@@ -1455,6 +1520,7 @@ const slugify=n=>n.toLowerCase().replace(/&/g,'').replace(/[^a-z0-9]+/g,'-').rep
 const liveTier=wr=>wr>=55?'S+':wr>=53?'S':wr>=51?'A':wr>=49?'B':wr>=47?'C':'D';
 const CODE_BY_CLS=Object.fromEntries(Object.entries(CLS_ID).map(([k,v])=>[v,k])), CODE_BY_RAR=Object.fromEntries(Object.entries(RAR_ID).map(([k,v])=>[v,k]));
 function merge(st,lv,nm){
+  const minG=lv&&lv._q?40:60;
   const list=st.brawlers.map(b=>({...b,live:false,muLive:false,mLive:false}));
   const byKey=new Map(list.map(b=>[nkey(b.n),b]));
   const nameOf=raw=>(byKey.get(nkey(raw))||{}).n||titleCase(raw);
@@ -1468,7 +1534,7 @@ function merge(st,lv,nm){
     for(const x of (lv.list||[])){if(!byKey.has(nkey(x.name))){const n=titleCase(x.name);const b={n,s:slugify(n),id:x.id,r:'?',c:'NA',wr:null,pr:null,t:null,m:[],mr:false,st:[],wk:[],mt:[],b:null,tips:[],why:'',live:false,muLive:false,mLive:false,isNew:true};list.push(b);byKey.set(nkey(x.name),b)}else{const b=byKey.get(nkey(x.name));if(b.id==null)b.id=x.id}}
     for(const [raw,L] of Object.entries(lv.brawlers||{})){
       const b=byKey.get(nkey(raw));if(!b)continue;
-      if(L.g>=60&&L.wr!=null){b.wr=L.wr;b.pr=L.pr;b.g=L.g;b.t=liveTier(L.wr);b.live=true}
+      if(L.g>=minG&&L.wr!=null){b.wr=L.wr;b.pr=L.pr;b.g=L.g;b.t=liveTier(L.wr);b.live=true}
       const ms=Object.entries(L.modes||{}).filter(([m,[g]])=>g>=25);
       if(ms.filter(([m])=>RANKED_MODES.includes(m)).length>=2){b.m=ms.map(([m,[g,wr]])=>[m,wr]).sort((a,c)=>c[1]-a[1]);b.mr=true;b.mLive=true}
       const mp=l=>(l||[]).map(([n,p,g])=>[nameOf(n),p,g]).filter(([n])=>byKey.has(nkey(n)));
@@ -1481,11 +1547,16 @@ function merge(st,lv,nm){
   let trios={...(st.trios||{})};trios._live={};
   for(const [m,l] of Object.entries(lv?.trios||{}))if(l.length>=3){trios[m]=l.map(x=>({t:x.t.map(nameOf),wr:x.wr,ex:x.ex,g:x.g,map:''}));trios._live[m]=true}
   const rot=(lv?.rotation||[]).map(e=>({...e,top:(e.top||[]).map(([n,w,g])=>[nameOf(n),w,g])}));
-  return {list,trios,rot};
+  const nl=l=>(l||[]).map(([n,p,g])=>[nameOf(n),p,g]).filter(([n])=>byKey.has(nkey(n)));
+  const vsx=lv?.vsx?Object.fromEntries(Object.entries(lv.vsx).map(([a,l])=>[nameOf(a),nl(l)])):null;
+  const wx=lv?.wx?Object.fromEntries(Object.entries(lv.wx).map(([a,l])=>[nameOf(a),nl(l)])):null;
+  const mtrios=Object.fromEntries(Object.entries(lv?.mapTrios||{}).map(([id,l])=>[id,l.map(x=>({...x,t:x.t.map(nameOf)}))]));
+  const maps=Object.fromEntries(Object.entries(lv?.maps||{}).map(([id,m])=>[id,{...m,top:(m.top||[]).map(([n,w,g])=>[nameOf(n),w,g])}]));
+  return {list,trios,rot,vsx,wx,mtrios,maps};
 }
 function applyData(){
-  const {list,trios,rot}=merge(STATIC,LIVE,NAMES);
-  DATA=list;TRIOS=trios;ROT=rot;META=STATIC.meta||{};MAP_BY_NAME=null;
+  const {list,trios,rot,vsx,wx,mtrios,maps}=merge(STATIC,(LV=liveView()),NAMES);
+  DATA=list;TRIOS=trios;ROT=rot;VSX=vsx;WX=wx;MTRIOS=mtrios;LMAPS=maps;PKEY=null;META=STATIC.meta||{};MAP_BY_NAME=null;
   byName=new Map(DATA.map(b=>[b.n,b]));bySlug=new Map(DATA.map(b=>[b.s,b]));
   indexModes();buildModel();
 }
@@ -1507,31 +1578,355 @@ function renderFoot(){
     <li>${dates.join(' ')}</li></ul></div>
     <div><h3>${t('foot.lim')}</h3><ul><li>${t('foot.lim1')}</li><li>${t('foot.lim2')}</li><li>${t('foot.lim3')}</li><li>${t('foot.lim4')}</li></ul></div></div>`;
 }
-function prewarm(){const ric=window.requestIdleCallback||(f=>setTimeout(()=>f({timeRemaining:()=>8}),120));const todo=['now','matchups','ranking','draft','comps','compare'].filter(v=>VIEWS.includes(v));const step=()=>{const v=todo.find(k=>k!==state.view&&viewEpoch[k]!==epoch);if(!v)return;viewEpoch[v]=epoch;try{if(v==='now')renderNow();else if(v==='draft')renderDraft();else if(v==='comps')renderComps();else if(v==='ranking')renderRanking(false);else if(v==='compare')renderCompare()}catch(e){delete viewEpoch[v]}ric(step,{timeout:1500})};ric(step,{timeout:1500})}
+function prewarm(){const ric=window.requestIdleCallback||(f=>setTimeout(()=>f({timeRemaining:()=>8}),120));const todo=['now','matchup','ranking','draft','comps','compare','pro'].filter(v=>VIEWS.includes(v));const step=()=>{const v=todo.find(k=>k!==state.view&&viewEpoch[k]!==epoch);if(!v)return;viewEpoch[v]=epoch;try{if(v==='now')renderNow();else if(v==='draft')renderDraft();else if(v==='comps')renderComps();else if(v==='ranking')renderRanking(false);else if(v==='compare')renderCompare();else if(v==='pro')renderPro()}catch(e){delete viewEpoch[v]}ric(step,{timeout:1500})};ric(step,{timeout:1500})}
 function rerender(){
   epoch++;for(const k in viewEpoch)delete viewEpoch[k];if(VIEWS.includes(state.view))viewEpoch[state.view]=epoch;
   renderPickFilters();renderGrid();renderMiniRows();renderRkControls();
   if(bySlug.has(state.sel))renderProfile(state.sel,false);
-  if(state.view==='now')renderNow();if(state.view==='draft')renderDraft();if(state.view==='comps')renderComps();if(state.view==='ranking')renderRanking(false);if(state.view==='compare')renderCompare();
+  if(state.view==='now')renderNow();if(state.view==='draft')renderDraft();if(state.view==='comps')renderComps();if(state.view==='ranking')renderRanking(false);if(state.view==='compare')renderCompare();if(state.view==='pro')renderPro();
   if(typeof prewarm==='function'&&DATA.length)prewarm();
 }
 async function getJSON(u){const r=await fetch(u+(u.includes('?')?'&':'?')+'t='+Math.floor(Date.now()/60000),{cache:'no-store'});if(!r.ok)throw new Error(r.status);return r.json()}
 async function load(){
   $('#loading').hidden=false;$('#err').hidden=true;
   try{
-    const [st,lv,nm,tp]=await Promise.all([getJSON(URLS.stat),getJSON(URLS.live).catch(()=>null),getJSON(URLS.meta).catch(()=>null),getJSON(URLS.tips).catch(()=>({}))]);
-    STATIC=st;LIVE=lv&&lv.meta?lv:null;NAMES=nm&&nm.brawlers?nm:null;TIPS=tp||{};applyData();boot();
+    const [st,lv,nm,tp,pr]=await Promise.all([getJSON(URLS.stat),getJSON(URLS.live).catch(()=>null),getJSON(URLS.meta).catch(()=>null),getJSON(URLS.tips).catch(()=>({})),getJSON(URLS.pro).catch(()=>null)]);
+    PRO=pr&&pr.modes?pr:null;STATIC=st;LIVE=lv&&lv.meta?lv:null;NAMES=nm&&nm.brawlers?nm:null;TIPS=tp||{};applyData();boot();
   }catch(e){console.error(e);$('#loading').hidden=true;$('#err').hidden=false;$('#pageSub').textContent=t('err.sub')}
 }
-async function poll(){try{const lv=await getJSON(URLS.live);if(lv&&lv.meta&&(!LIVE||lv.meta.updated!==LIVE.meta.updated)){LIVE=lv;applyData();rerender();renderSub();renderFoot();toast(t('sub.updated'))}}catch(e){}}
+async function poll(){try{const lv=await getJSON(URLS.live);if(lv&&lv.meta&&(!LIVE||lv.meta.updated!==LIVE.meta.updated)){LIVE=lv;applyData();rerender();renderSub();renderFoot();renderQBar();toast(t('sub.updated'))}}catch(e){}}
 $('#retry').addEventListener('click',load);
+
+/* =========================================================================
+   FILA (Tudo / Casual / Ranqueada)
+   ========================================================================= */
+const Q_IMG={c:'https://static.wikia.nocookie.net/brawlstars/images/c/c9/Logo.png/revision/latest/scale-to-width-down/64',r:'https://static.wikia.nocookie.net/brawlstars/images/4/40/Ranked.png/revision/latest/scale-to-width-down/64'};
+const qImg=(k,s=20)=>`<img alt="" src="${Q_IMG[k]}" referrerpolicy="no-referrer" decoding="async" width="${s}" height="${s}" style="width:${s}px;height:${s}px;object-fit:contain" onerror="this.remove()">`;
+const qOk=()=>!!(LIVE&&LIVE.queues&&LIVE.queues.c&&LIVE.queues.r);
+function liveView(){
+  if(!LIVE)return null;const q=state.queue,k=q==='casual'?'c':q==='ranked'?'r':'';
+  const Q=k&&LIVE.queues?.[k];if(!Q||!(Q.battles>=150))return LIVE;
+  const maps={};for(const [id,m] of Object.entries(LIVE.maps||{}))maps[id]={...m,g:Q.maps?.[id]?.g||0,top:Q.maps?.[id]?.top||[]};
+  return {...LIVE,brawlers:Q.brawlers||{},trios:Q.trios||{},mapTrios:Q.mapTrios||{},vsx:Q.vsx,wx:Q.wx,maps,
+    rotation:(LIVE.rotation||[]).map(e=>({...e,top:Q.maps?.[e.mapId]?.top||[]})),_q:k,_qb:Q.battles};
+}
+function renderQBar(){
+  const el=$('#qBar');if(!el)return;const ok=qOk(),Q=LIVE?.queues||{};
+  const opt=[['all',`<span class="qdot">${icon('list')}</span>`,t('q.all'),LIVE?.meta?.battles],['casual',qImg('c'),t('q.casual'),Q.c?.battles],['ranked',qImg('r'),t('q.ranked'),Q.r?.battles]];
+  el.innerHTML=`<span class="lens" aria-hidden="true"></span>`+opt.map(([k,ic,l,n])=>`<button class="qseg press" role="radio" data-q="${k}" aria-checked="${state.queue===k}" ${k!=='all'&&!ok?'disabled':''} title="${esc(l)}${n?` · ${fmt(n,0)} ${t('q.games')}`:''}">${ic}<span>${esc(l)}</span></button>`).join('');
+  const L=el.querySelector('.lens'),a=el.querySelector('[aria-checked="true"]');
+  requestAnimationFrame(()=>{if(a){L.style.width=a.offsetWidth+'px';L.style.transform=`translate3d(${a.offsetLeft}px,0,0)`}});
+  const n=$('#qNote');if(n)n.innerHTML=!LIVE?'':!ok?t('q.soon'):state.queue==='ranked'?t('q.rankedNote',{n:fmt(Q.r.battles,0)}):state.queue==='casual'?t('q.casualNote',{n:fmt(Q.c.battles,0)}):t('q.allNote');
+}
+function setQueue(q){if(q===state.queue)return;state.queue=q;store.set('queue',q);haptic();applyData();renderQBar();rerender();renderSub()}
+document.addEventListener('click',e=>{const x=e.target.closest('#qBar [data-q]');if(x&&!x.disabled)setQueue(x.dataset.q)});
+
+/* =========================================================================
+   COMPOSIÇÕES POR MAPA + COUNTERAR
+   ========================================================================= */
+const toB=names=>names.map(n=>byName.get(n)).filter(Boolean);
+function dedupTrios(list){const seen=new Map();for(const x of list||[]){const k=[...x.t].sort().join('|');const y=seen.get(k);if(!y||x.wr>y.wr)seen.set(k,x)}return [...seen.values()]}
+function compMaps(m){
+  const out=[],seen=new Set(),add=(id,rot)=>{if(!id||seen.has(id))return;seen.add(id);out.push({id,rot,g:LMAPS[id]?.g||0,name:mapName(id,LMAPS[id]?.name)})};
+  if(state.queue!=='ranked')ROT.filter(e=>e.mode===m).forEach(e=>add(e.mapId,true));
+  Object.entries(LMAPS).filter(([,v])=>v.mode===m&&(v.g==null||v.g>0)).sort((a,b)=>(b[1].g||0)-(a[1].g||0)).slice(0,10).forEach(([id])=>add(id,ROT.some(e=>e.mapId===id)));
+  return out.slice(0,10);
+}
+function mapComps(id,m){
+  const mt=dedupTrios(MTRIOS[id]).filter(x=>toB(x.t).length===3).sort((a,b)=>b.wr-a.wr);
+  if(mt.length>=3)return {src:'map',rows:mt.slice(0,5).map(x=>({T:toB(x.t),wr:x.wr,ex:x.ex,g:x.g}))};
+  const top=(LMAPS[id]?.top||[]).map(([n,w])=>byName.get(n)).filter(Boolean);
+  if(top.length>=5){const pool=top.slice(0,10),res=[];for(let i=0;i<pool.length;i++)for(let j=i+1;j<pool.length;j++)for(let k=j+1;k<pool.length;k++){const T=[pool[i],pool[j],pool[k]];let s=(30-i-j-k)*0.15+sy(T[0].n,T[1].n)+sy(T[0].n,T[2].n)+sy(T[1].n,T[2].n)-2*(3-new Set(T.map(x=>x.c)).size)+T.reduce((a,b)=>a+modePow(b,m),0)*0.3;res.push({T,s})}
+    return {src:'mapTop',rows:res.sort((a,b)=>b.s-a.s).slice(0,5).map(x=>({T:x.T}))}}
+  const tr=dedupTrios(TRIOS[m]).sort((a,b)=>b.wr-a.wr).filter(x=>toB(x.t).length===3);
+  if(tr.length)return {src:'mode',rows:tr.slice(0,5).map(x=>({T:toB(x.t),wr:x.wr,ex:x.ex,g:x.g}))};
+  return {src:'calc',rows:computedTrios(m).slice(0,5).map(x=>({T:x.T}))};
+}
+function compRow(T,wr,sub,delta,extra=''){
+  return `<div class="comp-row"><span class="av-stack">${T.map(x=>av(x)).join('')}</span><div style="min-width:0"><div class="t">${T.map(x=>esc(x.n)).join(' · ')}</div><div class="s">${sub||''}</div></div>
+    <div class="r">${wr!=null?`<span class="wr num" style="color:var(--${wr>=52?'good':wr<=47?'bad':'mid'})">${fmt(wr)}%</span>`:''}${delta!=null&&delta>0.4?`<span class="chip good num" style="height:24px;font-size:11.5px">${t('comps.vsExp',{v:fmt(delta)})}</span>`:''}${extra}<button class="mini-btn press" data-cnt="${esc(T.map(x=>x.n).join('|'))}">${icon('swords')}${t('comps.counter')}</button></div></div>`;
+}
+function openCounter(T,mode){
+  const E=T,ex=new Set(T.map(b=>b.s)),res=bestTrios(E,RANKED_MODES.includes(mode)?mode:'any',[],ex).slice(0,3);
+  const s=document.createElement('div');s.className='sheet glass';s.setAttribute('role','dialog');s.setAttribute('aria-modal','true');s.setAttribute('aria-labelledby','cntT');
+  const why=r=>{const out=[];r.per.forEach(p=>p.parts.filter(([,v])=>v!=null&&v>0.6).sort((a,b)=>b[1]-a[1]).slice(0,1).forEach(([e,v])=>out.push(`<span class="chip good num">${esc(p.c.n)} › ${esc(e.n)} ${sgn(v)}</span>`)));return out.join('')};
+  s.innerHTML=`<div class="grab" aria-hidden="true"></div><div class="sheet-h"><h3 id="cntT">${t('cnt.title')}</h3><button class="glass glass-btn" data-x aria-label="${t('ui.close')}">${icon('x')}</button></div>
+    <div class="sheet-body">
+      <div class="cnt-vs"><span class="av-stack">${T.map(x=>av(x)).join('')}</span><span class="t">${T.map(x=>esc(x.n)).join(' · ')}</span><span class="tag">${esc(modeName(mode))}</span></div>
+      <div class="kicker" style="margin:14px 2px 8px">${t('cnt.best')}</div>
+      <div class="list">${res.map((r,i)=>`<div class="cnt-item ${i?'':'first'}"><span class="rank num">${i+1}</span><span class="av-stack">${r.T.map(x=>av(x)).join('')}</span><div style="min-width:0"><div class="t">${r.T.map(x=>esc(x.n)).join(' · ')}</div><div class="chips">${why(r)||`<span class="chip plain">${t('draft.overall')}</span>`}</div></div></div>`).join('')}</div>
+      <p class="mini-note">${t('cnt.note')}</p>
+      <button class="btn press" data-open style="width:100%;justify-content:center">${icon('draft')}${t('cnt.draft')}</button>
+    </div>`;
+  openLayer(s,{stacked:true});
+  s.querySelector('[data-x]').addEventListener('click',closeLayer);
+  s.querySelector('[data-open]').addEventListener('click',()=>{closeLayer();loadEnemy(T.map(b=>b.n),mode)});
+  setTimeout(()=>s.querySelector('[data-x]').focus({preventScroll:true}),60);
+}
+function renderComps(){
+  compModeChips();const m=state.cmode,maps=compMaps(m),out=$('#compsOut');
+  if(!state.cmap||!maps.some(x=>x.id===state.cmap)||state.cmapMode!==m){state.cmap=maps[0]?.id||null;state.cmapMode=m}
+  const qTag=srcTag();
+  let html='';
+  if(maps.length){
+    const sel=maps.find(x=>x.id===state.cmap),mc=mapComps(sel.id,m);
+    html+=`<div class="gh"><h2>${t('comps.maps2')}</h2><span class="note">${qTag}${state.queue==='ranked'?t('comps.poolR'):t('comps.poolC')}</span></div>
+      <div class="hscroll map-strip">${maps.map(x=>`<button class="mtile press" data-cmap="${x.id}" aria-pressed="${x.id===state.cmap}" style="--mc:${modeColor(m)}"><span class="mtile-art">${mapImg(x.id,'mapimg')}</span><span class="mtile-n">${esc(x.name)}</span>${x.rot?`<span class="mtile-b">${t('comps.inRot')}</span>`:''}</button>`).join('')}</div>
+      <div class="gh" style="margin-top:6px"><h2>${t('comps.top5',{m:esc(sel.name)})}</h2><span class="note">${t('comps.src.'+mc.src)}</span></div>
+      <div class="list">${mc.rows.map(x=>compRow(x.T,x.wr,x.g?t('comps.games',{n:fmt(x.g,0)}):x.T.map(y=>esc(clsShort(y.c))).join(' · '),x.wr!=null&&x.ex!=null?x.wr-x.ex:null)).join('')}</div>`;
+  }
+  const tr=dedupTrios(TRIOS[m]).sort((a,b)=>b.wr-a.wr).filter(x=>toB(x.t).length===3);
+  if(tr.length){
+    html+=`<div class="gh" style="margin-top:10px"><h2>${t('comps.best',{m:esc(modeName(m))})}</h2><span class="note">${TRIOS._live&&TRIOS._live[m]?`<span class="src-tag live">${t('p.live2')}</span>${t('comps.live')}`:t('comps.ref')}</span></div>
+      <div class="list">${tr.slice(0,8).map(x=>compRow(toB(x.t),x.wr,x.g?t('comps.games',{n:fmt(x.g,0)}):(x.map?t('comps.maps',{m:esc(mapLabel(x.map))}):''),x.ex!=null?x.wr-x.ex:null)).join('')}</div>`;
+  }else{const ct=computedTrios(m);
+    html+=`<div class="gh" style="margin-top:10px"><h2>${t('comps.sugg',{m:esc(modeName(m))})}</h2><span class="note">${t('comps.calc')}</span></div>
+      <div class="list">${ct.map(x=>compRow(x.T,null,x.T.map(y=>`${esc(y.n)} ${fmt(modeWr(y,m))}%`).join(' · '),null)).join('')}</div>`}
+  out.innerHTML=html+`<p class="mini-note">${t('comps.note')}</p>`;
+  animIn(out);
+}
+$('#compsOut').addEventListener('click',e=>{
+  const mp=e.target.closest('[data-cmap]');if(mp){state.cmap=mp.dataset.cmap;haptic();renderComps();return}
+  const x=e.target.closest('[data-cnt]');if(x)openCounter(toB(x.dataset.cnt.split('|')),state.cmode);
+});
+function srcTag(){const q=LV&&LV._q;return q?`<span class="src-tag q">${qImg(q,14)}${t(q==='r'?'q.ranked':'q.casual')}</span>`:LIVE?`<span class="src-tag live">${t('q.all')}</span>`:''}
+
+/* =========================================================================
+   DRAFT: 3ª ESCOLHA IDEAL
+   ========================================================================= */
+function thirdPicks(L,E,mode){
+  const used=new Set([...L.map(b=>b.s),...E.map(b=>b.s)]),known=[...dedupTrios(TRIOS[mode]||[]),...Object.values(TRIOS).filter(Array.isArray).flat()];
+  return DATA.filter(b=>!used.has(b.s)).map(c=>{
+    const s1=sy(L[0].n,c.n),s2=sy(L[1].n,c.n);let trio=null;
+    for(const x of known){const st=new Set(x.t);if(st.has(L[0].n)&&st.has(L[1].n)&&st.has(c.n)&&x.ex!=null){if(!trio||x.wr>trio.wr)trio=x}}
+    let vs=0;const parts=[];for(const e of E){const v=mu(c.n,e.n);parts.push([e,v]);if(v!=null)vs+=v}
+    const dup=new Set([L[0].c,L[1].c,c.c]).size<3?1.6:0;
+    const score=1.1*(s1+s2)+(trio?0.6*(trio.wr-trio.ex):0)+0.8*vs+0.35*power(c)+(mode!=='any'?0.3*modePow(c,mode):0)-dup;
+    return {c,score,s1,s2,trio,vs,parts};
+  }).sort((a,b)=>b.score-a.score).slice(0,5);
+}
+function thirdHtml(L,E,mode){
+  const P=thirdPicks(L,E,mode);if(!P.length)return '';const top=P[0];
+  const chips=p=>[p.s1?`<span class="chip ${p.s1>0?'good':'bad'} num">+ ${esc(L[0].n)} ${sgn(p.s1)}</span>`:'',p.s2?`<span class="chip ${p.s2>0?'good':'bad'} num">+ ${esc(L[1].n)} ${sgn(p.s2)}</span>`:'',p.trio?`<span class="chip good num">${t('third.trio',{v:fmt(p.trio.wr)})}</span>`:'',E.length?`<span class="chip ${p.vs>0?'good':p.vs<0?'bad':'plain'} num">${t('draft.vsTeam',{v:sgn(p.vs)})}</span>`:''].join('');
+  return `<section class="group"><div class="gh"><h2>${t('third.title')}</h2><span class="note">${t(E.length?'third.note':'third.noteNoE')}</span></div>
+    <div class="card third" style="--cc:var(--c-${top.c.c})">
+      <div class="third-trio">${L.map(b=>`<span class="tm">${av(b,46)}<small>${esc(b.n)}</small></span>`).join('<span class="plus-s">+</span>')}<span class="plus-s">+</span><button class="tm pick press" data-go="${top.c.s}">${av(top.c,58)}<small>${esc(top.c.n)}</small></button></div>
+      <div class="chips" style="justify-content:center">${clsChip(top.c)}${chips(top)}</div>
+      <div><div class="mini-note" style="padding:0 0 8px">${t('p.build')}</div>${buildMini(top.c)}</div>
+    </div>
+    <div class="list">${P.slice(1).map(p=>`<button class="row press" data-go="${p.c.s}">${av(p.c)}<div style="min-width:0"><div class="t">${esc(p.c.n)}</div><div class="s">${clsIco(p.c.c,16)}${esc(clsShort(p.c.c))}${p.s1+p.s2?` · ${t('third.syn',{v:sgn(p.s1+p.s2)})}`:''}</div></div><div class="r"><span class="val num ${ptsClass(p.score)}">${sgn(p.score)}</span></div></button>`).join('')}</div>
+  </section>`;
+}
+
+/* =========================================================================
+   COMPETITIVO (Liquipedia)
+   ========================================================================= */
+let PRO=null,PKEY=null;
+const PRO_ALIAS={ll:'larrylawrie',larry:'larrylawrie',lawrie:'larrylawrie',mrp:'mrp',jaeyong:'jaeyong'};
+function proB(raw){
+  if(!PKEY){PKEY=new Map(DATA.map(b=>[nkey(b.n),b]))}
+  const k=nkey(raw),b=PKEY.get(PRO_ALIAS[k]||k);if(b)return b;
+  return {n:titleCase(raw),s:'',c:'NA',r:'?',id:null,_fake:true};
+}
+const proT=a=>a.map(proB);
+const pct=(w,n)=>n?w/n*100:0;
+function compTips(T,mode){
+  const has=c=>T.filter(b=>b.c===c),tips=[];
+  const tk=has('TK'),mk=[...has('MK'),...has('AR')],sp=has('SP'),as=has('AS'),ct=has('CT'),dd=has('DD');
+  if(tk.length)tips.push(t('tip.tk',{n:tk.map(b=>b.n).join(' / ')}));
+  if(mk.length)tips.push(t('tip.mk',{n:mk.map(b=>b.n).join(' / ')}));
+  if(ct.length)tips.push(t('tip.ct',{n:ct.map(b=>b.n).join(' / ')}));
+  if(sp.length)tips.push(t('tip.sp',{n:sp.map(b=>b.n).join(' / ')}));
+  if(as.length)tips.push(t('tip.as',{n:as.map(b=>b.n).join(' / ')}));
+  if(dd.length&&tips.length<3)tips.push(t('tip.dd',{n:dd.map(b=>b.n).join(' / ')}));
+  if(I18N.pt['tip.m.'+mode])tips.push(t('tip.m.'+mode));
+  const own=T.filter(b=>!b._fake).map(b=>{const x=tipsOf(b).find(s=>s&&s!=='—');return x?`<b>${esc(b.n)}:</b> ${esc(x)}`:''}).filter(Boolean);
+  return {gen:tips,own};
+}
+function proModes(){return Object.entries(PRO?.modes||{}).sort((a,b)=>b[1].games-a[1].games).map(([m])=>m)}
+function renderPro(){
+  const out=$('#proOut'),chips=$('#pModes');if(!out)return;
+  if(!PRO||!PRO.games){chips.innerHTML='';out.innerHTML=`<div class="card empty-art"><span class="art">${icon('trophy')}</span><b>${t('pro.emptyT')}</b><p>${t('pro.empty')}</p></div>`;return}
+  const ms=proModes();if(!ms.includes(state.pmode))state.pmode=ms[0];const m=state.pmode,M=PRO.modes[m];
+  chips.innerHTML=ms.map(k=>`<button class="fchip press" data-pm="${k}" aria-pressed="${k===m}">${modeIcon(k)}${esc(modeName(k))}<span class="cnt num">${PRO.modes[k].games}</span></button>`).join('');
+  const lq=`<a href="https://liquipedia.net/brawlstars/Brawl_Stars_Championship" target="_blank" rel="noopener">Liquipedia</a>`;
+  const comps=M.comps.map(c=>({...c,T:proT(c.t)}));
+  const picks=M.picks.map(([b,n,w])=>({b:proB(b),n,w})),bans=M.bans.map(([b,n])=>({b:proB(b),n}));
+  const maxP=Math.max(1,...picks.map(x=>x.n)),maxB=Math.max(1,...bans.map(x=>x.n));
+  const broken=brokenList(8);
+  out.innerHTML=`
+    <div class="card pro-sum"><div class="pro-stats">
+      <div><b class="num">${fmt(PRO.games,0)}</b><span>${t('pro.maps')}</span></div>
+      <div><b class="num">${fmt(M.games,0)}</b><span>${esc(modeName(m))}</span></div>
+      <div><b class="num">${fmt(PRO.events,0)}</b><span>${t('pro.events')}</span></div></div>
+      <p class="mini-note" style="padding:0">${t('pro.src',{a:lq,f:fmtDate(PRO.from),to:fmtDate(PRO.to)})}</p></div>
+
+    <section class="group"><div class="gh"><h2>${t('pro.comps',{m:esc(modeName(m))})}</h2><span class="note">${t('pro.compsNote')}</span></div>
+      <div class="list">${comps.slice(0,8).map((c,i)=>`<div class="comp-row"><span class="av-stack">${c.T.map(x=>av(x)).join('')}</span><div style="min-width:0"><div class="t">${c.T.map(x=>esc(x.n)).join(' · ')}</div><div class="s">${t('pro.used',{n:c.n})}${c.teams.length?' · '+c.teams.slice(0,2).map(esc).join(', '):''}</div></div>
+        <div class="r"><span class="wr num" style="color:var(--${pct(c.w,c.n)>=55?'good':pct(c.w,c.n)<=45?'bad':'mid'})">${fmt(pct(c.w,c.n),0)}%</span><button class="mini-btn press" data-ptip="${i}">${icon('bulb')}${t('pro.tips')}</button></div></div>`).join('')}</div>
+    </section>
+
+    <section class="group"><div class="gh"><h2>${t('pro.pb')}</h2><span class="note">${t('pro.pbNote')}</span></div>
+      <div class="pb-grid">
+        <div class="card pb"><div class="kicker">${t('pro.picks')}</div>${picks.slice(0,8).map(x=>`<button class="pb-row press" ${x.b.s?`data-go="${x.b.s}"`:''}>${av(x.b,32)}<span class="nm">${esc(x.b.n)}</span><span class="bar"><i style="transform:scaleX(${(x.n/maxP).toFixed(3)})"></i></span><span class="num v">${x.n} · ${fmt(pct(x.w,x.n),0)}%</span></button>`).join('')}</div>
+        <div class="card pb ban"><div class="kicker">${t('pro.bans')}</div>${bans.slice(0,8).map(x=>`<button class="pb-row press" ${x.b.s?`data-go="${x.b.s}"`:''}>${av(x.b,32)}<span class="nm">${esc(x.b.n)}</span><span class="bar"><i style="transform:scaleX(${(x.n/maxB).toFixed(3)})"></i></span><span class="num v">${x.n}</span></button>`).join('')}</div>
+      </div>
+    </section>
+
+    ${M.pairs.length?`<section class="group"><div class="gh"><h2>${t('pro.pairs')}</h2><span class="note">${t('pro.pairsNote')}</span></div>
+      <div class="pairs">${M.pairs.map(([p,n,w])=>{const P=proT(p);return `<div class="pair card"><span class="av-stack">${P.map(x=>av(x,34)).join('')}</span><div><div class="t">${P.map(x=>esc(x.n)).join(' + ')}</div><div class="s num">${t('pro.used',{n})} · ${fmt(pct(w,n),0)}%</div></div></div>`}).join('')}</div></section>`:''}
+
+    <section class="group"><div class="gh"><h2>${t('pro.perMap')}</h2><span class="note">${t('pro.perMapNote')}</span></div>
+      <div class="pm-grid">${Object.entries(M.perMap).slice(0,6).map(([mp,list])=>{const id=mapByName(mp);return `<div class="card pm" style="--mc:${modeColor(m)}"><div class="pm-art">${id?mapImg(id,'mapimg'):''}<span class="pm-n">${esc(mapLabel(mp))}</span></div>
+        ${list.map(([tt,n,w])=>{const T=proT(tt);return `<div class="pm-row"><span class="av-stack">${T.map(x=>av(x,30)).join('')}</span><span class="s num">${n}× · ${fmt(pct(w,n),0)}%</span></div>`}).join('')}</div>`}).join('')}</div>
+    </section>
+
+    <section class="group"><div class="gh"><h2>${t('pro.recent')}</h2><span class="note">${t('pro.recentNote')}</span></div>
+      <div class="list">${M.recent.map(g=>{const A=proT(g.t[0]),B=proT(g.t[1]);return `<div class="game"><div class="gm-top"><span>${esc(fmtDate(g.d))} · ${esc(g.ev)}</span><span>${esc(mapLabel(g.map))}</span></div>
+        <div class="gm-row"><div class="side ${g.win===0?'win':''}"><span class="tn">${esc(g.teams[0]||'—')}</span><span class="av-stack">${A.map(x=>av(x,30)).join('')}</span></div><span class="vs-s">VS</span><div class="side r ${g.win===1?'win':''}"><span class="av-stack">${B.map(x=>av(x,30)).join('')}</span><span class="tn">${esc(g.teams[1]||'—')}</span></div></div></div>`}).join('')}</div>
+    </section>
+
+    ${broken.length?`<section class="group"><div class="gh"><h2>${t('pro.broken')}</h2><span class="note">${srcTag()}${t('pro.brokenNote')}</span></div>
+      <div class="list">${broken.map(([a,b,v,g])=>`<button class="row press" data-go="${a.s}"><span class="av-stack">${av(a)}${av(b)}</span><div style="min-width:0"><div class="t">${t('pro.beats',{a:esc(a.n),b:esc(b.n)})}</div><div class="s">${g?t('comps.games',{n:fmt(g,0)}):t('pro.consensus')}${bans.some(x=>x.b.s===a.s)?' · '+t('pro.banned'):''}</div></div><div class="r"><span class="val num good">${sgn(v)} pts</span></div></button>`).join('')}</div></section>`:''}
+
+    <p class="mini-note">${t('pro.heat')}</p>`;
+  out._comps=comps;animIn(out);
+}
+function brokenList(n){
+  const res=[];
+  if(VSX){for(const [a,list] of Object.entries(VSX)){const A=byName.get(a);if(!A)continue;for(const [b,v,g] of list){const B=byName.get(b);if(B&&v>0)res.push([A,B,v,g])}}}
+  else for(const b of DATA)for(const [n,p,g] of (b.st||[])){const B=byName.get(n);if(B)res.push([b,B,p,g||0])}
+  const seen=new Set();return res.sort((x,y)=>y[2]-x[2]).filter(([a,b])=>{const k=a.s+'>'+b.s;if(seen.has(k))return false;seen.add(k);return true}).slice(0,n);
+}
+function openProTips(c,mode){
+  const T=c.T,tips=compTips(T,mode),real=T.filter(b=>!b._fake),cnt=real.length===3?bestTrios(real,RANKED_MODES.includes(mode)?mode:'any',[],new Set(real.map(b=>b.s))).slice(0,2):[];
+  const threats=[];for(const b of real){for(const [e,v] of DATA.map(e=>[e,mu(e.n,b.n)]).filter(([,v])=>v!=null&&v>0.8).sort((x,y)=>y[1]-x[1]).slice(0,2))threats.push([e,b,v])}
+  const comp=(tt,n)=>{const X=proT(tt);return `<div class="cnt-item"><span class="av-stack">${X.map(x=>av(x)).join('')}</span><div style="min-width:0"><div class="t">${X.map(x=>esc(x.n)).join(' · ')}</div></div><span class="tag num">${n}×</span></div>`};
+  const s=document.createElement('div');s.className='sheet glass';s.setAttribute('role','dialog');s.setAttribute('aria-modal','true');s.setAttribute('aria-labelledby','ptT');
+  s.innerHTML=`<div class="grab" aria-hidden="true"></div><div class="sheet-h"><h3 id="ptT">${t('pro.howTo')}</h3><button class="glass glass-btn" data-x aria-label="${t('ui.close')}">${icon('x')}</button></div>
+    <div class="sheet-body">
+      <div class="cnt-vs"><span class="av-stack">${T.map(x=>av(x)).join('')}</span><span class="t">${T.map(x=>esc(x.n)).join(' · ')}</span><span class="tag num">${fmt(pct(c.w,c.n),0)}% · ${c.n}×</span></div>
+      <div class="kicker" style="margin:16px 2px 8px">${t('pro.plan')}</div>
+      <ul class="tips">${tips.gen.map(x=>`<li>${esc(x)}</li>`).join('')}${tips.own.map(x=>`<li>${x}</li>`).join('')}</ul>
+      ${c.maps.length?`<div class="kicker" style="margin:16px 2px 8px">${t('pro.where')}</div><div class="chips">${c.maps.map(([mp,n])=>`<span class="chip">${esc(mapLabel(mp))} · ${n}×</span>`).join('')}</div>`:''}
+      ${c.lost.length?`<div class="kicker" style="margin:16px 2px 8px">${t('pro.lostTo')}</div><div class="list">${c.lost.map(([tt,n])=>comp(tt,n)).join('')}</div>`:''}
+      ${cnt.length?`<div class="kicker" style="margin:16px 2px 8px">${t('pro.calcCnt')}</div><div class="list">${cnt.map(r=>`<div class="cnt-item"><span class="av-stack">${r.T.map(x=>av(x)).join('')}</span><div style="min-width:0"><div class="t">${r.T.map(x=>esc(x.n)).join(' · ')}</div></div></div>`).join('')}</div>`:''}
+      ${threats.length?`<div class="kicker" style="margin:16px 2px 8px">${t('pro.threats')}</div><div class="chips">${threats.slice(0,6).map(([e,b,v])=>`<span class="chip bad num">${esc(e.n)} › ${esc(b.n)} ${sgn(v)}</span>`).join('')}</div>`:''}
+      ${c.beat.length?`<div class="kicker" style="margin:16px 2px 8px">${t('pro.beat')}</div><div class="list">${c.beat.map(([tt,n])=>comp(tt,n)).join('')}</div>`:''}
+      ${real.length===3?`<button class="btn press" data-open style="width:100%;justify-content:center;margin-top:16px">${icon('draft')}${t('cnt.draft')}</button>`:''}
+    </div>`;
+  openLayer(s,{stacked:true});
+  s.querySelector('[data-x]').addEventListener('click',closeLayer);
+  s.querySelector('[data-open]')?.addEventListener('click',()=>{closeLayer();loadEnemy(real.map(b=>b.n),mode)});
+}
+$('#pModes')?.addEventListener('click',e=>{const x=e.target.closest('[data-pm]');if(!x)return;state.pmode=x.dataset.pm;haptic();renderPro()});
+$('#proOut')?.addEventListener('click',e=>{const x=e.target.closest('[data-ptip]');if(x){openProTips($('#proOut')._comps[+x.dataset.ptip],state.pmode);return}const g=e.target.closest('[data-go]');if(g&&g.dataset.go)select(g.dataset.go)});
+
+/* ---------------- textos ---------------- */
+Object.assign(I18N.pt,{
+  'nav.pro':'Competitivo','tab.pro':'Pro',
+  'q.all':'Tudo','q.casual':'Casual','q.ranked':'Ranqueada','q.games':'partidas',
+  'q.soon':'O filtro casual/ranqueada liga sozinho na próxima coleta de dados.',
+  'q.allNote':'Somando partidas casuais e ranqueadas.','q.casualNote':'Só partidas de troféus · {n} partidas.','q.rankedNote':'Só ranqueada de Lendário pra cima · {n} partidas.',
+  'comps.maps2':'Mapas','comps.poolR':'mapas mais jogados na ranqueada','comps.poolC':'rotação atual e mapas mais jogados','comps.inRot':'Na rotação',
+  'comps.top5':'Top 5 em {m}','comps.src.map':'partidas reais neste mapa','comps.src.mapTop':'montadas com os melhores do mapa','comps.src.mode':'melhores do modo (pouco jogo no mapa)','comps.src.calc':'calculadas pelo modelo',
+  'cnt.title':'Como counterar','cnt.best':'Melhores respostas','cnt.note':'Calculado com os matchups e sinergias das partidas recentes.','cnt.draft':'Abrir no Draft',
+  'third.title':'3ª escolha ideal','third.note':'Sinergia com sua dupla + matchup contra o inimigo.','third.noteNoE':'Sinergia com sua dupla. Coloque os inimigos pra refinar.','third.trio':'trio {v}%','third.syn':'sinergia {v}',
+  'pro.emptyT':'Sem dados do competitivo ainda','pro.empty':'Os dados do cenário pro aparecem depois da próxima atualização.',
+  'pro.maps':'mapas pro','pro.events':'eventos','pro.src':'Fonte: {a} (CC BY-SA 3.0) · de {f} a {to}.',
+  'pro.comps':'Comps dos times pro · {m}','pro.compsNote':'Mais usadas e taxa de vitória','pro.used':'{n}× jogada','pro.tips':'Dicas',
+  'pro.pb':'Picks e bans','pro.pbNote':'Banido = mais temido pelos pros','pro.picks':'Mais escolhidos','pro.bans':'Mais banidos',
+  'pro.pairs':'Duplas favoritas','pro.pairsNote':'Duplas que se repetem entre comps',
+  'pro.perMap':'Por mapa','pro.perMapNote':'O que os pros jogam em cada mapa',
+  'pro.recent':'Jogos recentes','pro.recentNote':'Vencedor em destaque',
+  'pro.broken':'Matchups mais quebrados','pro.brokenNote':'Quem amassa quem nas partidas recentes','pro.beats':'{a} amassa {b}','pro.consensus':'consenso das tier lists','pro.banned':'muito banido no pro',
+  'pro.heat':'Mapa de calor por jogador não existe em fonte pública (nem a API oficial nem a Liquipedia guardam posições). Mostramos picks, bans, resultados e counters reais.',
+  'pro.howTo':'Como jogar com essa comp','pro.plan':'Plano de jogo','pro.where':'Onde os pros usam','pro.lostTo':'Perdeu para (pro)','pro.beat':'Venceu (pro)','pro.calcCnt':'Counters calculados','pro.threats':'Cuidado com',
+  'tip.tk':'{n} abre caminho: avance junto e use as paredes pra chegar perto sem tomar dano à toa.',
+  'tip.mk':'{n} controla a distância: fique atrás, segure as lanes e puna quem avançar.',
+  'tip.ct':'{n} nega área: use o controle pra cortar avanços e proteger o objetivo.',
+  'tip.sp':'{n} sustenta o time: fique no meio do grupo e não entre sozinho.',
+  'tip.as':'{n} flanqueia: espere os inimigos gastarem o ataque e entre pelas laterais.',
+  'tip.dd':'{n} é o dano principal: troque tiros com segurança e finalize quem estiver fraco.',
+  'tip.m.GG':'Quem carrega as gemas fica atrás; com 10 gemas, recue e jogue pelo tempo.',
+  'tip.m.BB':'Segure a bola até o super estar pronto e quebre a parede antes de chutar.',
+  'tip.m.KO':'Não troque abate cedo: quem tiver vantagem numérica força, quem estiver atrás espera o gás.',
+  'tip.m.HZ':'Divida as zonas no começo e junte o time na zona mais disputada.',
+  'tip.m.HE':'Combine pressão no cofre com defesa: um defende, dois atacam nos picos de super.',
+  'tip.m.BO':'Estrela vale mais que abate arriscado: com vantagem, jogue seguro e segure as linhas.',
+  'ui.close':I18N.pt['ui.close']||'Fechar'
+});
+Object.assign(I18N.en,{
+  'nav.pro':'Competitive','tab.pro':'Pro',
+  'q.all':'All','q.casual':'Casual','q.ranked':'Ranked','q.games':'games',
+  'q.soon':'The casual/ranked filter turns on with the next data collection.',
+  'q.allNote':'Casual and ranked games combined.','q.casualNote':'Trophy games only · {n} games.','q.rankedNote':'Ranked from Legendary up only · {n} games.',
+  'comps.maps2':'Maps','comps.poolR':'most played ranked maps','comps.poolC':'current rotation and most played maps','comps.inRot':'In rotation',
+  'comps.top5':'Top 5 on {m}','comps.src.map':'real games on this map','comps.src.mapTop':'built from the map’s best brawlers','comps.src.mode':'best in mode (few games on map)','comps.src.calc':'computed by the model',
+  'cnt.title':'How to counter','cnt.best':'Best answers','cnt.note':'Computed from matchups and synergies in recent games.','cnt.draft':'Open in Draft',
+  'third.title':'Best 3rd pick','third.note':'Synergy with your duo + matchup vs the enemy.','third.noteNoE':'Synergy with your duo. Add enemies to refine.','third.trio':'trio {v}%','third.syn':'synergy {v}',
+  'pro.emptyT':'No competitive data yet','pro.empty':'Pro scene data shows up after the next update.',
+  'pro.maps':'pro maps','pro.events':'events','pro.src':'Source: {a} (CC BY-SA 3.0) · {f} to {to}.',
+  'pro.comps':'Pro team comps · {m}','pro.compsNote':'Most used and win rate','pro.used':'played {n}×','pro.tips':'Tips',
+  'pro.pb':'Picks and bans','pro.pbNote':'Banned = most feared by pros','pro.picks':'Most picked','pro.bans':'Most banned',
+  'pro.pairs':'Favorite duos','pro.pairsNote':'Duos that repeat across comps',
+  'pro.perMap':'By map','pro.perMapNote':'What pros play on each map',
+  'pro.recent':'Recent games','pro.recentNote':'Winner highlighted',
+  'pro.broken':'Most broken matchups','pro.brokenNote':'Who crushes whom in recent games','pro.beats':'{a} crushes {b}','pro.consensus':'tier list consensus','pro.banned':'often banned in pro',
+  'pro.heat':'Per-player heatmaps don’t exist in any public source (neither the official API nor Liquipedia store positions). We show real picks, bans, results and counters.',
+  'pro.howTo':'How to play this comp','pro.plan':'Game plan','pro.where':'Where pros use it','pro.lostTo':'Lost to (pro)','pro.beat':'Beat (pro)','pro.calcCnt':'Computed counters','pro.threats':'Watch out for',
+  'tip.tk':'{n} leads the push: advance together and use walls to close the gap safely.',
+  'tip.mk':'{n} controls range: stay back, hold lanes and punish anyone who pushes.',
+  'tip.ct':'{n} denies area: use control to cut pushes and protect the objective.',
+  'tip.sp':'{n} sustains the team: stay in the middle of the group, never go in alone.',
+  'tip.as':'{n} flanks: wait for enemies to spend ammo, then dive from the sides.',
+  'tip.dd':'{n} is the main damage: trade safely and finish low targets.',
+  'tip.m.GG':'The gem carrier stays back; at 10 gems, retreat and play the clock.',
+  'tip.m.BB':'Hold the ball until supers are up and break the wall before shooting.',
+  'tip.m.KO':'Don’t trade early: the side up a player forces, the side down waits for the gas.',
+  'tip.m.HZ':'Split zones early and group up on the most contested one.',
+  'tip.m.HE':'Mix safe pressure with defense: one defends, two push on super spikes.',
+  'tip.m.BO':'Stars beat risky kills: when ahead, play safe and hold lanes.'
+});
+Object.assign(I18N.es,{
+  'nav.pro':'Competitivo','tab.pro':'Pro',
+  'q.all':'Todo','q.casual':'Casual','q.ranked':'Clasificatoria','q.games':'partidas',
+  'q.soon':'El filtro casual/clasificatoria se activa con la próxima recolección de datos.',
+  'q.allNote':'Partidas casuales y clasificatorias juntas.','q.casualNote':'Solo partidas de trofeos · {n} partidas.','q.rankedNote':'Solo clasificatoria de Legendario para arriba · {n} partidas.',
+  'comps.maps2':'Mapas','comps.poolR':'mapas más jugados en clasificatoria','comps.poolC':'rotación actual y mapas más jugados','comps.inRot':'En rotación',
+  'comps.top5':'Top 5 en {m}','comps.src.map':'partidas reales en este mapa','comps.src.mapTop':'armadas con los mejores del mapa','comps.src.mode':'mejores del modo (pocas partidas en el mapa)','comps.src.calc':'calculadas por el modelo',
+  'cnt.title':'Cómo counterear','cnt.best':'Mejores respuestas','cnt.note':'Calculado con matchups y sinergias de partidas recientes.','cnt.draft':'Abrir en Draft',
+  'third.title':'3ª elección ideal','third.note':'Sinergia con tu dúo + matchup contra el enemigo.','third.noteNoE':'Sinergia con tu dúo. Añade enemigos para afinar.','third.trio':'trío {v}%','third.syn':'sinergia {v}',
+  'pro.emptyT':'Aún sin datos competitivos','pro.empty':'Los datos de la escena pro aparecen tras la próxima actualización.',
+  'pro.maps':'mapas pro','pro.events':'eventos','pro.src':'Fuente: {a} (CC BY-SA 3.0) · de {f} a {to}.',
+  'pro.comps':'Comps de equipos pro · {m}','pro.compsNote':'Más usadas y tasa de victoria','pro.used':'jugada {n}×','pro.tips':'Consejos',
+  'pro.pb':'Picks y bans','pro.pbNote':'Baneado = más temido por los pros','pro.picks':'Más elegidos','pro.bans':'Más baneados',
+  'pro.pairs':'Dúos favoritos','pro.pairsNote':'Dúos que se repiten entre comps',
+  'pro.perMap':'Por mapa','pro.perMapNote':'Lo que juegan los pros en cada mapa',
+  'pro.recent':'Partidas recientes','pro.recentNote':'Ganador destacado',
+  'pro.broken':'Matchups más rotos','pro.brokenNote':'Quién aplasta a quién en partidas recientes','pro.beats':'{a} aplasta a {b}','pro.consensus':'consenso de tier lists','pro.banned':'muy baneado en pro',
+  'pro.heat':'No existen mapas de calor por jugador en fuentes públicas (ni la API oficial ni Liquipedia guardan posiciones). Mostramos picks, bans, resultados y counters reales.',
+  'pro.howTo':'Cómo jugar esta comp','pro.plan':'Plan de juego','pro.where':'Dónde la usan los pros','pro.lostTo':'Perdió contra (pro)','pro.beat':'Ganó a (pro)','pro.calcCnt':'Counters calculados','pro.threats':'Cuidado con',
+  'tip.tk':'{n} abre camino: avancen juntos y usen las paredes para acercarse sin recibir daño.',
+  'tip.mk':'{n} controla la distancia: quédate atrás, sostén las líneas y castiga al que avance.',
+  'tip.ct':'{n} niega zona: usa el control para cortar avances y proteger el objetivo.',
+  'tip.sp':'{n} sostiene al equipo: quédate en medio del grupo y no entres solo.',
+  'tip.as':'{n} flanquea: espera a que gasten munición y entra por los lados.',
+  'tip.dd':'{n} es el daño principal: intercambia con seguridad y remata a los débiles.',
+  'tip.m.GG':'El que lleva las gemas va atrás; con 10 gemas, retrocede y juega el tiempo.',
+  'tip.m.BB':'Guarda el balón hasta tener el súper y rompe la pared antes de tirar.',
+  'tip.m.KO':'No cambies bajas pronto: quien tiene ventaja presiona, quien va atrás espera el gas.',
+  'tip.m.HZ':'Repartan zonas al inicio y agrúpense en la más disputada.',
+  'tip.m.HE':'Combina presión con defensa: uno defiende y dos atacan con súper.',
+  'tip.m.BO':'Las estrellas valen más que bajas arriesgadas: con ventaja, juega seguro.'
+});
 
 /* =========================================================================
    INÍCIO
    ========================================================================= */
 function readHash(){return decodeURIComponent((location.hash||'').slice(1)).toLowerCase()}
 function boot(){
-  applyTheme();applyStaticI18n();$('#loading').hidden=true;renderSub();renderFoot();
+  applyTheme();applyStaticI18n();$('#loading').hidden=true;renderSub();renderFoot();renderQBar();
   const top3=DATA.filter(b=>b.wr!=null).sort((a,b)=>b.wr-a.wr).slice(0,3).map(b=>b.s);state.draft.enemy=top3;state.draft.example=true;
   const h=readHash();if(bySlug.has(h))state.sel=h;else if(!bySlug.has(state.sel))state.sel=DATA[0].s;
   if(!bySlug.has(state.cmp[0]))state.cmp[0]=DATA[0].s;if(!bySlug.has(state.cmp[1]))state.cmp[1]=DATA[1].s;
