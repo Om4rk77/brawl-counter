@@ -640,6 +640,43 @@ body.stacked #app{transform:scale(.94) translate3d(0,10px,0);border-radius:24px;
 .gm-row .tn{font-weight:700;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .gm-row .vs-s{font-family:var(--font-d);font-weight:800;font-size:12px;color:var(--fg-3)}
 @media (max-width:520px){.gm-row .tn{display:none}.pb-row{grid-template-columns:auto 70px minmax(0,1fr) auto}}
+
+/* elo mínimo */
+.rank-btn{position:relative;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;margin-left:-4px;opacity:0;transform:scale(.4) translateX(-18px);pointer-events:none;transition:opacity .3s var(--ease),transform .55s var(--bounce),margin .4s var(--bounce);margin-right:-48px}
+.rank-btn.on{opacity:1;transform:none;pointer-events:auto;margin-right:0}
+.rank-btn img{filter:drop-shadow(0 3px 6px rgba(0,0,0,.35))}
+.rank-btn .plus{position:absolute;top:3px;right:3px;width:15px;height:15px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:800;line-height:1;background:var(--fg);color:var(--bg);box-shadow:0 2px 6px rgba(0,0,0,.3)}
+.rank-menu{min-width:270px}
+.rank-menu .rm-h{font-size:12px;font-weight:720;text-transform:uppercase;letter-spacing:.06em;color:var(--fg-3);padding:8px 12px 6px}
+.rank-menu .mi{gap:12px}.rank-menu .mi[aria-checked="true"]{background:var(--fill)}
+.rank-menu .mi:disabled{opacity:.42}
+.rank-menu .rm-t{display:grid;flex:1;line-height:1.2}.rank-menu .rm-t small{font-size:12px;color:var(--fg-2);font-weight:520}
+.rank-menu .rm-ck{width:18px;height:18px;color:var(--accent)}
+.rank-menu .rm-note{margin:6px 12px 8px;font-size:11.5px;color:var(--fg-3);line-height:1.4}
+/* comunidade */
+.comm-note{padding:14px 16px;margin-bottom:12px;display:grid;gap:8px;font-size:13.5px}
+.comm-note .cn-h{display:flex;align-items:center;gap:8px;font-size:15px}
+.comm-note p{margin:0;color:var(--fg-2);line-height:1.45}
+.comm-note ul{margin:0;padding-left:18px;display:grid;gap:3px;color:var(--fg-2)}
+.comm-note a{color:var(--accent);font-weight:650}
+/* mapas */
+.map-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:12px}
+.map-t{display:grid;align-content:start;text-align:left;border-radius:20px;overflow:hidden;background:var(--surface);box-shadow:var(--card-shadow);content-visibility:auto;contain-intrinsic-size:auto 190px}
+.map-t:not([data-mapgo]){cursor:default}
+.map-art{position:relative;aspect-ratio:16/10;background:color-mix(in srgb,var(--mc) 26%,var(--surface-2));overflow:hidden}
+.map-art img.mapimg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .5s}.map-art img.mapimg.ok{opacity:1}
+.map-mode{position:absolute;right:8px;bottom:8px;width:28px;height:28px;border-radius:9px;display:grid;place-items:center;background:rgba(0,0,0,.45);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.map-n{padding:9px 11px 2px;font-weight:700;font-size:13.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.map-s{display:flex;align-items:center;justify-content:space-between;gap:6px;padding:4px 11px 11px;min-height:38px}
+.map-s .av-stack .av{--s:26px;border-radius:9px}.map-s .av-stack .av+.av{margin-left:-8px}
+.map-none{font-size:11.5px;color:var(--fg-3)}.map-g{font-size:11px;color:var(--fg-3)}
+@media (max-width:520px){.map-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}}
+
+.qbar{max-width:100%}
+@media (max-width:560px){.qwrap{gap:10px}.qnote{flex-basis:100%}
+  .qseg{padding:0 11px 0 9px;font-size:13px;gap:6px}
+  .qbar.four .qseg:not([aria-checked="true"])>span:last-child{display:none}
+  .qbar.four .qseg:not([aria-checked="true"]){padding:0 10px}}
 </style>
 </head>
 <body>
@@ -717,7 +754,7 @@ body.stacked #app{transform:scale(.94) translate3d(0,10px,0);border-radius:24px;
 <div class="wrap hero">
   <h1 class="large-title" id="pageTitle">Agora</h1>
   <p class="sub" id="pageSub">…</p>
-  <div class="qwrap"><div class="qbar glass" id="qBar" role="radiogroup" aria-label="Fila"></div><span class="qnote" id="qNote"></span></div>
+  <div class="qwrap"><div class="qbar glass" id="qBar" role="radiogroup" aria-label="Fila"></div><button class="rank-btn glass press" id="rankBtn" aria-hidden="true" tabindex="-1"></button><span class="qnote" id="qNote"></span></div>
   <div class="search" id="searchBox">
     <label class="search-field glass spec" for="q">
       <svg aria-hidden="true"><use href="#i-search"/></svg>
@@ -827,7 +864,7 @@ body.stacked #app{transform:scale(.94) translate3d(0,10px,0);border-radius:24px;
           data/meta.json   (nomes oficiais em 3 idiomas, ids e imagens — diário)
           data/tips.json   (dicas traduzidas para inglês e espanhol)
    ========================================================================= */
-const URLS={live:'data/live.json',stat:'data/static.json',meta:'data/meta.json',tips:'data/tips.json',pro:'data/pro.json'};
+const URLS={live:'data/live.json',stat:'data/static.json',meta:'data/meta.json',tips:'data/tips.json',pro:'data/pro.json',comm:'data/community.json'};
 const POLL_MS=5*60*1000;
 const CDN='https://cdn.brawlify.com', BFY='https://brawlify.com/images';
 
@@ -838,10 +875,10 @@ const CLS_FB={DD:['Damage Dealer','Destruidor','Destructor'],TK:['Tank','Tanque'
 const RAR_ORDER=['I','R','SR','E','M','L','UL'];
 const RAR_ID={I:0,R:1,SR:2,E:3,M:4,L:5,UL:6};
 const RAR_FB={I:['Trophy Road','Caminho de Troféus','Recompensa de Trofeos'],R:['Rare','Raro','Especial'],SR:['Super Rare','Super-Raro','Superespecial'],E:['Epic','Épico','Épico'],M:['Mythic','Mítico','Mítico'],L:['Legendary','Lendário','Legendario'],UL:['Ultra','Ultra','Ultra'],'?':['New','Novo','Nuevo']};
-const MODE_EN={GG:'Gem Grab',BB:'Brawl Ball',HE:'Heist',BO:'Bounty',HZ:'Hot Zone',KO:'Knockout',WO:'Wipeout',HK:'Brawl Hockey',BK:'Basket Brawl',VB:'Volley Brawl',DU:'Duels',WO5:'Wipeout 5v5',KO5:'Knockout 5v5',BB5:'Brawl Ball 5v5',GG5:'Gem Grab 5v5',PB:'Paint Brawl',TE:'Trophy Escape',AR:'Brawl Arena'};
-const MODE_FB={GG:['Gem Grab','Pique-Gema','Atrapagemas'],BB:['Brawl Ball','Futebrawl','Balón Brawl'],HE:['Heist','Roubo','Atraco'],BO:['Bounty','Caça-Estrelas','Caza Estelar'],HZ:['Hot Zone','Zona Estratégica','Zona Restringida'],KO:['Knockout','Nocaute','Noqueo'],WO:['Wipeout','Extermínio','Eliminación'],HK:['Brawl Hockey','Hóquei Brawl','Hockey Brawl'],BK:['Basket Brawl','Basquete Brawl','Baloncesto Brawl'],VB:['Volley Brawl','Vôlei Brawl','Voleibrawl'],DU:['Duels','Duelos','Duelos']};
+const MODE_EN={GG:'Gem Grab',BB:'Brawl Ball',HE:'Heist',BO:'Bounty',HZ:'Hot Zone',KO:'Knockout',WO:'Wipeout',HK:'Brawl Hockey',BK:'Basket Brawl',VB:'Volley Brawl',DU:'Duels',WO5:'Wipeout 5v5',KO5:'Knockout 5v5',BB5:'Brawl Ball 5v5',GG5:'Gem Grab 5v5',PB:'Paint Brawl',TE:'Trophy Escape',AR:'Brawl Arena',SD:'Solo Showdown',DSD:'Duo Showdown'};
+const MODE_FB={GG:['Gem Grab','Pique-Gema','Atrapagemas'],BB:['Brawl Ball','Futebrawl','Balón Brawl'],HE:['Heist','Roubo','Atraco'],BO:['Bounty','Caça-Estrelas','Caza Estelar'],HZ:['Hot Zone','Zona Estratégica','Zona Restringida'],KO:['Knockout','Nocaute','Noqueo'],WO:['Wipeout','Extermínio','Eliminación'],HK:['Brawl Hockey','Hóquei Brawl','Hockey Brawl'],BK:['Basket Brawl','Basquete Brawl','Baloncesto Brawl'],VB:['Volley Brawl','Vôlei Brawl','Voleibrawl'],DU:['Duels','Duelos','Duelos'],SD:['Solo Showdown','Combate Solitário','Supervivencia (solo)'],DSD:['Duo Showdown','Combate Duplo','Supervivencia (dúo)']};
 const MODE_ID={GG:48000000,HE:48000002,BO:48000003,BB:48000005,HZ:48000017,KO:48000020};
-const MODE_COLOR={GG:'#d852ff',HE:'#d852ff',BO:'#24d6ff',BB:'#8ca0ff',HZ:'#e33c50',KO:'#f7831c'};
+const MODE_COLOR={GG:'#d852ff',HE:'#d852ff',BO:'#24d6ff',BB:'#8ca0ff',HZ:'#e33c50',KO:'#f7831c',SD:'#91e136',DSD:'#91e136'};
 const RANKED_MODES=['GG','BB','HE','BO','HZ','KO'];
 const TIER_C={'S+':'#e8454f','S':'#f2793a','A':'#e3a21a','B':'#3fae5a','C':'#3a8bd6','D':'#8a8a93'};
 const GEAR_FB={'Speed':[62000000,'Speed','Velocidade','Velocidad'],'Health':[62000001,'Health','Saúde','Salud'],'Damage':[62000002,'Damage','Dano','Daño'],'Vision':[62000003,'Vision','Visão','Visión'],'Shield':[62000004,'Shield','Escudo','Escudo'],'Reload Speed':[62000005,'Reload Speed','Velocidade de Recarga','Velocidad de Recarga'],'Super Charge':[62000006,'Super Charge','Recarga do Super','Supercarga'],'Thicc Head':[62000007,'Thicc Head','Mente Sã','Cabezón'],'Pet Power':[62000014,'Pet Power','Poder do Companheiro','Poder del Compañero'],'Gadget Cooldown':[62000017,'Gadget Cooldown','Recarga do Acessório','Tiempo de Carga del Gadget']};
@@ -849,8 +886,8 @@ const LANGS=['en','pt','es'], LI={en:0,pt:1,es:2}, LOCALE={pt:'pt-BR',en:'en-US'
 
 /* ---------------- textos da interface ---------------- */
 const I18N={
-pt:{'nav.now':'Agora','nav.matchup':'Matchups','nav.draft':'Draft','nav.comps':'Composições','nav.ranking':'Ranking','nav.compare':'Comparar',
-'tab.now':'Agora','tab.matchup':'Counters','tab.draft':'Draft','tab.comps':'Times','tab.ranking':'Ranking',
+pt:{'nav.now':'Mapas','nav.matchup':'Matchups','nav.draft':'Draft','nav.comps':'Composições','nav.ranking':'Ranking','nav.compare':'Comparar',
+'tab.now':'Mapas','tab.matchup':'Counters','tab.draft':'Draft','tab.comps':'Times','tab.ranking':'Ranking',
 'ui.settings':'Ajustes','ui.search':'Buscar','ui.searchPh':'Buscar brawler, ex.: Piper','ui.language':'Idioma','ui.appearance':'Aparência','ui.auto':'Auto','ui.light':'Claro','ui.dark':'Escuro','ui.about':'Sobre os dados','ui.close':'Fechar','ui.change':'Trocar','ui.choose':'Escolher','ui.none':'Nenhum brawler encontrado.','ui.noFn':'Nenhum brawler nesta função.','ui.all':'Todos','ui.of':'de','ui.copied':'Link de {n} copiado','ui.copyThis':'Copie este link: {u}','ui.favAdd':'Adicionado aos favoritos','ui.favDel':'Removido dos favoritos','ui.theme.auto':'Tema automático','ui.theme.light':'Tema claro','ui.theme.dark':'Tema escuro','ui.langSet':'Idioma: Português','ui.noResult':'Nenhum brawler com “{q}”.','ui.alreadyIn':'Já está em outro slot',
 'err.title':'Não foi possível carregar os dados','err.body':'A conexão falhou ao buscar a base de brawlers. Verifique a internet e tente de novo.','err.retry':'Tentar de novo','err.sub':'Sem conexão com a base de dados.',
 'sub.live':'Ao vivo','sub.stale':'Dados ao vivo atrasados','sub.liveTxt':'atualizado <b>{ago}</b> · {b} partidas de {p} jogadores do topo nos últimos {d} dias','sub.ref':'{n} brawlers · referência de <b>{d}</b>','sub.refWait':'o coletor ao vivo começa assim que a chave da API for configurada','sub.updated':'Dados ao vivo atualizados',
@@ -870,8 +907,8 @@ pt:{'nav.now':'Agora','nav.matchup':'Matchups','nav.draft':'Draft','nav.comps':'
 'ctx.open':'Ver perfil','ctx.fav':'Favoritar','ctx.unfav':'Remover favorito','ctx.compare':'Comparar','ctx.counter':'Montar counter',
 'foot.src':'De onde vêm os números','foot.lim':'Limites dos dados','foot.live':'<b>Ao vivo:</b> {a}. A cada hora o site lê as partidas recentes dos jogadores do topo do ranking (global e países) e recalcula win rate, pick rate, modos, mapas, matchups, sinergia e trios numa janela de 7 dias. A rotação de mapas também vem da API oficial.','foot.api':'API oficial do Brawl Stars','foot.ref':'<b>Reserva:</b> quando um número ao vivo ainda não tem amostra suficiente, o site usa {bp} e {sm}, marcado como “referência”.','foot.build':'<b>Builds:</b> {bt}, win rate de cada item ou vantagem em pontos quando é o que a fonte mostra.','foot.names':'<b>Nomes, ícones e traduções:</b> dados oficiais do jogo publicados pela {bf}, atualizados todo dia. Imagens: {cdn}.','foot.lim1':'Nenhuma fonte pública mede a build por modo ou por confronto. A build mostrada é a de maior win rate geral.','foot.lim2':'O Draft e o counter solo são calculados pelo site a partir da matriz de matchups, da sinergia entre parceiros e da força no modo. Pares sem dado contam como neutros.','foot.lim3':'Builds não existem na API oficial (ela não registra acessórios por partida).','foot.lim4':'As dicas de “Como jogar contra” são análise do kit de cada brawler, não estatística.','foot.dates':'Builds e dicas: {d}.','foot.liveDate':'Dados ao vivo: {d}.','foot.metaDate':'Nomes e ícones: {d}.',
 },
-en:{'nav.now':'Now','nav.matchup':'Matchups','nav.draft':'Draft','nav.comps':'Team comps','nav.ranking':'Ranking','nav.compare':'Compare',
-'tab.now':'Now','tab.matchup':'Counters','tab.draft':'Draft','tab.comps':'Teams','tab.ranking':'Ranking',
+en:{'nav.now':'Maps','nav.matchup':'Matchups','nav.draft':'Draft','nav.comps':'Team comps','nav.ranking':'Ranking','nav.compare':'Compare',
+'tab.now':'Maps','tab.matchup':'Counters','tab.draft':'Draft','tab.comps':'Teams','tab.ranking':'Ranking',
 'ui.settings':'Settings','ui.search':'Search','ui.searchPh':'Search brawler, e.g. Piper','ui.language':'Language','ui.appearance':'Appearance','ui.auto':'Auto','ui.light':'Light','ui.dark':'Dark','ui.about':'About the data','ui.close':'Close','ui.change':'Change','ui.choose':'Choose','ui.none':'No brawler found.','ui.noFn':'No brawler in this class.','ui.all':'All','ui.of':'of','ui.copied':'Link to {n} copied','ui.copyThis':'Copy this link: {u}','ui.favAdd':'Added to favorites','ui.favDel':'Removed from favorites','ui.theme.auto':'Automatic theme','ui.theme.light':'Light theme','ui.theme.dark':'Dark theme','ui.langSet':'Language: English','ui.noResult':'No brawler matches “{q}”.','ui.alreadyIn':'Already in another slot',
 'err.title':"Couldn't load the data",'err.body':'The connection failed while fetching the brawler database. Check your internet and try again.','err.retry':'Try again','err.sub':'No connection to the database.',
 'sub.live':'Live','sub.stale':'Live data delayed','sub.liveTxt':'updated <b>{ago}</b> · {b} matches from {p} top players over the last {d} days','sub.ref':'{n} brawlers · reference from <b>{d}</b>','sub.refWait':'the live collector starts once the API key is set up','sub.updated':'Live data updated',
@@ -891,8 +928,8 @@ en:{'nav.now':'Now','nav.matchup':'Matchups','nav.draft':'Draft','nav.comps':'Te
 'ctx.open':'View profile','ctx.fav':'Add to favorites','ctx.unfav':'Remove favorite','ctx.compare':'Compare','ctx.counter':'Build a counter',
 'foot.src':'Where the numbers come from','foot.lim':'Data limits','foot.live':'<b>Live:</b> {a}. Every hour the site reads the recent matches of top-ranked players (global and by country) and recalculates win rate, pick rate, modes, maps, matchups, synergy and trios over a 7-day window. The map rotation also comes from the official API.','foot.api':'Official Brawl Stars API','foot.ref':'<b>Fallback:</b> when a live number doesn’t have enough sample yet, the site uses {bp} and {sm}, marked as “reference”.','foot.build':'<b>Builds:</b> {bt}, win rate per item or advantage in points when that’s what the source shows.','foot.names':'<b>Names, icons and translations:</b> official game data published by {bf}, updated daily. Images: {cdn}.','foot.lim1':'No public source measures builds per mode or per matchup. The build shown is the one with the highest overall win rate.','foot.lim2':'Draft and solo counter are calculated from the matchup matrix, teammate synergy and mode strength. Pairs without data count as neutral.','foot.lim3':'Builds aren’t in the official API (it doesn’t record gadgets per match).','foot.lim4':'“How to play against” tips are kit analysis, not statistics.','foot.dates':'Builds and tips: {d}.','foot.liveDate':'Live data: {d}.','foot.metaDate':'Names and icons: {d}.',
 },
-es:{'nav.now':'Ahora','nav.matchup':'Enfrentamientos','nav.draft':'Draft','nav.comps':'Composiciones','nav.ranking':'Clasificación','nav.compare':'Comparar',
-'tab.now':'Ahora','tab.matchup':'Counters','tab.draft':'Draft','tab.comps':'Equipos','tab.ranking':'Ranking',
+es:{'nav.now':'Mapas','nav.matchup':'Enfrentamientos','nav.draft':'Draft','nav.comps':'Composiciones','nav.ranking':'Clasificación','nav.compare':'Comparar',
+'tab.now':'Mapas','tab.matchup':'Counters','tab.draft':'Draft','tab.comps':'Equipos','tab.ranking':'Ranking',
 'ui.settings':'Ajustes','ui.search':'Buscar','ui.searchPh':'Buscar brawler, ej.: Piper','ui.language':'Idioma','ui.appearance':'Apariencia','ui.auto':'Auto','ui.light':'Claro','ui.dark':'Oscuro','ui.about':'Sobre los datos','ui.close':'Cerrar','ui.change':'Cambiar','ui.choose':'Elegir','ui.none':'No se encontró ningún brawler.','ui.noFn':'Ningún brawler en esta clase.','ui.all':'Todos','ui.of':'de','ui.copied':'Enlace de {n} copiado','ui.copyThis':'Copia este enlace: {u}','ui.favAdd':'Añadido a favoritos','ui.favDel':'Quitado de favoritos','ui.theme.auto':'Tema automático','ui.theme.light':'Tema claro','ui.theme.dark':'Tema oscuro','ui.langSet':'Idioma: Español','ui.noResult':'Ningún brawler coincide con “{q}”.','ui.alreadyIn':'Ya está en otro espacio',
 'err.title':'No se pudieron cargar los datos','err.body':'La conexión falló al buscar la base de brawlers. Revisa tu internet e inténtalo de nuevo.','err.retry':'Reintentar','err.sub':'Sin conexión con la base de datos.',
 'sub.live':'En vivo','sub.stale':'Datos en vivo con retraso','sub.liveTxt':'actualizado <b>{ago}</b> · {b} partidas de {p} jugadores top en los últimos {d} días','sub.ref':'{n} brawlers · referencia del <b>{d}</b>','sub.refWait':'el recolector en vivo empieza cuando se configure la clave de la API','sub.updated':'Datos en vivo actualizados',
@@ -924,9 +961,9 @@ const state={
   rk:{cls:new Set(),rar:'all',mode:'all',sort:'wr',dir:-1},
   cmp:['piper','ash'], theme:store.get('theme','auto'),
   draft:{mode:store.get('dmode','any'),enemy:[null,null,null],ally:[null,null],example:true},
-  cmode:'GG', showAll:{st:false,wk:false}, mapMode:'all', queue:store.get('queue','all'), pmode:'GG', cmap:null, cmapMode:null
+  cmode:'GG', showAll:{st:false,wk:false}, mapMode:'all', queue:store.get('queue','all'), rmin:store.get('rmin',16), pmode:'GG', cmap:null, cmapMode:null
 };
-let LV=null,VSX=null,WX=null,MTRIOS={},LMAPS={};
+let COMM=null,SHOW=null,LV=null,VSX=null,WX=null,MTRIOS={},LMAPS={};
 let DATA=[],TRIOS={},META={},LIVE=null,STATIC=null,NAMES=null,TIPS={},ROT=[],MAPS={};
 let byName=new Map(), bySlug=new Map(), MU=new Map(), SY=new Map();
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
@@ -1030,8 +1067,8 @@ function buildMini(b){
    NAVEGAÇÃO: abas com lente de vidro, arrastável
    ========================================================================= */
 const VIEWS=['now','matchup','draft','comps','ranking','compare','pro'];
-const HASH={now:'now',matchup:'matchups',draft:'draft',comps:'comps',ranking:'ranking',compare:'compare',pro:'competitivo'};
-const HASH_IN={now:'now',agora:'now',ahora:'now',matchups:'matchup',draft:'draft',comps:'comps',composicoes:'comps',composiciones:'comps',ranking:'ranking',compare:'compare',comparar:'compare',pro:'pro',competitivo:'pro',competitive:'pro'};
+const HASH={now:'mapas',matchup:'matchups',draft:'draft',comps:'comps',ranking:'ranking',compare:'compare',pro:'competitivo'};
+const HASH_IN={now:'now',mapas:'now',maps:'now',agora:'now',ahora:'now',matchups:'matchup',draft:'draft',comps:'comps',composicoes:'comps',composiciones:'comps',ranking:'ranking',compare:'compare',comparar:'compare',pro:'pro',competitivo:'pro',competitive:'pro'};
 /* lente com física de mola: interrompível, guarda a velocidade, estica conforme a velocidade */
 const LENS=new WeakMap(),LK=560,LC=2*Math.sqrt(560)*.74;
 function lensState(lens){let st=LENS.get(lens);if(!st){st={x:0,w:0,vx:0,vw:0,tx:0,tw:0,run:false,init:false,drag:false,pw:-1};LENS.set(lens,st)}return st}
@@ -1058,6 +1095,7 @@ function setView(v,opts={}){
     $$('[role=tab][data-view]').forEach(b=>b.setAttribute('aria-selected',String(b.dataset.view===v)));
     placeLenses(opts.instant);
     VIEWS.forEach(k=>{$('#view-'+k).hidden=k!==v});
+    renderQBar();if(DATA.length)renderSub();
     $('#pageTitle').textContent=t('nav.'+v);$('#miniTitle').textContent=t('nav.'+v);
     document.title=(v==='now'?'':t('nav.'+v)+' · ')+'Brawl Counter';
     const accent={now:'var(--c-AR)',draft:'var(--c-MK)',comps:'var(--c-SP)',ranking:'var(--c-MK)',compare:'var(--c-CT)',pro:'var(--c-TK)'}[v];
@@ -1264,7 +1302,7 @@ function renderProfile(slug,animate=true){profKey=(arguments[0]||state.sel)+':'+
   if(state.view==='matchup')setAccent(`var(--c-${b.c})`);
   const fav=state.favs.has(b.s),best=byName.get(b.wk[0]?.[0]);
   const nSt=state.showAll.st?5:3,nWk=state.showAll.wk?5:3,mates=(b.mt||[]).slice(0,3);
-  const tips=tipsOf(b),why=whyOf(b);
+  const tips=tipsOf(b);
   const el=$('#profile');el.style.setProperty('--accent',`var(--c-${b.c})`);
   el.innerHTML=`
     <article class="p-card glass">
@@ -1288,7 +1326,7 @@ function renderProfile(slug,animate=true){profKey=(arguments[0]||state.sel)+':'+
     </div>
     ${best?`<section class="group"><div class="gh"><h2>${t('p.bestPick',{n:esc(b.n)})}</h2></div>
       <div class="card best" style="--accent:var(--c-${best.c})">
-        <button class="best-main press" data-go="${best.s}">${av(best)}<div style="min-width:0"><div class="kicker">${t('p.counter1',{v:fmt(b.wk[0][1])})}</div><div class="best-name">${esc(best.n)}</div><p class="best-why">${esc(why)}</p></div></button>
+        <button class="best-main press" data-go="${best.s}">${av(best)}<div style="min-width:0"><div class="kicker">${t('p.counter1',{v:fmt(b.wk[0][1])})}</div><div class="best-name">${esc(best.n)}</div><p class="best-why">${esc(best.n===b.whyFor&&whyOf(b)?whyOf(b):t('p.whyGen',{a:best.n,b:b.n,v:fmt(b.wk[0][1]),g:b.wk[0][2]?t('p.whyG',{g:fmt(b.wk[0][2],0)}):''}))}</p></div></button>
         <div><div class="mini-note" style="padding:0 0 8px">${t('p.buildOf',{n:esc(best.n)})}</div>${buildMini(best)}</div>
         <div class="alts"><span>${t('p.alsoWork')}</span>${b.wk.slice(1,3).map(([n,p])=>{const x=byName.get(n);return x?`<button class="alt press" data-go="${x.s}">${av(x)}${esc(x.n)} <b class="num">+${fmt(p)}</b></button>`:''}).join('')}</div>
       </div></section>`:''}
@@ -1415,7 +1453,7 @@ function loadEnemy(names,mode){state.draft.enemy=names.map(n=>byName.get(n)?.s||
 /* =========================================================================
    COMPOSIÇÕES
    ========================================================================= */
-function compModeChips(){$('#cModes').innerHTML=RANKED_MODES.map(m=>`<button class="fchip press" data-cm="${m}" aria-pressed="${state.cmode===m}">${modeIcon(m)}${esc(modeName(m))}</button>`).join('')}
+function compModeChips(){const ms=effQueue()==='ranked'?RANKED_MODES:[...RANKED_MODES,...SD_CODES];if(!ms.includes(state.cmode))state.cmode='GG';$('#cModes').innerHTML=ms.map(m=>`<button class="fchip press" data-cm="${m}" aria-pressed="${state.cmode===m}">${modeIcon(m)}${esc(modeName(m))}</button>`).join('')}
 function computedTrios(mode){const pool=DATA.filter(b=>modeWr(b,mode)!=null).sort((a,b)=>modeWr(b,mode)-modeWr(a,mode)).slice(0,22);const res=[];for(let i=0;i<pool.length;i++)for(let j=i+1;j<pool.length;j++)for(let k=j+1;k<pool.length;k++){const T=[pool[i],pool[j],pool[k]];let s=T.reduce((a,b)=>a+modePow(b,mode),0);s+=sy(T[0].n,T[1].n)+sy(T[0].n,T[2].n)+sy(T[1].n,T[2].n);s-=2*(3-new Set(T.map(x=>x.c)).size);res.push({T,s})}return res.sort((a,b)=>b.s-a.s).slice(0,6)}
 $('#cModes').addEventListener('click',e=>{const x=e.target.closest('[data-cm]');if(!x)return;state.cmode=x.dataset.cm;renderComps()});
 
@@ -1428,13 +1466,13 @@ function renderRkControls(){
   $('#rkMode').innerHTML=`<option value="all">${t('rk.allModes')}</option>`+RANKED_MODES.map(m=>`<option value="${m}" ${state.rk.mode===m?'selected':''}>${esc(t('rk.top3',{m:modeName(m)}))}</option>`).join('');
 }
 function renderRanking(anim){
-  const {cls,rar,mode,sort,dir}=state.rk;
+  const {cls,rar,mode,sort,dir}=state.rk,comm=effQueue()==='comm';
   let list=DATA.filter(b=>(!cls.size||cls.has(b.c))&&(rar==='all'||b.r===rar)&&(mode==='all'||(b.mr&&b.m.slice(0,3).some(([c])=>c===mode))));
-  const val=b=>sort==='n'?b.n:sort==='c'?CLS_ORDER.indexOf(b.c):sort==='r'?RAR_ORDER.indexOf(b.r):sort==='mode'?(mode==='all'?b.wr:modeWr(b,mode)):b[sort];
+  const val=b=>sort==='n'?b.n:sort==='c'?CLS_ORDER.indexOf(b.c):sort==='r'?RAR_ORDER.indexOf(b.r):sort==='mode'?(mode==='all'?b.wr:modeWr(b,mode)):sort==='tier'?b.cs:b[sort];
   list.sort((a,b)=>{const x=val(a),y=val(b);if(x==null&&y==null)return 0;if(x==null)return 1;if(y==null)return -1;return (typeof x==='string'?x.localeCompare(y):x-y)*dir||a.n.localeCompare(b.n)});
-  const hm=mode!=='all',rc=hm?'has-mode':'nomode';
+  const hm=comm||mode!=='all',rc=hm?'has-mode':'nomode';
   const th=(k,l,cls='')=>{const s=sort===k?(dir<0?'descending':'ascending'):null;return `<div class="${cls}" ${s?`aria-sort="${s}"`:''} role="columnheader"><button data-sort="${k}">${esc(l)}<svg class="arr"><use href="#i-down"/></svg></button></div>`};
-  const head=`<div class="rk-row rk-head ${rc}" role="row"><div class="rk-n">#</div>${th('n',t('rk.brawler'))}${th('c',t('rk.fn'),'c-cls')}${th('r',t('rk.rar'),'c-rar')}${th('wr',t('rk.wr'),'c-wr')}${th('pr',t('rk.pick'),'c-pick')}${hm?th('mode',modeName(mode),'c-mode-x'):''}<div role="columnheader">${t('rk.tier')}</div></div>`;
+  const head=`<div class="rk-row rk-head ${rc}" role="row"><div class="rk-n">#</div>${th('n',t('rk.brawler'))}${th('c',t('rk.fn'),'c-cls')}${th('r',t('rk.rar'),'c-rar')}${th('wr',t('rk.wr'),'c-wr')}${comm?th('cm',t('rk.comm'),'c-pick'):th('pr',t('rk.pick'),'c-pick')}${comm?th('cs',t('rk.final'),'c-mode-x'):hm?th('mode',modeName(mode),'c-mode-x'):''}<div role="columnheader">${t(comm?'rk.consensus':'rk.tier')}</div></div>`;
   const rows=list.map((b,i)=>{const w=b.wr==null?0:Math.max(3,Math.min(100,(b.wr-42)/15*100)),wc=wrClass(b.wr),mw=hm?modeWr(b,mode):null;
     return `<button class="rk-row ${rc} ${anim&&!reduce&&i<24?'r-in':''}" style="${anim&&i<24?`animation-delay:${i*16}ms`:''}" data-go="${b.s}" role="row">
       <div class="rk-n num">${i+1}</div>
@@ -1442,9 +1480,10 @@ function renderRanking(anim){
       <div class="c-cls"><span class="chip cls" style="--cc:var(--c-${b.c})">${clsIco(b.c,18)}${esc(clsShort(b.c))}</span></div>
       <div class="c-rar"><span class="chip" style="--rc:var(--r-${b.r==='?'?'M':b.r})"><span class="dot" style="margin-left:2px"></span>${esc(rarName(b.r))}</span></div>
       <div class="c-wr"><div class="wrcell"><span class="val num ${wc}">${b.wr==null?'—':fmt(b.wr)+'%'}</span><span class="bar"><i data-w="${w}" style="--b:var(--${wc||'mid'}-bar)"></i></span></div></div>
-      <div class="c-pick num" style="color:var(--fg-2)">${b.pr==null?'—':(b.pr<0.1?'<'+fmt(.1):fmt(b.pr))+'%'}</div>
-      ${hm?`<div class="c-mode-x num"><span class="val ${wrClass(mw)}">${mw==null?'—':fmt(mw)+'%'}</span></div>`:''}
-      <div>${b.t?`<span class="tier" style="--tc:${TIER_C[b.t]};height:26px;min-width:32px;font-size:13px;border-radius:9px">${b.t}</span>`:'—'}</div></button>`}).join('');
+      ${comm?`<div class="c-pick num" title="${esc(b.cmT.map(([s,tr])=>s.name+': '+tr).join(' · '))}">${b.cm==null?'—':`<b>${b.cm}</b><small style="color:var(--fg-3)"> · ${b.cmT.length}/${COMM.sources.length}</small>`}</div>`:`<div class="c-pick num" style="color:var(--fg-2)">${b.pr==null?'—':(b.pr<0.1?'<'+fmt(.1):fmt(b.pr))+'%'}</div>`}
+      ${comm?`<div class="c-mode-x num"><span class="val ${b.cs>=70?'good':b.cs<=35?'bad':'mid'}" style="font-size:16px">${b.cs??'—'}</span></div>`:hm?`<div class="c-mode-x num"><span class="val ${wrClass(mw)}">${mw==null?'—':fmt(mw)+'%'}</span></div>`:''}
+      <div>${(comm?b.cmTier:b.t)?`<span class="tier" style="--tc:${TIER_C[comm?b.cmTier:b.t]||'var(--fg-3)'};height:26px;min-width:32px;font-size:13px;border-radius:9px">${comm?b.cmTier:b.t}</span>`:'—'}</div></button>`}).join('');
+  let cn=$('#rkComm');if(!cn){cn=document.createElement('div');cn.id='rkComm';$('#rkList').before(cn)}cn.innerHTML=comm?commNote():'';
   $('#rkList').innerHTML=head+(rows||`<div class="empty">${t('rk.none')}</div>`);
   $('#rkCount').textContent=t(list.length===1?'rk.count1':'rk.countN',{n:list.length});
   fillBars($('#rkList'));
@@ -1487,28 +1526,6 @@ function renderCompare(){
 const btDate=s=>{const m=/^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})/.exec(s||'');return m?new Date(Date.UTC(+m[1],m[2]-1,+m[3],+m[4],+m[5],+m[6])):new Date(s)};
 function left(ms){if(ms<=0)return t('now.ended');const m=Math.floor(ms/60000),h=Math.floor(m/60),d=Math.floor(h/24);return d?`${d}d ${h%24}h`:h?`${h}h ${String(m%60).padStart(2,'0')}min`:`${m} min`}
 function topRows(top){return top.map(([n,w,g])=>{const b=byName.get(n);if(!b)return '';return `<button class="row press" data-go="${b.s}">${av(b)}<div style="min-width:0"><div class="t">${esc(b.n)}</div><div class="s">${clsIco(b.c,15)}${esc(clsShort(b.c))}${g?` · ${t('now.games',{n:fmt(g,0)})}`:''}</div></div><div class="r" style="min-width:0"><span class="val num ${wrClass(w)}">${fmt(w)}%</span></div></button>`}).join('')}
-function renderNow(){
-  const out=$('#nowOut');
-  const evs=ROT.filter(e=>e.mode).map(e=>({...e,endT:btDate(e.end).getTime()})).sort((a,b)=>(RANKED_MODES.indexOf(a.mode)<0)-(RANKED_MODES.indexOf(b.mode)<0)||a.endT-b.endT);
-  if(!evs.length){
-    out.innerHTML=`<div class="card empty-art" style="--accent:var(--c-AR)"><span class="art">${icon('clock')}</span><b>${t('now.waitT')}</b><p>${t('now.waitTxt')}</p></div>
-      <div class="gh" style="margin-top:8px"><h2>${t('now.byMode')}</h2><span class="note">${t('now.byModeNote')}</span></div>
-      <div class="now-grid stagger">${RANKED_MODES.map(m=>{const top=DATA.filter(b=>modeWr(b,m)!=null).sort((a,b)=>modeWr(b,m)-modeWr(a,m)).slice(0,5).map(b=>[b.n,modeWr(b,m),null]);
-        return `<article class="ev lift" style="--mc:${modeColor(m)}"><div class="ev-art" style="aspect-ratio:16/5;background:linear-gradient(135deg,color-mix(in srgb,var(--mc) 55%,#000 10%),color-mix(in srgb,var(--mc) 25%,var(--surface-2)))">
-          <div class="ev-head glass"><span class="mode-ic">${modeIcon(m,28)||icon('swords')}</span><div style="min-width:0"><div class="ev-mode">${t('p.modes')}</div><div class="ev-map">${esc(modeName(m))}</div></div><span></span></div></div>
-          <div class="ev-body"><div class="list">${topRows(top)}</div><div class="ev-foot"><span style="flex:1"></span><button class="mini-btn press" data-nowdraft="${m}">${t('now.draftHere')}</button></div></div></article>`}).join('')}</div>`;
-    return;
-  }
-  out.innerHTML=`<div class="gh"><h2>${t('now.active')}</h2><span class="note"><span class="live-dot"></span>${t('now.rot')}</span></div>
-    <div class="now-grid stagger">${evs.map(e=>{let top=(e.top||[]).filter(([n])=>byName.has(n)).slice(0,5),src='now.bestMap';
-      if(top.length<3){top=DATA.filter(b=>modeWr(b,e.mode)!=null).sort((a,b)=>modeWr(b,e.mode)-modeWr(a,e.mode)).slice(0,5).map(b=>[b.n,modeWr(b,e.mode),null]);src='now.bestMode'}
-      const ms=e.endT-Date.now();
-      return `<article class="ev lift ${ms<=0?'ended':''}" style="--mc:${modeColor(e.mode)}"><div class="ev-art">${e.mapId?mapImg(e.mapId,'mapimg'):''}
-        <div class="ev-head glass"><span class="mode-ic">${modeIcon(e.mode,28)||icon('swords')}</span><div style="min-width:0"><div class="ev-mode">${esc(modeName(e.mode))}</div><div class="ev-map">${esc(mapName(e.mapId,e.map))}</div></div><div class="ev-time" data-end="${e.endT}"><b>${left(ms)}</b>${ms>0?t('now.left'):''}</div></div></div>
-        <div class="ev-body"><div class="list">${topRows(top)||`<div class="empty">${t('now.noSample')}</div>`}</div>
-        <div class="ev-foot"><span class="mini-note" style="padding:0;flex:1">${t(src)}</span>${RANKED_MODES.includes(e.mode)?`<button class="mini-btn press" data-nowdraft="${e.mode}">${t('now.draftHere')}</button>`:''}</div></div></article>`}).join('')}</div>`;
-}
-$('#nowOut').addEventListener('click',e=>{const x=e.target.closest('[data-nowdraft]');if(x){state.draft.mode=x.dataset.nowdraft;store.set('dmode',state.draft.mode);setView('draft')}});
 setInterval(()=>{$$('.ev-time[data-end]').forEach(el=>{const ms=+el.dataset.end-Date.now();el.innerHTML=`<b>${left(ms)}</b>${ms>0?t('now.left'):''}`;if(ms<=0)el.closest('.ev').classList.add('ended')});if(DATA.length)renderSub()},30000);
 
 /* =========================================================================
@@ -1521,7 +1538,7 @@ const liveTier=wr=>wr>=55?'S+':wr>=53?'S':wr>=51?'A':wr>=49?'B':wr>=47?'C':'D';
 const CODE_BY_CLS=Object.fromEntries(Object.entries(CLS_ID).map(([k,v])=>[v,k])), CODE_BY_RAR=Object.fromEntries(Object.entries(RAR_ID).map(([k,v])=>[v,k]));
 function merge(st,lv,nm){
   const minG=lv&&lv._q?40:60;
-  const list=st.brawlers.map(b=>({...b,live:false,muLive:false,mLive:false}));
+  const list=st.brawlers.map(b=>({...b,whyFor:b.wk?.[0]?.[0]||null,live:false,muLive:false,mLive:false}));
   const byKey=new Map(list.map(b=>[nkey(b.n),b]));
   const nameOf=raw=>(byKey.get(nkey(raw))||{}).n||titleCase(raw);
   // ids, classe e raridade oficiais
@@ -1556,13 +1573,14 @@ function merge(st,lv,nm){
 }
 function applyData(){
   const {list,trios,rot,vsx,wx,mtrios,maps}=merge(STATIC,(LV=liveView()),NAMES);
-  DATA=list;TRIOS=trios;ROT=rot;VSX=vsx;WX=wx;MTRIOS=mtrios;LMAPS=maps;PKEY=null;META=STATIC.meta||{};MAP_BY_NAME=null;
+  DATA=list;TRIOS=trios;ROT=rot;SHOW=normShow(LIVE?.showdown);VSX=vsx;WX=wx;MTRIOS=mtrios;LMAPS=maps;PKEY=null;META=STATIC.meta||{};MAP_BY_NAME=null;
   byName=new Map(DATA.map(b=>[b.n,b]));bySlug=new Map(DATA.map(b=>[b.s,b]));
-  indexModes();buildModel();
+  indexModes();buildModel();computeComm();
 }
 function ago(iso){const d=(Date.now()-new Date(iso))/60000;if(!(d>=0))return '';if(d<1)return t('ago.now');if(d<60)return t('ago.min',{n:Math.round(d)});const h=Math.floor(d/60);return h<24?t('ago.h',{n:h}):t('ago.d',{n:Math.floor(h/24)})}
 function fmtDate(iso){try{const d=iso.length<=10?(()=>{const [y,m,dd]=iso.split('-').map(Number);return new Date(y,m-1,dd)})():new Date(iso);return d.toLocaleDateString(loc(),{day:'numeric',month:'short',year:'numeric'})}catch(e){return iso}}
 function renderSub(){
+  if(state.view==='pro'&&PRO){$('#pageSub').innerHTML=t('pro.sub',{g:fmt(PRO.games,0),e:PRO.events,ago:ago(PRO.updated)});return}
   if(LIVE){const M=LIVE.meta,stale=(Date.now()-new Date(M.updated))>3*3600e3;
     $('#pageSub').innerHTML=`<span class="live-dot ${stale?'off':''}"></span><b>${t(stale?'sub.stale':'sub.live')}</b> · ${t('sub.liveTxt',{ago:ago(M.updated),b:fmt(M.battles,0),p:fmt(M.players,0),d:M.windowDays})}`}
   else $('#pageSub').innerHTML=`${t('sub.ref',{n:DATA.length,d:fmtDate(META.updated||'')})}<br><span style="color:var(--fg-3);font-size:13px">${t('sub.refWait')}</span>`;
@@ -1590,8 +1608,8 @@ async function getJSON(u){const r=await fetch(u+(u.includes('?')?'&':'?')+'t='+M
 async function load(){
   $('#loading').hidden=false;$('#err').hidden=true;
   try{
-    const [st,lv,nm,tp,pr]=await Promise.all([getJSON(URLS.stat),getJSON(URLS.live).catch(()=>null),getJSON(URLS.meta).catch(()=>null),getJSON(URLS.tips).catch(()=>({})),getJSON(URLS.pro).catch(()=>null)]);
-    PRO=pr&&pr.modes?pr:null;STATIC=st;LIVE=lv&&lv.meta?lv:null;NAMES=nm&&nm.brawlers?nm:null;TIPS=tp||{};applyData();boot();
+    const [st,lv,nm,tp,pr,cm]=await Promise.all([getJSON(URLS.stat),getJSON(URLS.live).catch(()=>null),getJSON(URLS.meta).catch(()=>null),getJSON(URLS.tips).catch(()=>({})),getJSON(URLS.pro).catch(()=>null),getJSON(URLS.comm).catch(()=>null)]);
+    PRO=pr&&pr.modes?pr:null;COMM=cm&&cm.sources?cm:null;STATIC=st;LIVE=lv&&lv.meta?lv:null;NAMES=nm&&nm.brawlers?nm:null;TIPS=tp||{};applyData();boot();
   }catch(e){console.error(e);$('#loading').hidden=true;$('#err').hidden=false;$('#pageSub').textContent=t('err.sub')}
 }
 async function poll(){try{const lv=await getJSON(URLS.live);if(lv&&lv.meta&&(!LIVE||lv.meta.updated!==LIVE.meta.updated)){LIVE=lv;applyData();rerender();renderSub();renderFoot();renderQBar();toast(t('sub.updated'))}}catch(e){}}
@@ -1604,21 +1622,45 @@ const Q_IMG={c:'https://static.wikia.nocookie.net/brawlstars/images/c/c9/Logo.pn
 const qImg=(k,s=20)=>`<img alt="" src="${Q_IMG[k]}" referrerpolicy="no-referrer" decoding="async" width="${s}" height="${s}" style="width:${s}px;height:${s}px;object-fit:contain" onerror="this.remove()">`;
 const qOk=()=>!!(LIVE&&LIVE.queues&&LIVE.queues.c&&LIVE.queues.r);
 function liveView(){
-  if(!LIVE)return null;const q=state.queue,k=q==='casual'?'c':q==='ranked'?'r':'';
+  if(!LIVE)return null;const q=state.queue==='comm'?'all':state.queue,k=q==='casual'?'c':q==='ranked'?(LIVE.queues?.['r'+state.rmin]?'r'+state.rmin:'r'):'';
   const Q=k&&LIVE.queues?.[k];if(!Q||!(Q.battles>=150))return LIVE;
   const maps={};for(const [id,m] of Object.entries(LIVE.maps||{}))maps[id]={...m,g:Q.maps?.[id]?.g||0,top:Q.maps?.[id]?.top||[]};
   return {...LIVE,brawlers:Q.brawlers||{},trios:Q.trios||{},mapTrios:Q.mapTrios||{},vsx:Q.vsx,wx:Q.wx,maps,
     rotation:(LIVE.rotation||[]).map(e=>({...e,top:Q.maps?.[e.mapId]?.top||[]})),_q:k,_qb:Q.battles};
 }
+const RANKS=[[10,'diamond','0/0a/Diamond_Rank_2024'],[13,'mythic','7/72/Mythic_Rank_2024'],[16,'legendary','f/fb/Legendary_Rank_2024'],[19,'masters','6/6d/Masters_Rank_2024'],[22,'pro','3/36/Pro_Rank']];
+const rankImg=(r,s=26)=>{const x=RANKS.find(y=>y[0]===r)||RANKS[2];return `<img alt="" src="https://static.wikia.nocookie.net/brawlstars/images/${x[2]}.png/revision/latest/scale-to-width-down/96" referrerpolicy="no-referrer" decoding="async" style="width:${s}px;height:${s}px;object-fit:contain" onerror="this.style.opacity=0">`};
+const rankName=r=>t('rank.'+(RANKS.find(y=>y[0]===r)||RANKS[2])[1]);
+const MIN_Q=150;
+const effQueue=()=>state.queue==='comm'&&state.view!=='ranking'?'all':state.queue;
+const COMM_SVG=`<svg viewBox="0 0 24 24" aria-hidden="true" style="width:20px;height:20px"><circle cx="12" cy="12" r="11" fill="#ff5a1f"/><path fill="#fff" d="M6.2 9.6c0-1.6 1.3-2.9 2.9-2.9h5.8c1.6 0 2.9 1.3 2.9 2.9v3.3c0 1.6-1.3 2.9-2.9 2.9h-2.6l-2.9 2.2c-.3.2-.7 0-.7-.4v-1.8c-1.4-.2-2.5-1.4-2.5-2.9V9.6Z"/><circle cx="9.6" cy="11.2" r="1" fill="#ff5a1f"/><circle cx="12" cy="11.2" r="1" fill="#ff5a1f"/><circle cx="14.4" cy="11.2" r="1" fill="#ff5a1f"/></svg>`;
+function qBattles(k){const Q=LIVE?.queues||{};if(k==='all'||k==='comm')return LIVE?.meta?.battles;if(k==='casual')return Q.c?.battles;return (Q['r'+state.rmin]||Q.r)?.battles}
 function renderQBar(){
-  const el=$('#qBar');if(!el)return;const ok=qOk(),Q=LIVE?.queues||{};
-  const opt=[['all',`<span class="qdot">${icon('list')}</span>`,t('q.all'),LIVE?.meta?.battles],['casual',qImg('c'),t('q.casual'),Q.c?.battles],['ranked',qImg('r'),t('q.ranked'),Q.r?.battles]];
-  el.innerHTML=`<span class="lens" aria-hidden="true"></span>`+opt.map(([k,ic,l,n])=>`<button class="qseg press" role="radio" data-q="${k}" aria-checked="${state.queue===k}" ${k!=='all'&&!ok?'disabled':''} title="${esc(l)}${n?` · ${fmt(n,0)} ${t('q.games')}`:''}">${ic}<span>${esc(l)}</span></button>`).join('');
+  const el=$('#qBar'),wrap=$('.qwrap');if(!el||!wrap)return;
+  wrap.hidden=state.view==='pro';if(wrap.hidden)return;
+  const ok=qOk(),showComm=state.view==='ranking',eq=effQueue();
+  const opt=[['all',`<span class="qdot">${icon('list')}</span>`,t('q.all')],['casual',qImg('c'),t('q.casual')],['ranked',qImg('r'),t('q.ranked')]].concat(showComm?[['comm',COMM_SVG,t('q.comm')]]:[]);
+  const sig=opt.map(o=>o[0]).join()+state.lang;
+  el.classList.toggle('four',showComm);if(el.dataset.sig!==sig){el.dataset.sig=sig;el.innerHTML=`<span class="lens" aria-hidden="true"></span>`+opt.map(([k,ic,l])=>`<button class="qseg press" role="radio" data-q="${k}">${ic}<span>${esc(l)}</span></button>`).join('')}
+  el.querySelectorAll('[data-q]').forEach(btn=>{const k=btn.dataset.q,n=qBattles(k);btn.setAttribute('aria-checked',String(eq===k));btn.disabled=(k==='casual'||k==='ranked')&&!ok;btn.title=btn.textContent+(n&&k!=='comm'?` · ${fmt(n,0)} ${t('q.games')}`:'')});
   const L=el.querySelector('.lens'),a=el.querySelector('[aria-checked="true"]');
   requestAnimationFrame(()=>{if(a){L.style.width=a.offsetWidth+'px';L.style.transform=`translate3d(${a.offsetLeft}px,0,0)`}});
-  const n=$('#qNote');if(n)n.innerHTML=!LIVE?'':!ok?t('q.soon'):state.queue!=='all'&&!(LV&&LV._q)?t('q.few',{n:fmt((state.queue==='ranked'?Q.r:Q.c).battles,0)}):state.queue==='ranked'?t('q.rankedNote',{n:fmt(Q.r.battles,0)}):state.queue==='casual'?t('q.casualNote',{n:fmt(Q.c.battles,0)}):t('q.allNote');
+  const rb=$('#rankBtn');if(rb){const on=eq==='ranked'&&ok;rb.classList.toggle('on',on);rb.tabIndex=on?0:-1;rb.setAttribute('aria-hidden',String(!on));rb.innerHTML=`${rankImg(state.rmin,30)}<span class="plus" aria-hidden="true">+</span>`;rb.setAttribute('aria-label',t('rank.pick')+': '+rankName(state.rmin)+'+')}
+  const n=$('#qNote');if(!n)return;
+  const few=(eq==='casual'||eq==='ranked')&&!(LV&&LV._q);
+  n.innerHTML=!LIVE?'':eq==='comm'?t('q.commNote',{n:COMM?.sources?.length||0}):!ok?t('q.soon'):few?t('q.few',{n:fmt(qBattles(eq)||0,0)}):eq==='ranked'?t('q.rankedNote',{r:rankName(state.rmin),n:fmt(qBattles('ranked'),0)}):eq==='casual'?t('q.casualNote',{n:fmt(qBattles('casual'),0)}):t('q.allNote');
 }
-function setQueue(q){if(q===state.queue)return;state.queue=q;store.set('queue',q);haptic();applyData();renderQBar();rerender();renderSub()}
+function setQueue(q){if(q===state.queue)return;const prevEff=effQueue();state.queue=q;store.set('queue',q);haptic();
+  if(q==='comm'){state.rk.sort='cs';state.rk.dir=-1}else if(state.rk.sort==='cs'||state.rk.sort==='cm'){state.rk.sort='wr';state.rk.dir=-1}
+  const dataChanged=(prevEff==='comm'?'all':prevEff)!==(q==='comm'?'all':q);if(dataChanged)applyData();renderQBar();rerender();renderSub()}
+function openRankMenu(anchor){
+  const Q=LIVE?.queues||{};haptic();
+  const m=document.createElement('div');m.className='menu glass rank-menu';m.setAttribute('role','menu');
+  m.innerHTML=`<div class="rm-h">${t('rank.title')}</div>`+RANKS.map(([r])=>{const n=Q['r'+r]?.battles||0,dis=n<MIN_Q;return `<button class="mi" role="menuitemradio" aria-checked="${state.rmin===r}" data-r="${r}" ${dis?'disabled':''}>${rankImg(r,30)}<span class="rm-t"><b>${esc(rankName(r))}+</b><small>${dis?t('rank.few',{n:fmt(n,0)}):t('rank.games',{n:fmt(n,0)})}</small></span>${state.rmin===r?icon('check','rm-ck'):''}</button>`}).join('')+`<p class="rm-note">${t('rank.note')}</p>`;
+  openLayer(m,{light:true});placeMenu(m,anchor,'below-left');
+  m.addEventListener('click',e=>{const x=e.target.closest('[data-r]');if(!x||x.disabled)return;closeLayer();const r=+x.dataset.r;if(r===state.rmin)return;state.rmin=r;store.set('rmin',r);applyData();renderQBar();rerender();renderSub()});
+}
+document.addEventListener('click',e=>{const x=e.target.closest('#rankBtn');if(x&&x.classList.contains('on'))openRankMenu(x)});
 document.addEventListener('click',e=>{const x=e.target.closest('#qBar [data-q]');if(x&&!x.disabled)setQueue(x.dataset.q)});
 
 /* =========================================================================
@@ -1627,10 +1669,11 @@ document.addEventListener('click',e=>{const x=e.target.closest('#qBar [data-q]')
 const toB=names=>names.map(n=>byName.get(n)).filter(Boolean);
 function dedupTrios(list){const seen=new Map();for(const x of list||[]){const k=[...x.t].sort().join('|');const y=seen.get(k);if(!y||x.wr>y.wr)seen.set(k,x)}return [...seen.values()]}
 function compMaps(m){
-  const out=[],seen=new Set(),add=(id,rot)=>{if(!id||seen.has(id))return;seen.add(id);out.push({id,rot,g:LMAPS[id]?.g||0,name:mapName(id,LMAPS[id]?.name)})};
-  if(state.queue!=='ranked')ROT.filter(e=>e.mode===m).forEach(e=>add(e.mapId,true));
+  const out=[],seen=new Set(),add=(id,rot)=>{const name=mapName(id,LMAPS[id]?.name);if(!id||seen.has(id)||seen.has('n:'+mkey(name)))return;seen.add(id);seen.add('n:'+mkey(name));out.push({id,rot,g:LMAPS[id]?.g||0,name})};
+  if(effQueue()!=='ranked')ROT.filter(e=>e.mode===m).forEach(e=>add(e.mapId,true));
   Object.entries(LMAPS).filter(([,v])=>v.mode===m&&(v.g==null||v.g>0)).sort((a,b)=>(b[1].g||0)-(a[1].g||0)).slice(0,10).forEach(([id])=>add(id,ROT.some(e=>e.mapId===id)));
-  return out.slice(0,10);
+  if(effQueue()!=='ranked')activeMaps().filter(x=>x.code===m).sort((a,b)=>a.name.localeCompare(b.name)).forEach(x=>add(x.id,ROT.some(e=>e.mapId===x.id)));
+  return effQueue()==='ranked'?out.slice(0,12):out;
 }
 function mapComps(id,m){
   const mt=dedupTrios(MTRIOS[id]).filter(x=>toB(x.t).length===3).sort((a,b)=>b.wr-a.wr);
@@ -1664,13 +1707,13 @@ function openCounter(T,mode){
   setTimeout(()=>s.querySelector('[data-x]').focus({preventScroll:true}),60);
 }
 function renderComps(){
-  compModeChips();const m=state.cmode,maps=compMaps(m),out=$('#compsOut');
+  compModeChips();if(SD_CODES.includes(state.cmode))return renderShowdown(state.cmode,$('#compsOut'));const m=state.cmode,maps=compMaps(m),out=$('#compsOut');
   if(!state.cmap||!maps.some(x=>x.id===state.cmap)||state.cmapMode!==m){state.cmap=maps[0]?.id||null;state.cmapMode=m}
   const qTag=srcTag();
   let html='';
   if(maps.length){
     const sel=maps.find(x=>x.id===state.cmap),mc=mapComps(sel.id,m);
-    html+=`<div class="gh"><h2>${t('comps.maps2')}</h2><span class="note">${qTag}${state.queue==='ranked'?t('comps.poolR'):t('comps.poolC')}</span></div>
+    html+=`<div class="gh"><h2>${t('comps.maps2')}</h2><span class="note">${qTag}${effQueue()==='ranked'?t('comps.poolR'):t('comps.poolC')}</span></div>
       <div class="hscroll map-strip">${maps.map(x=>`<button class="mtile press" data-cmap="${x.id}" aria-pressed="${x.id===state.cmap}" style="--mc:${modeColor(m)}"><span class="mtile-art">${mapImg(x.id,'mapimg')}</span><span class="mtile-n">${esc(x.name)}</span>${x.rot?`<span class="mtile-b">${t('comps.inRot')}</span>`:''}</button>`).join('')}</div>
       <div class="gh" style="margin-top:6px"><h2>${t('comps.top5',{m:esc(sel.name)})}</h2><span class="note">${t('comps.src.'+mc.src)}</span></div>
       <div class="list">${mc.rows.map(x=>compRow(x.T,x.wr,x.g?t('comps.games',{n:fmt(x.g,0)}):x.T.map(y=>esc(clsShort(y.c))).join(' · '),x.wr!=null&&x.ex!=null?x.wr-x.ex:null)).join('')}</div>`;
@@ -1763,22 +1806,22 @@ function renderPro(){
 
     <section class="group"><div class="gh"><h2>${t('pro.comps',{m:esc(modeName(m))})}</h2><span class="note">${t('pro.compsNote')}</span></div>
       <div class="list">${comps.slice(0,8).map((c,i)=>`<div class="comp-row"><span class="av-stack">${c.T.map(x=>av(x)).join('')}</span><div style="min-width:0"><div class="t">${c.T.map(x=>esc(x.n)).join(' · ')}</div><div class="s">${t('pro.used',{n:c.n})}${c.teams.length?' · '+c.teams.slice(0,2).map(esc).join(', '):''}</div></div>
-        <div class="r"><span class="wr num" style="color:var(--${pct(c.w,c.n)>=55?'good':pct(c.w,c.n)<=45?'bad':'mid'})">${fmt(pct(c.w,c.n),0)}%</span><button class="mini-btn press" data-ptip="${i}">${icon('bulb')}${t('pro.tips')}</button></div></div>`).join('')}</div>
+        <div class="r">${c.n>=5?`<span class="wr num" style="color:var(--${pct(c.w,c.n)>=55?'good':pct(c.w,c.n)<=45?'bad':'mid'})">${fmt(pct(c.w,c.n),0)}%</span>`:`<span class="wr num" style="color:var(--fg-2);font-size:17px" title="${esc(t('pro.small'))}">${c.w}–${c.n-c.w}</span>`}<button class="mini-btn press" data-ptip="${i}">${icon('bulb')}${t('pro.tips')}</button></div></div>`).join('')}</div>
     </section>
 
     <section class="group"><div class="gh"><h2>${t('pro.pb')}</h2><span class="note">${t('pro.pbNote')}</span></div>
       <div class="pb-grid">
-        <div class="card pb"><div class="kicker">${t('pro.picks')}</div>${picks.slice(0,8).map(x=>`<button class="pb-row press" ${x.b.s?`data-go="${x.b.s}"`:''}>${av(x.b,32)}<span class="nm">${esc(x.b.n)}</span><span class="bar"><i style="transform:scaleX(${(x.n/maxP).toFixed(3)})"></i></span><span class="num v">${x.n} · ${fmt(pct(x.w,x.n),0)}%</span></button>`).join('')}</div>
+        <div class="card pb"><div class="kicker">${t('pro.picks')}</div>${picks.slice(0,8).map(x=>`<button class="pb-row press" ${x.b.s?`data-go="${x.b.s}"`:''}>${av(x.b,32)}<span class="nm">${esc(x.b.n)}</span><span class="bar"><i style="transform:scaleX(${(x.n/maxP).toFixed(3)})"></i></span><span class="num v">${x.n} · ${x.n>=5?fmt(pct(x.w,x.n),0)+'%':x.w+'–'+(x.n-x.w)}</span></button>`).join('')}</div>
         <div class="card pb ban"><div class="kicker">${t('pro.bans')}</div>${bans.slice(0,8).map(x=>`<button class="pb-row press" ${x.b.s?`data-go="${x.b.s}"`:''}>${av(x.b,32)}<span class="nm">${esc(x.b.n)}</span><span class="bar"><i style="transform:scaleX(${(x.n/maxB).toFixed(3)})"></i></span><span class="num v">${x.n}</span></button>`).join('')}</div>
       </div>
     </section>
 
     ${M.pairs.length?`<section class="group"><div class="gh"><h2>${t('pro.pairs')}</h2><span class="note">${t('pro.pairsNote')}</span></div>
-      <div class="pairs">${M.pairs.map(([p,n,w])=>{const P=proT(p);return `<div class="pair card"><span class="av-stack">${P.map(x=>av(x,34)).join('')}</span><div><div class="t">${P.map(x=>esc(x.n)).join(' + ')}</div><div class="s num">${t('pro.used',{n})} · ${fmt(pct(w,n),0)}%</div></div></div>`}).join('')}</div></section>`:''}
+      <div class="pairs">${M.pairs.map(([p,n,w])=>{const P=proT(p);return `<div class="pair card"><span class="av-stack">${P.map(x=>av(x,34)).join('')}</span><div><div class="t">${P.map(x=>esc(x.n)).join(' + ')}</div><div class="s num">${t('pro.used',{n})} · ${n>=5?fmt(pct(w,n),0)+'%':w+'–'+(n-w)}</div></div></div>`}).join('')}</div></section>`:''}
 
     <section class="group"><div class="gh"><h2>${t('pro.perMap')}</h2><span class="note">${t('pro.perMapNote')}</span></div>
       <div class="pm-grid">${Object.entries(M.perMap).slice(0,6).map(([mp,list])=>{const id=mapByName(mp);return `<div class="card pm" style="--mc:${modeColor(m)}"><div class="pm-art">${id?mapImg(id,'mapimg'):''}<span class="pm-n">${esc(mapLabel(mp))}</span></div>
-        ${list.map(([tt,n,w])=>{const T=proT(tt);return `<div class="pm-row"><span class="av-stack">${T.map(x=>av(x,30)).join('')}</span><span class="s num">${n}× · ${fmt(pct(w,n),0)}%</span></div>`}).join('')}</div>`}).join('')}</div>
+        ${list.map(([tt,n,w])=>{const T=proT(tt);return `<div class="pm-row"><span class="av-stack">${T.map(x=>av(x,30)).join('')}</span><span class="s num">${n}× · ${n>=5?fmt(pct(w,n),0)+'%':w+'–'+(n-w)}</span></div>`}).join('')}</div>`}).join('')}</div>
     </section>
 
     <section class="group"><div class="gh"><h2>${t('pro.recent')}</h2><span class="note">${t('pro.recentNote')}</span></div>
@@ -1805,7 +1848,7 @@ function openProTips(c,mode){
   const s=document.createElement('div');s.className='sheet glass';s.setAttribute('role','dialog');s.setAttribute('aria-modal','true');s.setAttribute('aria-labelledby','ptT');
   s.innerHTML=`<div class="grab" aria-hidden="true"></div><div class="sheet-h"><h3 id="ptT">${t('pro.howTo')}</h3><button class="glass glass-btn" data-x aria-label="${t('ui.close')}">${icon('x')}</button></div>
     <div class="sheet-body">
-      <div class="cnt-vs"><span class="av-stack">${T.map(x=>av(x)).join('')}</span><span class="t">${T.map(x=>esc(x.n)).join(' · ')}</span><span class="tag num">${fmt(pct(c.w,c.n),0)}% · ${c.n}×</span></div>
+      <div class="cnt-vs"><span class="av-stack">${T.map(x=>av(x)).join('')}</span><span class="t">${T.map(x=>esc(x.n)).join(' · ')}</span><span class="tag num">${c.n>=5?fmt(pct(c.w,c.n),0)+'%':c.w+'–'+(c.n-c.w)} · ${c.n}×</span></div>
       <div class="kicker" style="margin:16px 2px 8px">${t('pro.plan')}</div>
       <ul class="tips">${tips.gen.map(x=>`<li>${esc(x)}</li>`).join('')}${tips.own.map(x=>`<li>${x}</li>`).join('')}</ul>
       ${c.maps.length?`<div class="kicker" style="margin:16px 2px 8px">${t('pro.where')}</div><div class="chips">${c.maps.map(([mp,n])=>`<span class="chip">${esc(mapLabel(mp))} · ${n}×</span>`).join('')}</div>`:''}
@@ -1834,7 +1877,7 @@ Object.assign(I18N.pt,{
   'third.title':'3ª escolha ideal','third.note':'Sinergia com sua dupla + matchup contra o inimigo.','third.noteNoE':'Sinergia com sua dupla. Coloque os inimigos pra refinar.','third.trio':'trio {v}%','third.syn':'sinergia {v}',
   'pro.emptyT':'Sem dados do competitivo ainda','pro.empty':'Os dados do cenário pro aparecem depois da próxima atualização.',
   'pro.maps':'mapas pro','pro.events':'eventos','pro.src':'Fonte: {a} (CC BY-SA 3.0) · de {f} a {to}.',
-  'pro.comps':'Comps dos times pro · {m}','pro.compsNote':'Mais usadas e taxa de vitória','pro.used':'{n}× jogada','pro.tips':'Dicas',
+  'pro.comps':'Comps dos times pro · {m}','pro.compsNote':'Mais usadas e taxa de vitória','pro.used':'{n}× jogada','pro.small':'Amostra pequena: vitórias–derrotas','pro.sub':'<b>Cenário profissional</b> · {g} mapas de {e} eventos do campeonato oficial · atualizado {ago}','pro.tips':'Dicas',
   'pro.pb':'Picks e bans','pro.pbNote':'Banido = mais temido pelos pros','pro.picks':'Mais escolhidos','pro.bans':'Mais banidos',
   'pro.pairs':'Duplas favoritas','pro.pairsNote':'Duplas que se repetem entre comps',
   'pro.perMap':'Por mapa','pro.perMapNote':'O que os pros jogam em cada mapa',
@@ -1867,7 +1910,7 @@ Object.assign(I18N.en,{
   'third.title':'Best 3rd pick','third.note':'Synergy with your duo + matchup vs the enemy.','third.noteNoE':'Synergy with your duo. Add enemies to refine.','third.trio':'trio {v}%','third.syn':'synergy {v}',
   'pro.emptyT':'No competitive data yet','pro.empty':'Pro scene data shows up after the next update.',
   'pro.maps':'pro maps','pro.events':'events','pro.src':'Source: {a} (CC BY-SA 3.0) · {f} to {to}.',
-  'pro.comps':'Pro team comps · {m}','pro.compsNote':'Most used and win rate','pro.used':'played {n}×','pro.tips':'Tips',
+  'pro.comps':'Pro team comps · {m}','pro.compsNote':'Most used and win rate','pro.used':'played {n}×','pro.small':'Small sample: wins–losses','pro.sub':'<b>Pro scene</b> · {g} maps from {e} official championship events · updated {ago}','pro.tips':'Tips',
   'pro.pb':'Picks and bans','pro.pbNote':'Banned = most feared by pros','pro.picks':'Most picked','pro.bans':'Most banned',
   'pro.pairs':'Favorite duos','pro.pairsNote':'Duos that repeat across comps',
   'pro.perMap':'By map','pro.perMapNote':'What pros play on each map',
@@ -1899,7 +1942,7 @@ Object.assign(I18N.es,{
   'third.title':'3ª elección ideal','third.note':'Sinergia con tu dúo + matchup contra el enemigo.','third.noteNoE':'Sinergia con tu dúo. Añade enemigos para afinar.','third.trio':'trío {v}%','third.syn':'sinergia {v}',
   'pro.emptyT':'Aún sin datos competitivos','pro.empty':'Los datos de la escena pro aparecen tras la próxima actualización.',
   'pro.maps':'mapas pro','pro.events':'eventos','pro.src':'Fuente: {a} (CC BY-SA 3.0) · de {f} a {to}.',
-  'pro.comps':'Comps de equipos pro · {m}','pro.compsNote':'Más usadas y tasa de victoria','pro.used':'jugada {n}×','pro.tips':'Consejos',
+  'pro.comps':'Comps de equipos pro · {m}','pro.compsNote':'Más usadas y tasa de victoria','pro.used':'jugada {n}×','pro.small':'Muestra pequeña: victorias–derrotas','pro.sub':'<b>Escena profesional</b> · {g} mapas de {e} eventos del campeonato oficial · actualizado {ago}','pro.tips':'Consejos',
   'pro.pb':'Picks y bans','pro.pbNote':'Baneado = más temido por los pros','pro.picks':'Más elegidos','pro.bans':'Más baneados',
   'pro.pairs':'Dúos favoritos','pro.pairsNote':'Dúos que se repiten entre comps',
   'pro.perMap':'Por mapa','pro.perMapNote':'Lo que juegan los pros en cada mapa',
@@ -1921,6 +1964,114 @@ Object.assign(I18N.es,{
   'tip.m.BO':'Las estrellas valen más que bajas arriesgadas: con ventaja, juega seguro.'
 });
 
+/* =========================================================================
+   COMUNIDADE (tier lists de criadores e sites) + WR
+   ========================================================================= */
+function normShow(sd){if(!sd)return null;const K=new Map(DATA.map(b=>[nkey(b.n),b.n])),nm=n=>K.get(nkey(n))||titleCase(n);const o={};for(const [m,maps] of Object.entries(sd)){o[m]={};for(const [id,d] of Object.entries(maps||{}))o[m][id]={...d,top:(d.top||[]).map(([n,...r])=>[nm(n),...r]),duos:(d.duos||[]).map(([p,...r])=>[p.map(nm),...r])}}return o}
+const COMM_TIER=v=>v==null?null:v>=4.5?'S':v>=3.5?'A':v>=2.5?'B':v>=1.5?'C':v>=0.75?'D':'F';
+function computeComm(){
+  const sc=COMM?.scale||{};const withWr=DATA.filter(b=>b.wr!=null).sort((a,b)=>a.wr-b.wr);const pos=new Map(withWr.map((b,i)=>[b.s,withWr.length>1?i/(withWr.length-1)*100:50]));
+  for(const b of DATA){
+    const got=[];for(const s of COMM?.sources||[]){const tr=s.tiers?.[b.n];if(tr!=null&&sc[tr]!=null)got.push([s,tr])}
+    const mean=got.length?got.reduce((a,[,tr])=>a+sc[tr],0)/got.length:null;
+    b.cmT=got;b.cm=mean==null?null:Math.round(mean/5*100);b.cmTier=COMM_TIER(mean);b.cwr=pos.has(b.s)?Math.round(pos.get(b.s)):null;
+    b.cs=b.cm!=null&&b.cwr!=null?Math.round((b.cm+b.cwr)/2):(b.cm??b.cwr);
+  }
+}
+function commNote(){
+  if(!COMM)return '';const a=s=>`<a href="${s.url}" target="_blank" rel="noopener">${esc(s.name)}</a> <span class="num">(${esc(fmtDate(s.date))})</span>`;
+  return `<div class="card comm-note"><div class="cn-h">${COMM_SVG}<b>${t('comm.title')}</b></div><p>${t('comm.how')}</p><ul>${COMM.sources.map(s=>`<li>${a(s)}${s.note?` · ${esc(s.note)}`:''}</li>`).join('')}</ul></div>`;
+}
+
+/* =========================================================================
+   MAPAS (antiga aba Agora)
+   ========================================================================= */
+let MCODE=null;
+function modeCodeById(id){if(!MCODE){MCODE={};for(const [c,m] of Object.entries(MODE_META))MCODE[m.id]=c}return MCODE[id]||null}
+function metaModeName(id){const c=modeCodeById(id);if(c)return modeName(c);return NAMES?.modes?.[id]?.n?.[state.lang]||NAMES?.modes?.[id]?.n?.en||'—'}
+function activeMaps(){const rot=new Set(ROT.map(e=>e.mapId)),best=new Map();
+  for(const [id,m] of Object.entries(NAMES?.maps||{})){if(m.x||!m.mode)continue;const code=modeCodeById(m.mode),x={id,mode:m.mode,code,name:m.n?.[state.lang]||m.n?.en||''};
+    const score=(rot.has(id)?4:0)+(LMAPS[id]?2:0)+(SHOW?.[code]?.[id]?2:0),k=m.mode+'|'+mkey(m.n?.en||x.name),old=best.get(k);if(!old||score>old.score)best.set(k,{...x,score})}
+  return [...best.values()]}
+function mapTopFor(id,code){
+  if(code==='SD'||code==='DSD'){const d=SHOW?.[code]?.[id];return d?d.top.map(([n,w,g])=>[n,w,g]):[]}
+  return (LMAPS[id]?.top||[]).filter(([n])=>byName.has(n));
+}
+function mapTile(x,live){
+  const top=mapTopFor(x.id,x.code).slice(0,3).map(([n])=>byName.get(n)).filter(Boolean),go=x.code&&(RANKED_MODES.includes(x.code)||x.code==='SD'||x.code==='DSD');
+  return `<button class="map-t press" ${go?`data-mapgo="${x.id}" data-code="${x.code}"`:''} style="--mc:${x.code?modeColor(x.code):'var(--accent)'}">
+    <span class="map-art">${mapImg(x.id,'mapimg')}<span class="map-mode">${x.code?modeIcon(x.code,18):modeIconById(x.mode,18)}</span>${live?`<span class="mtile-b">${t('comps.inRot')}</span>`:''}</span>
+    <span class="map-n">${esc(x.name)}</span>
+    <span class="map-s">${top.length?`<span class="av-stack">${top.map(b=>av(b,26)).join('')}</span>`:`<span class="map-none">${t('maps.noData')}</span>`}${x.g?`<span class="num map-g">${fmt(x.g,0)}</span>`:''}</span></button>`;
+}
+function renderNow(){
+  const out=$('#nowOut'),eq=effQueue();
+  if(!NAMES?.maps){out.innerHTML=`<div class="card empty-art"><span class="art">${icon('map')}</span><p>${t('now.waitTxt')}</p></div>`;return}
+  const rotIds=new Set(ROT.map(e=>e.mapId));
+  if(eq==='ranked'){
+    const ok=LV&&LV._q,list=ok?Object.entries(LMAPS).filter(([,v])=>(v.g||0)>0).map(([id,v])=>{const m=NAMES.maps[id];const mode=m?.mode||modeId(v.mode);return {id,mode,code:modeCodeById(mode)||v.mode,name:mapName(id,v.name),g:v.g}}).sort((a,b)=>RANKED_MODES.indexOf(a.code)-RANKED_MODES.indexOf(b.code)||b.g-a.g):[];
+    out.innerHTML=`<div class="gh"><h2>${t('maps.rankedT')}</h2><span class="note">${t('maps.rankedNote',{r:rankName(state.rmin)})}</span></div>
+      ${list.length?`<div class="map-grid">${list.map(x=>mapTile(x,false)).join('')}</div>`:`<div class="card empty-art"><span class="art">${icon('map')}</span><p>${t('maps.rankedNone')}</p></div>`}`;
+    return animIn(out);
+  }
+  const all=activeMaps(),counts={};all.forEach(x=>counts[x.mode]=(counts[x.mode]||0)+1);
+  const order=Object.keys(counts).map(Number).sort((a,b)=>{const ca=modeCodeById(a),cb=modeCodeById(b),ia=[...RANKED_MODES,'SD','DSD'].indexOf(ca),ib=[...RANKED_MODES,'SD','DSD'].indexOf(cb);return (ia<0?99:ia)-(ib<0?99:ib)||counts[b]-counts[a]});
+  if(state.mapMode!=='all'&&!counts[state.mapMode])state.mapMode='all';
+  const shown=all.filter(x=>state.mapMode==='all'||x.mode===+state.mapMode).sort((a,b)=>(rotIds.has(b.id)-rotIds.has(a.id))||order.indexOf(a.mode)-order.indexOf(b.mode)||a.name.localeCompare(b.name));
+  const evs=ROT.filter(e=>e.mode).map(e=>({...e,endT:btDate(e.end).getTime()})).sort((a,b)=>(RANKED_MODES.indexOf(a.mode)<0)-(RANKED_MODES.indexOf(b.mode)<0)||a.endT-b.endT);
+  out.innerHTML=(evs.length?`<div class="gh"><h2>${t('now.active')}</h2><span class="note"><span class="live-dot"></span>${t('now.rot')}</span></div>
+    <div class="now-grid">${evs.map(e=>{const isSd=e.mode==='SD'||e.mode==='DSD';let top=(isSd?mapTopFor(e.mapId,e.mode):(e.top||[])).filter(([n])=>byName.has(n)).slice(0,5),src=isSd?'maps.sdSrc':'now.bestMap';
+      if(top.length<3&&!isSd){top=DATA.filter(b=>modeWr(b,e.mode)!=null).sort((a,b)=>modeWr(b,e.mode)-modeWr(a,e.mode)).slice(0,5).map(b=>[b.n,modeWr(b,e.mode),null]);src='now.bestMode'}
+      const ms=e.endT-Date.now();
+      return `<article class="ev ${ms<=0?'ended':''}" style="--mc:${modeColor(e.mode)}"><div class="ev-art">${e.mapId?mapImg(e.mapId,'mapimg'):''}
+        <div class="ev-head glass"><span class="mode-ic">${modeIcon(e.mode,28)||icon('swords')}</span><div style="min-width:0"><div class="ev-mode">${esc(modeName(e.mode))}</div><div class="ev-map">${esc(mapName(e.mapId,e.map))}</div></div><div class="ev-time" data-end="${e.endT}"><b>${left(ms)}</b>${ms>0?t('now.left'):''}</div></div></div>
+        <div class="ev-body"><div class="list">${topRows(top)||`<div class="empty">${t('now.noSample')}</div>`}</div>
+        <div class="ev-foot"><span class="mini-note" style="padding:0;flex:1">${t(src)}</span>${RANKED_MODES.includes(e.mode)?`<button class="mini-btn press" data-nowdraft="${e.mode}">${t('now.draftHere')}</button>`:''}</div></div></article>`}).join('')}</div>`:'')+
+    `<div class="gh" style="margin-top:14px"><h2>${t('maps.allT')}</h2><span class="note">${t('maps.allNote',{n:fmt(all.length,0)})}</span></div>
+    <div class="hscroll" id="mapModes"><button class="fchip no-ico press" data-mm="all" aria-pressed="${state.mapMode==='all'}">${t('maps.all')}<span class="cnt num">${all.length}</span></button>${order.map(id=>{const c=modeCodeById(id);return `<button class="fchip press" data-mm="${id}" aria-pressed="${String(state.mapMode)===String(id)}">${c?modeIcon(c):modeIconById(id)}${esc(metaModeName(id))}<span class="cnt num">${counts[id]}</span></button>`}).join('')}</div>
+    <div class="map-grid">${shown.map(x=>mapTile(x,rotIds.has(x.id))).join('')}</div>`;
+  animIn(out);
+}
+$('#nowOut').addEventListener('click',e=>{
+  const mm=e.target.closest('[data-mm]');if(mm){state.mapMode=mm.dataset.mm==='all'?'all':+mm.dataset.mm;haptic();renderNow();return}
+  const nd=e.target.closest('[data-nowdraft]');if(nd){state.draft.mode=nd.dataset.nowdraft;store.set('dmode',state.draft.mode);setView('draft');return}
+  const g=e.target.closest('[data-mapgo]');if(g){state.cmode=g.dataset.code;state.cmap=g.dataset.mapgo;state.cmapMode=g.dataset.code;setView('comps')}
+});
+
+/* =========================================================================
+   COMBATE SOLO / DUPLO nas composições
+   ========================================================================= */
+const SD_CODES=['SD','DSD'];
+function sdMaps(m){
+  const out=[],seen=new Set(),add=(id,rot)=>{const name=mapName(id,SHOW?.[m]?.[id]?.name);if(!id||seen.has(id)||seen.has('n:'+mkey(name)))return;seen.add(id);seen.add('n:'+mkey(name));out.push({id,rot,g:SHOW?.[m]?.[id]?.g||0,name})};
+  ROT.filter(e=>e.mode===m).forEach(e=>add(e.mapId,true));
+  Object.entries(SHOW?.[m]||{}).sort((a,b)=>b[1].g-a[1].g).forEach(([id])=>add(id,false));
+  activeMaps().filter(x=>x.code===m).sort((a,b)=>a.name.localeCompare(b.name)).forEach(x=>add(x.id,false));
+  return out;
+}
+function sdAggregate(m){const acc={};for(const d of Object.values(SHOW?.[m]||{}))for(const [n,w,g,r] of d.top){const x=acc[n]||(acc[n]=[0,0,0]);x[0]+=g;x[1]+=w*g;x[2]+=r*g}return Object.entries(acc).filter(([,v])=>v[0]>=10).map(([n,[g,w,r]])=>[n,w/g,g,r/g]).sort((a,b)=>b[1]-a[1]).slice(0,10)}
+function renderShowdown(m,out){
+  const maps=sdMaps(m),cut=m==='SD'?4:2;
+  if(!state.cmap||!maps.some(x=>x.id===state.cmap)||state.cmapMode!==m){state.cmap=maps[0]?.id||null;state.cmapMode=m}
+  const sel=maps.find(x=>x.id===state.cmap),d=sel&&SHOW?.[m]?.[sel.id];
+  const row=([n,w,g,r])=>{const b=byName.get(n);if(!b)return '';return `<button class="row press" data-go="${b.s}">${av(b)}<div style="min-width:0"><div class="t">${esc(b.n)}</div><div class="s">${t('sd.avg',{r:fmt(r)})} · ${t('sd.g',{n:fmt(g,0)})}</div></div><div class="r"><span class="val num ${w>=(d?.base||40)+5?'good':w<=(d?.base||40)-5?'bad':'mid'}">${fmt(w)}%</span></div></button>`};
+  const duo=([p,w,g,r])=>{const P=p.map(n=>byName.get(n)).filter(Boolean);if(P.length<2)return '';return `<div class="comp-row"><span class="av-stack">${P.map(b=>av(b)).join('')}</span><div style="min-width:0"><div class="t">${P.map(b=>esc(b.n)).join(' + ')}</div><div class="s">${t('sd.avg',{r:fmt(r)})} · ${t('sd.g',{n:fmt(g,0)})}</div></div><div class="r"><span class="wr num">${fmt(w)}%</span></div></div>`};
+  let html=`<div class="gh"><h2>${t('comps.maps2')}</h2><span class="note">${t('sd.mapsNote')}</span></div>
+    <div class="hscroll map-strip">${maps.map(x=>`<button class="mtile press" data-cmap="${x.id}" aria-pressed="${x.id===state.cmap}" style="--mc:${modeColor(m)}"><span class="mtile-art">${mapImg(x.id,'mapimg')}</span><span class="mtile-n">${esc(x.name)}</span>${x.rot?`<span class="mtile-b">${t('comps.inRot')}</span>`:''}</button>`).join('')}</div>`;
+  if(d&&d.top.length){
+    html+=`<div class="gh" style="margin-top:6px"><h2>${t('sd.best',{m:esc(sel.name)})}</h2><span class="note">${t(m==='SD'?'sd.topSolo':'sd.topDuo')} · ${t('sd.base',{v:fmt(d.base)})}</span></div><div class="list">${d.top.slice(0,8).map(row).join('')}</div>`;
+    if(m==='DSD'&&d.duos?.length)html+=`<div class="gh" style="margin-top:10px"><h2>${t('sd.duos')}</h2><span class="note">${t('sd.duosNote')}</span></div><div class="list">${d.duos.map(duo).join('')}</div>`;
+  }else{
+    const ag=sdAggregate(m);
+    html+=`<div class="card" style="padding:14px 18px;color:var(--fg-2);font-size:14px;margin-top:6px">${SHOW?t('sd.noMap'):t('sd.soon')}</div>`;
+    if(ag.length)html+=`<div class="gh" style="margin-top:10px"><h2>${t('sd.bestMode',{m:esc(modeName(m))})}</h2><span class="note">${t(m==='SD'?'sd.topSolo':'sd.topDuo')}</span></div><div class="list">${ag.map(row).join('')}</div>`;
+  }
+  out.innerHTML=html+`<p class="mini-note">${t('sd.method',{c:cut})}</p>`;animIn(out);
+}
+
+Object.assign(I18N.pt,{"q.comm": "WR/Comunidade", "q.commNote": "Opinião de {n} tier lists da comunidade + win rate das partidas do topo.", "q.rankedNote": "Só ranqueada de {r} pra cima · {n} partidas.", "rank.diamond": "Diamante", "rank.mythic": "Mítico", "rank.legendary": "Lendário", "rank.masters": "Mestre", "rank.pro": "Pro", "rank.pick": "Elo mínimo", "rank.title": "Filtrar a partir do elo", "rank.games": "{n} partidas", "rank.few": "só {n} partidas por enquanto", "rank.note": "Elo médio dos 6 jogadores da partida. Faixas com menos de 150 partidas ficam bloqueadas até juntar dados.", "p.whyGen": "Nas partidas recentes, {a} leva vantagem de +{v} pts contra {b}{g}.", "p.whyG": " ({g} partidas no confronto)", "rk.comm": "Comunidade", "rk.final": "Nota final", "rk.consensus": "Consenso", "comm.title": "Como a nota é feita", "comm.how": "Cada fonte dá um tier (S=5 … F=0). A nota da comunidade é a média dos tiers das fontes que avaliaram o brawler (0–100). A nota de WR é a posição do brawler no win rate das partidas do topo (0–100). A nota final é a média das duas. Fontes:", "maps.rankedT": "Mapas ativos na ranqueada", "maps.rankedNote": "mapas que apareceram em partidas ranqueadas de {r}+ nos últimos 7 dias", "maps.rankedNone": "Ainda sem partidas ranqueadas suficientes nesse elo para listar os mapas.", "maps.allT": "Todos os mapas do jogo", "maps.allNote": "{n} mapas ativos · toque num mapa para ver as melhores comps", "maps.all": "Todos", "maps.noData": "sem dados ainda", "maps.sdSrc": "Melhores no mapa (top 4 / top 2)", "sd.g": "{n} partidas", "sd.mapsNote": "rotação, mapas jogados e todos os mapas do modo", "sd.best": "Melhores brawlers em {m}", "sd.topSolo": "% de vezes no top 4", "sd.topDuo": "% de vezes no top 2", "sd.base": "média do mapa {v}%", "sd.avg": "posição média {r}", "sd.duos": "Melhores duplas", "sd.duosNote": "dupla do jogador com o parceiro dele", "sd.noMap": "Ainda não há partidas suficientes neste mapa.", "sd.soon": "Os dados de Combate Solitário e Duplo começam a aparecer na próxima coleta.", "sd.bestMode": "Melhores em {m} (todos os mapas)", "sd.method": "Só sabemos a posição do jogador do topo dono do histórico. \"Top\" é ficar entre os {c} primeiros. Número ajustado para amostras pequenas."});
+Object.assign(I18N.en,{"q.comm": "WR/Community", "q.commNote": "Opinions from {n} community tier lists + win rate from top players.", "q.rankedNote": "Ranked from {r} up only · {n} games.", "rank.diamond": "Diamond", "rank.mythic": "Mythic", "rank.legendary": "Legendary", "rank.masters": "Masters", "rank.pro": "Pro", "rank.pick": "Minimum rank", "rank.title": "Filter from rank", "rank.games": "{n} games", "rank.few": "only {n} games so far", "rank.note": "Average rank of the 6 players in the match. Ranks with fewer than 150 games stay locked until there is enough data.", "p.whyGen": "In recent games, {a} has a +{v} pts edge against {b}{g}.", "p.whyG": " ({g} games in the matchup)", "rk.comm": "Community", "rk.final": "Final score", "rk.consensus": "Consensus", "comm.title": "How the score works", "comm.how": "Each source gives a tier (S=5 … F=0). The community score is the average tier from the sources that rated the brawler (0–100). The WR score is the brawler’s position in top-player win rate (0–100). The final score is the average of both. Sources:", "maps.rankedT": "Active ranked maps", "maps.rankedNote": "maps seen in {r}+ ranked games in the last 7 days", "maps.rankedNone": "Not enough ranked games at this rank yet to list maps.", "maps.allT": "Every map in the game", "maps.allNote": "{n} active maps · tap a map to see the best comps", "maps.all": "All", "maps.noData": "no data yet", "maps.sdSrc": "Best on this map (top 4 / top 2)", "sd.g": "{n} games", "sd.mapsNote": "rotation, played maps and every map in the mode", "sd.best": "Best brawlers on {m}", "sd.topSolo": "% of times in top 4", "sd.topDuo": "% of times in top 2", "sd.base": "map average {v}%", "sd.avg": "avg. place {r}", "sd.duos": "Best duos", "sd.duosNote": "player’s brawler with their partner", "sd.noMap": "Not enough games on this map yet.", "sd.soon": "Solo and Duo Showdown data starts with the next collection.", "sd.bestMode": "Best in {m} (all maps)", "sd.method": "We only know the place of the top player who owns the battle log. \"Top\" means finishing in the top {c}. Adjusted for small samples."});
+Object.assign(I18N.es,{"q.comm": "WR/Comunidad", "q.commNote": "Opinión de {n} tier lists de la comunidad + win rate de jugadores top.", "q.rankedNote": "Solo clasificatoria de {r} para arriba · {n} partidas.", "rank.diamond": "Diamante", "rank.mythic": "Mítico", "rank.legendary": "Legendario", "rank.masters": "Maestro", "rank.pro": "Pro", "rank.pick": "Rango mínimo", "rank.title": "Filtrar desde el rango", "rank.games": "{n} partidas", "rank.few": "solo {n} partidas por ahora", "rank.note": "Rango medio de los 6 jugadores de la partida. Los rangos con menos de 150 partidas se bloquean hasta tener datos.", "p.whyGen": "En partidas recientes, {a} tiene +{v} pts de ventaja contra {b}{g}.", "p.whyG": " ({g} partidas en el enfrentamiento)", "rk.comm": "Comunidad", "rk.final": "Nota final", "rk.consensus": "Consenso", "comm.title": "Cómo se calcula", "comm.how": "Cada fuente da un tier (S=5 … F=0). La nota de la comunidad es la media de los tiers de las fuentes que evaluaron al brawler (0–100). La nota de WR es su posición en el win rate de jugadores top (0–100). La nota final es la media de ambas. Fuentes:", "maps.rankedT": "Mapas activos en clasificatoria", "maps.rankedNote": "mapas vistos en clasificatoria {r}+ en los últimos 7 días", "maps.rankedNone": "Aún no hay suficientes partidas clasificatorias en este rango.", "maps.allT": "Todos los mapas del juego", "maps.allNote": "{n} mapas activos · toca un mapa para ver las mejores comps", "maps.all": "Todos", "maps.noData": "sin datos aún", "maps.sdSrc": "Mejores en el mapa (top 4 / top 2)", "sd.g": "{n} partidas", "sd.mapsNote": "rotación, mapas jugados y todos los del modo", "sd.best": "Mejores brawlers en {m}", "sd.topSolo": "% de veces en top 4", "sd.topDuo": "% de veces en top 2", "sd.base": "media del mapa {v}%", "sd.avg": "posición media {r}", "sd.duos": "Mejores dúos", "sd.duosNote": "brawler del jugador con su compañero", "sd.noMap": "Aún no hay partidas suficientes en este mapa.", "sd.soon": "Los datos de Supervivencia solo y dúo empiezan en la próxima recolección.", "sd.bestMode": "Mejores en {m} (todos los mapas)", "sd.method": "Solo sabemos la posición del jugador top dueño del historial. \"Top\" es quedar entre los {c} primeros. Ajustado para muestras pequeñas."});
 /* =========================================================================
    INÍCIO
    ========================================================================= */
