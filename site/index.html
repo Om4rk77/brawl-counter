@@ -564,9 +564,9 @@ body.stacked #app{transform:scale(.94) translate3d(0,10px,0);border-radius:24px;
 .rk-row{content-visibility:auto;contain-intrinsic-size:auto 62px}
 .foot{content-visibility:auto;contain-intrinsic-size:auto 480px}
 .map,.ev{contain:layout paint}
-.cls-ico.has-img{background:none;box-shadow:none;overflow:visible}
-.cls-ico.has-img svg{display:none}
-.cls-ico img{width:118%;height:118%;object-fit:contain;filter:drop-shadow(0 1px 1.5px rgba(0,0,0,.25))}
+.cls-ico{position:relative}
+.cls-ico img{position:absolute;left:14%;top:14%;width:72%;height:72%;object-fit:contain;opacity:0;transition:opacity .25s}
+.cls-ico.ok img{opacity:1}.cls-ico.ok svg{opacity:0}
 .brand-mark.logo{background:none;box-shadow:none;width:38px;height:38px;border-radius:0}
 .brand-mark.logo img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 4px 8px rgba(0,0,0,.25))}
 .view{will-change:auto}
@@ -909,7 +909,7 @@ function itemIcon(kind,id,size){
   return `<span class="ico ${kind==='gr'?'full':''}" style="${st}">${imgTag(urls,`data-fb="icon" data-svg="${ITEM[kind].svg}"`)}</span>`;
 }
 const CLS_IMG={DD:'a/a8/Class-Damage_Dealer',TK:'4/42/Class-Tank',MK:'0/08/Class-Marksman',AR:'4/4f/Class-Artillery',CT:'8/82/Class-Controller',AS:'0/0c/Class-Assassin',SP:'c/cd/Class-Support'};
-const clsIco=(c,size)=>`<span class="cls-ico${CLS_IMG[c]?' has-img':''}" style="--cc:var(--c-${c})${size?`;--s:${size}px`:''}" aria-hidden="true">${CLS_IMG[c]?`<img alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" src="https://static.wikia.nocookie.net/brawlstars/images/${CLS_IMG[c]}.png/revision/latest/scale-to-width-down/64" onerror="this.parentNode.classList.remove('has-img');this.remove()">`:''}<svg><use href="#i-${c}"/></svg></span>`;
+const clsIco=(c,size)=>`<span class="cls-ico${CLS_IMG[c]?' has-img':''}" style="--cc:var(--c-${c})${size?`;--s:${size}px`:''}" aria-hidden="true">${CLS_IMG[c]?`<img alt="" decoding="async" referrerpolicy="no-referrer" onload="this.parentNode.classList.add('ok')" src="https://static.wikia.nocookie.net/brawlstars/images/${CLS_IMG[c]}.png/revision/latest/scale-to-width-down/64" onerror="this.remove()">`:''}<svg><use href="#i-${c}"/></svg></span>`;
 const modeIcon=(c,size=20)=>{const id=modeId(c);return id?`<img src="${CDN}/game-modes/regular/${id}.png" alt="" width="${size}" height="${size}" style="width:${size}px;height:${size}px;object-fit:contain" onerror="this.remove()">`:''};
 const modeIconById=(id,size=20)=>id?`<img src="${CDN}/game-modes/regular/${id}.png" alt="" width="${size}" height="${size}" style="width:${size}px;height:${size}px;object-fit:contain" onerror="this.remove()">`:'';
 const mapImg=(id,cls='')=>imgTag([`${CDN}/maps/regular/${id}.png`,`${BFY}/maps/${id}.png`],cls?`class="${cls}"`:'');
