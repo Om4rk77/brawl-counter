@@ -1,0 +1,275 @@
+{
+ "id": "2026-11-03",
+ "title": "Atualização de novembro",
+ "version": "v70",
+ "date": "2026-11-03",
+ "source": "https://supercell.com/en/games/brawlstars/blog/game-updates/release-notes-november-2026/",
+ "summary": "O meta dominado por Shade, Gus, Amber e Wendy levou nerfs fortes, a Ranqueada foi reformulada e chegaram 3 brawlers novos.",
+ "highlights": [
+  "Os 4 mais fortes do meta (Shade, Gus, Amber e Wendy) perderam muita força. Espere ver menos deles nas ranqueadas.",
+  "Gus agora tem no máximo 3 espíritos no mapa (antes 10). A cura em equipe dele cai bastante.",
+  "Melodie, Chuck e Darryl não perdem mais as cargas de Super guardadas quando morrem. Isso pesa muito em Roubo e em partidas longas.",
+  "Shade ficou com menos vida, Super mais curto (6s → 4s) e escudo do Jump Scare bem menor (1.000 → 400).",
+  "Draco recebeu um buff enorme no Super (dano 1.120 → 1.620) e pode voltar ao meta.",
+  "Ranqueada: Poder 11 em todos os ranks, Diamante pede 12 brawlers, reset de temporada mais leve (cai 2 ranks em vez de 6) e Elo depende dos rounds vencidos."
+ ],
+ "new": [
+  {
+   "n": "Thunder Frogs",
+   "info": "Lendário · Artilharia",
+   "d": "Três sapos que formam um triângulo de dano em área. O Super junta os três num sapo gigante que pula 3 vezes.",
+   "r": "L",
+   "cls": "AR"
+  },
+  {
+   "n": "Rey",
+   "info": "Mítico · Atirador",
+   "d": "Os tiros marcam o inimigo e causam mais dano conforme a marca enche. O Super dá escudo e atira nos inimigos visíveis.",
+   "r": "M",
+   "cls": "MK"
+  },
+  {
+   "n": "Ruby",
+   "info": "Mítica · Causadora de dano",
+   "d": "Lança dois tiros em formato de 8, com dano extra se os dois acertam. O Super cria uma área que prende no chão e causa dano.",
+   "r": "M",
+   "cls": "DD"
+  }
+ ],
+ "buffs": [
+  {
+   "n": "Draco",
+   "c": [
+    "Dano do Super 1.120 → 1.620",
+    "Redução de dano no Super 20% → 25%",
+    "Dano do Super aplicado de forma mais consistente"
+   ]
+  },
+  {
+   "n": "Melodie",
+   "c": [
+    "Dano do ataque 460 → 500",
+    "Dano das notas 920 → 1.000",
+    "Não perde cargas de Super ao morrer"
+   ]
+  },
+  {
+   "n": "Chuck",
+   "c": [
+    "Recarga do ataque 2,0s → 1,8s",
+    "Não perde cargas de Super ao morrer"
+   ]
+  },
+  {
+   "n": "Darryl",
+   "c": [
+    "Dano do Super 660 → 720",
+    "Não perde cargas de Super ao morrer"
+   ]
+  },
+  {
+   "n": "Shelly",
+   "c": [
+    "Dano do ataque 300 → 340",
+    "Dano do Super 320 → 360"
+   ]
+  },
+  {
+   "n": "Hank",
+   "c": [
+    "Vida 5.500 → 6.000"
+   ]
+  },
+  {
+   "n": "Ziggy",
+   "c": [
+    "Dano do ataque 950 → 1.050",
+    "Bônus do The Great Ziggini caiu de 18% para 7%"
+   ]
+  },
+  {
+   "n": "Buster",
+   "c": [
+    "Carga de Super perto de aliados +10%"
+   ]
+  },
+  {
+   "n": "Angelo",
+   "c": [
+    "Tempo para carregar o tiro totalmente -10%"
+   ]
+  },
+  {
+   "n": "R-T",
+   "c": [
+    "Projétil do ataque 15% maior"
+   ]
+  }
+ ],
+ "nerfs": [
+  {
+   "n": "Shade",
+   "c": [
+    "Vida 3.700 → 3.400",
+    "Carga de Super -12%",
+    "Duração do Super 6s → 4s",
+    "Carga de Super por área (traço) -13%",
+    "Jump Scare: recarga 18s → 24s, escudo 1.000 → 400",
+    "Hardened Hoodie: escudo 30% → 20%"
+   ]
+  },
+  {
+   "n": "Gus",
+   "c": [
+    "Máximo de espíritos no mapa 10 → 3",
+    "Carga de Super -8%",
+    "Knockback Spirit: recarga 18s → 26s, dano 540 → 260",
+    "Health Bonanza: cura extra 75% → 50%",
+    "Buffies de Health Bonanza e Hipercarga enfraquecidas"
+   ]
+  },
+  {
+   "n": "Amber",
+   "c": [
+    "Dancing Flames: recarga 14s → 20s",
+    "Fire Starters: recarga 24s → 28s, vida do barril 1.300 → 1.000",
+    "Dano contínuo do Super 480 → 400",
+    "Raio do Super com Hipercarga 1.600 → 1.200"
+   ]
+  },
+  {
+   "n": "Wendy",
+   "c": [
+    "Projétil do ataque 20% menor",
+    "Wind-Powered: alcance 15 → 10",
+    "Slowing Shield: lentidão 20% → 15%"
+   ]
+  },
+  {
+   "n": "Ash",
+   "c": [
+    "Carga de Super ganha pelo próprio Super -40%",
+    "Carga de Super -15%"
+   ]
+  },
+  {
+   "n": "Max",
+   "c": [
+    "Carga de Super ao se mover -23%",
+    "Super Charged: escudo 4s → 3s",
+    "Sneaky Sneakers: recarga 18s → 24s, duração 3s → 2s"
+   ]
+  },
+  {
+   "n": "Brock",
+   "c": [
+    "Carga da Hipercarga -28%",
+    "Buffies de More Rockets! e Rocket No. 4 enfraquecidas"
+   ]
+  },
+  {
+   "n": "Rico",
+   "c": [
+    "Robo Retreat: velocidade 35% → 25%",
+    "Buffies de Multiball e Robo Retreat enfraquecidas"
+   ]
+  },
+  {
+   "n": "Colette",
+   "c": [
+    "Carga de Super do 2º projétil da Hipercarga -75%"
+   ]
+  },
+  {
+   "n": "Maisie",
+   "c": [
+    "Dano do ataque 1.500 → 1.360"
+   ]
+  },
+  {
+   "n": "Pierce",
+   "c": [
+    "Dano do último tiro 1.500 → 1.400"
+   ]
+  },
+  {
+   "n": "Nori",
+   "c": [
+    "Dano do Super por peixe 4% → 3%"
+   ]
+  }
+ ],
+ "other": [
+  {
+   "n": "Surge",
+   "c": [
+    "Super com Hipercarga não leva mais direto ao nível 5",
+    "Ataque dispara mais rápido (470 → 400)",
+    "Power Shield: recarga 22s → 18s"
+   ]
+  },
+  {
+   "n": "Damian",
+   "c": [
+    "Soco normal 700 → 800, soco de fogo 800 → 880",
+    "Pulo do Super mais lento (3.000 → 2.400)"
+   ]
+  },
+  {
+   "n": "Squeak",
+   "c": [
+    "Dano do ataque 1.160 → 1.280, Super 1.000 → 1.100",
+    "Chain Reaction: bônus 15% → 10%"
+   ]
+  },
+  {
+   "n": "Cosmo",
+   "c": [
+    "Vida 3.400 → 3.600",
+    "Telescope Trap: recarga 20s → 24s, área 1.300 → 1.000"
+   ]
+  },
+  {
+   "n": "Kit",
+   "c": [
+    "Dano do Super chega antes (0,75s e 1,5s em vez de 1s e 2s)"
+   ]
+  }
+ ],
+ "sections": [
+  {
+   "t": "Ranqueada",
+   "items": [
+    "Poder 11 obrigatório em todos os ranks (antes era Poder 9 até o Diamante).",
+    "Diamante agora exige 12 brawlers (antes 9).",
+    "Ranqueada desbloqueia com 5.000 troféus (antes 1.000). Quem já tinha acesso continua com ele.",
+    "Reset de temporada mais leve: cai 2 ranks (antes 6).",
+    "Elo da melhor de 3 depende dos rounds: ganha mais num 2-0 e perde menos num 1-2.",
+    "Draft novo: grade maior, filtros, favoritos, sugestão de ban, troca de ordem de pick e chat rápido.",
+    "Estatísticas pós-partida e botão Jogar de novo."
+   ]
+  },
+  {
+   "t": "Modos e mapas",
+   "items": [
+    "Novo modo Counterlight: dois rounds em que cada time tenta capturar pontos no lado inimigo, e vence quem for mais rápido.",
+    "Mega Showdown (20 jogadores), Super Hockey com goleiro, Jingle Brawls e Loaded Showdown renovado.",
+    "18 mapas novos, 3 para cada modo ranqueado."
+   ]
+  },
+  {
+   "t": "Hipercargas e Buffies novas",
+   "items": [
+    "Hipercargas novas: Cosmo (prende o alvo por 2s) e Vince (Super sempre no máximo).",
+    "Buffies novas para Mr. P, Lou, Gale, Mandy, Chester e Berry, com vários acessórios e poderes reformulados."
+   ]
+  },
+  {
+   "t": "Só na Brawl Arena",
+   "items": [
+    "Nerfs: Ollie, Janet, Gray, Gigi, Stu, Starr Nova, 8-Bit, Mandy e Piper.",
+    "Buffs: Nori, Fang, Najia, Doug e Chuck."
+   ]
+  }
+ ]
+}
