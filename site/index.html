@@ -537,6 +537,23 @@ body.stacked #app{transform:scale(.94) translate3d(0,10px,0);border-radius:24px;
 .foot a{text-decoration:none}
 .foot a:hover{text-decoration:underline}
 .src-grid{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr))}
+.foot[hidden]{display:none}
+.sheet .foot{padding:0 0 8px}.sheet .src-grid{grid-template-columns:1fr}
+#patchBtn{position:relative}#patchBtn[hidden]{display:none}
+.nb-dot{position:absolute;top:4px;right:4px;width:9px;height:9px;border-radius:50%;background:var(--bad-bar);box-shadow:0 0 0 2px var(--bg)}.nb-dot[hidden]{display:none}
+.pn-meta{font-size:13px;color:var(--fg-2);margin:-4px 16px 10px}
+.pn-body{display:grid;gap:18px}
+.pn-sum{font-size:15px;line-height:1.45;margin:0}
+.pn-h{font-size:12px;font-weight:720;text-transform:uppercase;letter-spacing:.07em;color:var(--fg-2);margin:0 2px 8px;display:flex;gap:8px}.pn-h .n{color:var(--fg-3)}
+.pn-card{background:var(--surface-2);border-radius:18px;overflow:hidden;box-shadow:0 0 0 .5px var(--sep)}
+.pn-hl{margin:0;padding:12px 14px 12px 32px;display:grid;gap:8px;font-size:14px;line-height:1.42}
+.pn-row{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;align-items:start;padding:10px 14px;text-align:left;width:100%;position:relative;color:inherit}
+.pn-row+.pn-row::before{content:"";position:absolute;top:0;right:0;left:62px;border-top:.5px solid var(--sep)}
+.pn-row .av{--s:36px}
+.pn-row .t{font-weight:650;font-size:14.5px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}.pn-row .t small{font-weight:600;font-size:12px;color:var(--fg-2)}
+.pn-row ul{margin:3px 0 0;padding-left:16px;font-size:13.5px;color:var(--fg-2);display:grid;gap:2px}.pn-row p{margin:3px 0 0;font-size:13.5px;color:var(--fg-2)}
+.pn-tag{font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px}.pn-tag.good{background:var(--good-tint);color:var(--good)}.pn-tag.bad{background:var(--bad-tint);color:var(--bad)}.pn-tag.mid{background:var(--fill);color:var(--fg-2)}
+.pn-src{font-size:12.5px;color:var(--fg-3);text-align:center}.pn-src a{font-weight:600}
 
 @media (max-width:560px){
   .brand span{display:none}
@@ -723,6 +740,7 @@ body.stacked #app{transform:scale(.94) translate3d(0,10px,0);border-radius:24px;
     <symbol id="i-lock" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2.2"><rect x="5" y="10.5" width="14" height="10" rx="3"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/></g></symbol>
     <symbol id="i-map" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" d="M3.5 6.5 9 4l6 2.5L20.5 4v13.5L15 20l-6-2.5L3.5 20V6.5ZM9 4v13.5M15 6.5V20"/></symbol>
     <symbol id="i-eye" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z"/><circle cx="12" cy="12" r="3"/></g></symbol>
+    <symbol id="i-notes" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="17" rx="3"/><path d="M9 2.5v3M15 2.5v3M8.5 10.5h7M8.5 14h7M8.5 17.5h4"/></g></symbol>
     <symbol id="i-info" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5"/></g><circle cx="12" cy="7.8" r="1.3" fill="currentColor"/></symbol>
   </defs>
 </svg>
@@ -745,6 +763,7 @@ body.stacked #app{transform:scale(.94) translate3d(0,10px,0);border-radius:24px;
       <span class="mini-title" id="miniTitle" aria-hidden="true">Agora</span>
     </div>
     <div class="top-actions">
+      <button class="glass glass-btn spec" id="patchBtn" data-i18n-aria="pn.title" aria-label="Notas da atualização" title="Notas da atualização" hidden><svg aria-hidden="true"><use href="#i-notes"/></svg><span class="nb-dot" hidden></span></button>
       <button class="glass glass-btn spec" id="setBtn" aria-haspopup="menu" data-i18n-aria="ui.settings" aria-label="Ajustes"><svg aria-hidden="true"><use href="#i-gear"/></svg></button>
       <button class="glass glass-btn spec" id="themeBtn" aria-label="Tema"><svg aria-hidden="true"><use href="#i-auto"/></svg></button>
     </div>
@@ -841,7 +860,7 @@ body.stacked #app{transform:scale(.94) translate3d(0,10px,0);border-radius:24px;
   </section>
 </main>
 
-<footer class="wrap foot" id="foot"></footer>
+<footer class="wrap foot" id="foot" hidden></footer>
 </div>
 
 <nav class="dock" id="dock" aria-label="Seções">
@@ -864,7 +883,7 @@ body.stacked #app{transform:scale(.94) translate3d(0,10px,0);border-radius:24px;
           data/meta.json   (nomes oficiais em 3 idiomas, ids e imagens — diário)
           data/tips.json   (dicas traduzidas para inglês e espanhol)
    ========================================================================= */
-const URLS={live:'data/live.json',stat:'data/static.json',meta:'data/meta.json',tips:'data/tips.json',pro:'data/pro.json',comm:'data/community.json'};
+const URLS={patch:'data/patch.json',live:'data/live.json',stat:'data/static.json',meta:'data/meta.json',tips:'data/tips.json',pro:'data/pro.json',comm:'data/community.json'};
 const POLL_MS=5*60*1000;
 const CDN='https://cdn.brawlify.com', BFY='https://brawlify.com/images';
 
@@ -888,7 +907,7 @@ const LANGS=['en','pt','es'], LI={en:0,pt:1,es:2}, LOCALE={pt:'pt-BR',en:'en-US'
 const I18N={
 pt:{'nav.now':'Mapas','nav.matchup':'Matchups','nav.draft':'Draft','nav.comps':'Composições','nav.ranking':'Ranking','nav.compare':'Comparar',
 'tab.now':'Mapas','tab.matchup':'Counters','tab.draft':'Draft','tab.comps':'Times','tab.ranking':'Ranking',
-'ui.settings':'Ajustes','ui.search':'Buscar','ui.searchPh':'Buscar brawler, ex.: Piper','ui.language':'Idioma','ui.appearance':'Aparência','ui.auto':'Auto','ui.light':'Claro','ui.dark':'Escuro','ui.about':'Sobre os dados','ui.close':'Fechar','ui.change':'Trocar','ui.choose':'Escolher','ui.none':'Nenhum brawler encontrado.','ui.noFn':'Nenhum brawler nesta função.','ui.all':'Todos','ui.of':'de','ui.copied':'Link de {n} copiado','ui.copyThis':'Copie este link: {u}','ui.favAdd':'Adicionado aos favoritos','ui.favDel':'Removido dos favoritos','ui.theme.auto':'Tema automático','ui.theme.light':'Tema claro','ui.theme.dark':'Tema escuro','ui.langSet':'Idioma: Português','ui.noResult':'Nenhum brawler com “{q}”.','ui.alreadyIn':'Já está em outro slot',
+'ui.settings':'Ajustes','ui.search':'Buscar','ui.searchPh':'Buscar brawler, ex.: Piper','ui.language':'Idioma','ui.appearance':'Aparência','ui.auto':'Auto','ui.light':'Claro','ui.dark':'Escuro','ui.about':'Dados','pn.title':'Notas da atualização','pn.hl':'O que mais muda na gameplay','pn.new':'Brawlers novos','pn.buffs':'Buffs','pn.nerfs':'Nerfs','pn.other':'Ajustes','pn.src':'Fonte: notas oficiais da Supercell','ui.dataSrc':'De onde vêm os dados','ui.close':'Fechar','ui.change':'Trocar','ui.choose':'Escolher','ui.none':'Nenhum brawler encontrado.','ui.noFn':'Nenhum brawler nesta função.','ui.all':'Todos','ui.of':'de','ui.copied':'Link de {n} copiado','ui.copyThis':'Copie este link: {u}','ui.favAdd':'Adicionado aos favoritos','ui.favDel':'Removido dos favoritos','ui.theme.auto':'Tema automático','ui.theme.light':'Tema claro','ui.theme.dark':'Tema escuro','ui.langSet':'Idioma: Português','ui.noResult':'Nenhum brawler com “{q}”.','ui.alreadyIn':'Já está em outro slot',
 'err.title':'Não foi possível carregar os dados','err.body':'A conexão falhou ao buscar a base de brawlers. Verifique a internet e tente de novo.','err.retry':'Tentar de novo','err.sub':'Sem conexão com a base de dados.',
 'sub.live':'Ao vivo','sub.stale':'Dados ao vivo atrasados','sub.liveTxt':'atualizado <b>{ago}</b> · {b} partidas de {p} jogadores do topo nos últimos {d} dias','sub.ref':'{n} brawlers · referência de <b>{d}</b>','sub.refWait':'o coletor ao vivo começa assim que a chave da API for configurada','sub.updated':'Dados ao vivo atualizados',
 'ago.now':'agora mesmo','ago.min':'há {n} min','ago.h':'há {n} h','ago.d':'há {n} d',
@@ -909,7 +928,7 @@ pt:{'nav.now':'Mapas','nav.matchup':'Matchups','nav.draft':'Draft','nav.comps':'
 },
 en:{'nav.now':'Maps','nav.matchup':'Matchups','nav.draft':'Draft','nav.comps':'Team comps','nav.ranking':'Ranking','nav.compare':'Compare',
 'tab.now':'Maps','tab.matchup':'Counters','tab.draft':'Draft','tab.comps':'Teams','tab.ranking':'Ranking',
-'ui.settings':'Settings','ui.search':'Search','ui.searchPh':'Search brawler, e.g. Piper','ui.language':'Language','ui.appearance':'Appearance','ui.auto':'Auto','ui.light':'Light','ui.dark':'Dark','ui.about':'About the data','ui.close':'Close','ui.change':'Change','ui.choose':'Choose','ui.none':'No brawler found.','ui.noFn':'No brawler in this class.','ui.all':'All','ui.of':'of','ui.copied':'Link to {n} copied','ui.copyThis':'Copy this link: {u}','ui.favAdd':'Added to favorites','ui.favDel':'Removed from favorites','ui.theme.auto':'Automatic theme','ui.theme.light':'Light theme','ui.theme.dark':'Dark theme','ui.langSet':'Language: English','ui.noResult':'No brawler matches “{q}”.','ui.alreadyIn':'Already in another slot',
+'ui.settings':'Settings','ui.search':'Search','ui.searchPh':'Search brawler, e.g. Piper','ui.language':'Language','ui.appearance':'Appearance','ui.auto':'Auto','ui.light':'Light','ui.dark':'Dark','ui.about':'Data','pn.title':'Patch notes','pn.hl':'Biggest gameplay changes','pn.new':'New brawlers','pn.buffs':'Buffs','pn.nerfs':'Nerfs','pn.other':'Adjustments','pn.src':'Source: official Supercell notes','ui.dataSrc':'Where the data comes from','ui.close':'Close','ui.change':'Change','ui.choose':'Choose','ui.none':'No brawler found.','ui.noFn':'No brawler in this class.','ui.all':'All','ui.of':'of','ui.copied':'Link to {n} copied','ui.copyThis':'Copy this link: {u}','ui.favAdd':'Added to favorites','ui.favDel':'Removed from favorites','ui.theme.auto':'Automatic theme','ui.theme.light':'Light theme','ui.theme.dark':'Dark theme','ui.langSet':'Language: English','ui.noResult':'No brawler matches “{q}”.','ui.alreadyIn':'Already in another slot',
 'err.title':"Couldn't load the data",'err.body':'The connection failed while fetching the brawler database. Check your internet and try again.','err.retry':'Try again','err.sub':'No connection to the database.',
 'sub.live':'Live','sub.stale':'Live data delayed','sub.liveTxt':'updated <b>{ago}</b> · {b} matches from {p} top players over the last {d} days','sub.ref':'{n} brawlers · reference from <b>{d}</b>','sub.refWait':'the live collector starts once the API key is set up','sub.updated':'Live data updated',
 'ago.now':'just now','ago.min':'{n} min ago','ago.h':'{n} h ago','ago.d':'{n} d ago',
@@ -930,7 +949,7 @@ en:{'nav.now':'Maps','nav.matchup':'Matchups','nav.draft':'Draft','nav.comps':'T
 },
 es:{'nav.now':'Mapas','nav.matchup':'Enfrentamientos','nav.draft':'Draft','nav.comps':'Composiciones','nav.ranking':'Clasificación','nav.compare':'Comparar',
 'tab.now':'Mapas','tab.matchup':'Counters','tab.draft':'Draft','tab.comps':'Equipos','tab.ranking':'Ranking',
-'ui.settings':'Ajustes','ui.search':'Buscar','ui.searchPh':'Buscar brawler, ej.: Piper','ui.language':'Idioma','ui.appearance':'Apariencia','ui.auto':'Auto','ui.light':'Claro','ui.dark':'Oscuro','ui.about':'Sobre los datos','ui.close':'Cerrar','ui.change':'Cambiar','ui.choose':'Elegir','ui.none':'No se encontró ningún brawler.','ui.noFn':'Ningún brawler en esta clase.','ui.all':'Todos','ui.of':'de','ui.copied':'Enlace de {n} copiado','ui.copyThis':'Copia este enlace: {u}','ui.favAdd':'Añadido a favoritos','ui.favDel':'Quitado de favoritos','ui.theme.auto':'Tema automático','ui.theme.light':'Tema claro','ui.theme.dark':'Tema oscuro','ui.langSet':'Idioma: Español','ui.noResult':'Ningún brawler coincide con “{q}”.','ui.alreadyIn':'Ya está en otro espacio',
+'ui.settings':'Ajustes','ui.search':'Buscar','ui.searchPh':'Buscar brawler, ej.: Piper','ui.language':'Idioma','ui.appearance':'Apariencia','ui.auto':'Auto','ui.light':'Claro','ui.dark':'Oscuro','ui.about':'Datos','pn.title':'Notas de la actualización','pn.hl':'Lo que más cambia en el juego','pn.new':'Brawlers nuevos','pn.buffs':'Buffs','pn.nerfs':'Nerfs','pn.other':'Ajustes','pn.src':'Fuente: notas oficiales de Supercell','ui.dataSrc':'De dónde salen los datos','ui.close':'Cerrar','ui.change':'Cambiar','ui.choose':'Elegir','ui.none':'No se encontró ningún brawler.','ui.noFn':'Ningún brawler en esta clase.','ui.all':'Todos','ui.of':'de','ui.copied':'Enlace de {n} copiado','ui.copyThis':'Copia este enlace: {u}','ui.favAdd':'Añadido a favoritos','ui.favDel':'Quitado de favoritos','ui.theme.auto':'Tema automático','ui.theme.light':'Tema claro','ui.theme.dark':'Tema oscuro','ui.langSet':'Idioma: Español','ui.noResult':'Ningún brawler coincide con “{q}”.','ui.alreadyIn':'Ya está en otro espacio',
 'err.title':'No se pudieron cargar los datos','err.body':'La conexión falló al buscar la base de brawlers. Revisa tu internet e inténtalo de nuevo.','err.retry':'Reintentar','err.sub':'Sin conexión con la base de datos.',
 'sub.live':'En vivo','sub.stale':'Datos en vivo con retraso','sub.liveTxt':'actualizado <b>{ago}</b> · {b} partidas de {p} jugadores top en los últimos {d} días','sub.ref':'{n} brawlers · referencia del <b>{d}</b>','sub.refWait':'el recolector en vivo empieza cuando se configure la clave de la API','sub.updated':'Datos en vivo actualizados',
 'ago.now':'ahora mismo','ago.min':'hace {n} min','ago.h':'hace {n} h','ago.d':'hace {n} d',
@@ -1198,7 +1217,7 @@ $('#setBtn').addEventListener('click',e=>{
   m.addEventListener('click',ev=>{
     const l=ev.target.closest('[data-lang]');if(l){haptic();closeLayer();setLang(l.dataset.lang);return}
     const th=ev.target.closest('[data-th]');if(th){haptic();setTheme(th.dataset.th);m.querySelectorAll('[data-th]').forEach(b=>b.setAttribute('aria-pressed',String(b===th)));return}
-    if(ev.target.closest('[data-about]')){closeLayer();$('#foot').scrollIntoView({behavior:reduce?'auto':'smooth'})}
+    if(ev.target.closest('[data-about]')){closeLayer();setTimeout(openDataSheet,240)}
   });
   setTimeout(()=>m.querySelector('[aria-checked="true"]')?.focus({preventScroll:true}),40);
 });
@@ -1585,6 +1604,43 @@ function renderSub(){
     $('#pageSub').innerHTML=`<span class="live-dot ${stale?'off':''}"></span><b>${t(stale?'sub.stale':'sub.live')}</b> · ${t('sub.liveTxt',{ago:ago(M.updated),b:fmt(M.battles,0),p:fmt(M.players,0),d:M.windowDays})}`}
   else $('#pageSub').innerHTML=`${t('sub.ref',{n:DATA.length,d:fmtDate(META.updated||'')})}<br><span style="color:var(--fg-3);font-size:13px">${t('sub.refWait')}</span>`;
 }
+function simpleSheet(title,meta,body){
+  const s=document.createElement('div');s.className='sheet glass';s.setAttribute('role','dialog');s.setAttribute('aria-modal','true');s.setAttribute('aria-labelledby','smT');
+  s.innerHTML=`<div class="grab" aria-hidden="true"></div><div class="sheet-h"><h3 id="smT">${esc(title)}</h3><button class="glass glass-btn" data-x aria-label="${t('ui.close')}">${icon('x')}</button></div>${meta?`<div class="pn-meta">${meta}</div>`:''}<div class="sheet-body">${body}</div>`;
+  openLayer(s,{stacked:true});
+  s.addEventListener('click',e=>{if(e.target.closest('[data-x]'))return closeLayer();const g=e.target.closest('[data-pgo]');if(g){haptic();closeLayer();select(g.dataset.pgo)}});
+  setTimeout(()=>s.querySelector('[data-x]')?.focus({preventScroll:true}),60);
+  return s;
+}
+function openDataSheet(){renderFoot();simpleSheet(t('ui.about'),'',`<div class="foot">${$('#foot').innerHTML}</div>`)}
+/* notas da atualização (data/patch.json) */
+let PATCH=null;
+function patchRows(list,kind){
+  const lab=t({good:'pn.buffs',bad:'pn.nerfs',mid:'pn.other'}[kind]).replace(/s$/,'');
+  return list.map(x=>{
+    const b=byName.get(x.n);let a='';try{a=b?av(b):av({n:x.n,c:x.cls||'DD',r:x.r||'M'})}catch(e){a=''}
+    const tag=x.info?`<small>${esc(x.info)}</small>`:`<span class="pn-tag ${kind}">${esc(lab)}</span>`;
+    const inner=`${a}<div style="min-width:0"><div class="t">${esc(x.n)}${tag}${b&&b.wr!=null?`<small>WR ${fmt(b.wr)}%</small>`:''}</div>${x.d?`<p>${esc(x.d)}</p>`:''}${Array.isArray(x.c)?`<ul>${x.c.map(c=>`<li>${esc(c)}</li>`).join('')}</ul>`:''}</div>`;
+    return b?`<button class="pn-row press" data-pgo="${b.s}" aria-label="${esc(x.n)}">${inner}</button>`:`<div class="pn-row">${inner}</div>`;
+  }).join('');
+}
+function openPatch(){
+  const P=PATCH;if(!P)return;haptic();
+  try{localStorage.setItem('bc:patchSeen',JSON.stringify(P.id))}catch(e){}$('#patchBtn .nb-dot').hidden=true;
+  const sec=(title,n,body)=>`<section><h4 class="pn-h">${esc(title)}${n?` <span class="n">${n}</span>`:''}</h4><div class="pn-card">${body}</div></section>`;
+  const ul=a=>`<ul class="pn-hl">${a.map(i=>`<li>${esc(i)}</li>`).join('')}</ul>`;
+  simpleSheet(P.title||t('pn.title'),`${P.version?esc(P.version)+' · ':''}${fmtDate(P.date||'')}`,`<div class="pn-body">
+    ${P.summary?`<p class="pn-sum">${esc(P.summary)}</p>`:''}
+    ${P.highlights?.length?sec(t('pn.hl'),0,ul(P.highlights)):''}
+    ${P.new?.length?sec(t('pn.new'),P.new.length,patchRows(P.new,'mid')):''}
+    ${P.buffs?.length?sec(t('pn.buffs'),P.buffs.length,patchRows(P.buffs,'good')):''}
+    ${P.nerfs?.length?sec(t('pn.nerfs'),P.nerfs.length,patchRows(P.nerfs,'bad')):''}
+    ${P.other?.length?sec(t('pn.other'),P.other.length,patchRows(P.other,'mid')):''}
+    ${(P.sections||[]).map(x=>sec(x.t,0,ul(x.items))).join('')}
+    ${P.source?`<div class="pn-src"><a href="${esc(P.source)}" target="_blank" rel="noopener">${t('pn.src')}</a></div>`:''}</div>`);
+}
+$('#patchBtn').addEventListener('click',openPatch);
+function loadPatch(){getJSON(URLS.patch).then(p=>{if(!p||!p.id)return;PATCH=p;$('#patchBtn').hidden=false;if(store.get('patchSeen',null)!==p.id)$('#patchBtn .nb-dot').hidden=false}).catch(()=>{})}
 function renderFoot(){
   const a=(u,txt)=>`<a href="${u}" target="_blank" rel="noopener">${txt}</a>`;
   const dates=[t('foot.dates',{d:fmtDate(META.updated||'')})];if(LIVE)dates.push(t('foot.liveDate',{d:new Date(LIVE.meta.updated).toLocaleString(loc())}));if(NAMES?.updated)dates.push(t('foot.metaDate',{d:fmtDate(NAMES.updated)}));
@@ -1609,7 +1665,7 @@ async function load(){
   $('#loading').hidden=false;$('#err').hidden=true;
   try{
     const [st,lv,nm,tp,pr,cm]=await Promise.all([getJSON(URLS.stat),getJSON(URLS.live).catch(()=>null),getJSON(URLS.meta).catch(()=>null),getJSON(URLS.tips).catch(()=>({})),getJSON(URLS.pro).catch(()=>null),getJSON(URLS.comm).catch(()=>null)]);
-    PRO=pr&&pr.modes?pr:null;COMM=cm&&cm.sources?cm:null;STATIC=st;LIVE=lv&&lv.meta?lv:null;NAMES=nm&&nm.brawlers?nm:null;TIPS=tp||{};applyData();boot();
+    PRO=pr&&pr.modes?pr:null;COMM=cm&&cm.sources?cm:null;STATIC=st;LIVE=lv&&lv.meta?lv:null;NAMES=nm&&nm.brawlers?nm:null;TIPS=tp||{};applyData();boot();loadPatch();
   }catch(e){console.error(e);$('#loading').hidden=true;$('#err').hidden=false;$('#pageSub').textContent=t('err.sub')}
 }
 async function poll(){try{const lv=await getJSON(URLS.live);if(lv&&lv.meta&&(!LIVE||lv.meta.updated!==LIVE.meta.updated)){LIVE=lv;applyData();rerender();renderSub();renderFoot();renderQBar();toast(t('sub.updated'))}}catch(e){}}
